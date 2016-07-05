@@ -28,8 +28,6 @@ async def on_ready():
     print("Loaded Moderation")
     bot.load_extension("modules.rng")
     print("loaded RNG")
-    bot.load_extension("modules.gaf")
-    print("loaded GAF")
     bot.load_extension("modules.copypasta")
     print("Loaded Copypastas")
     bot.load_extension("modules.subscriptions")
