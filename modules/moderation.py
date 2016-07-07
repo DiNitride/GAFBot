@@ -2,61 +2,68 @@ import discord
 from discord.ext import commands
 from utils import checks
 
-
 class Moderation():
     def __init__(self, bot):
         self.bot = bot
 
-    #Changes the bot's game
+    ##############################
+    ## Misc moderation commands ##
+    ##############################
+
+    # Changes the bot's game
     @commands.command(pass_conext=True)
     @checks.is_admin()
     async def changegame(self, *, game: str):
         """Updates the Bot's game"""
+        # Update the bots game
         await self.bot.change_status(discord.Game(name=game))
         await self.bot.say("Game updated.")
         print("Updated Bot's Game")
+
+    ##################################
+    ## Banning and Kicking commands ##
+    ##################################
 
     #Bans a member
     @commands.command()
     @checks.is_admin()
     async def ban(self, member: discord.Member = None):
         """Bans a member"""
-        #Are they trying to ban nobody? Are they stupid?
-        #Why do they have mod powers if they're this much of an idiot?
-        if member is None:
-            return
-        #Is the person being banned me? No we don't allow that
-        elif member.id == '95953002774413312':
-            await self.bot.say("http://i.imgur.com/BSbBniw.png")
-            return
-        #Bans the user
-        await self.bot.ban(member, delete_message_days=1)
-        #Prints to console
-        print("{0.name} has been banned".format(member))
-
-    #Softbans a member
-    @commands.command(pass_context=True)
-    @checks.is_admin()
-    async def softban(self, ctx, member: discord.Member = None):
-        """Softbans a member"""
-        server = ctx.message.server
-        #Are they trying to ban nobody? Are they stupid?
-        #Why do they have mod powers if they're this much of an idiot?
+        # Are they trying to ban nobody? Are they stupid?
+        # Why do they have mod powers if they're this much of an idiot?
         if member is None:
             return
         # Is the person being banned me? No we don't allow that
         elif member.id == '95953002774413312':
             await self.bot.say("http://i.imgur.com/BSbBniw.png")
             return
-        #Sends messages to the user being softbanned with a new invite link
-        softbanmessage = "You were softbanned to clear messages, rejoin:"
-        await self.bot.send_message(member, softbanmessage)
-        await self.bot.send_message(member, "https://discord.gg/0xiHA3yQkE0pu2Qp")
-        #Outputs to console
-        print("{0.name} has been softbanned".format(member))
-        #
+        # Bans the user
         await self.bot.ban(member, delete_message_days=1)
-        await self.bot.unban(server, member)
+        # Prints to console
+        print("{0.name} has been banned".format(member))
+
+    # Kicks a member
+    @commands.command()
+    @checks.is_admin()
+    async def ban(self, member: discord.Member = None):
+        """Kicks a member"""
+        # Are they trying to kick nobody? Are they stupid?
+        # Why do they have mod powers if they're this much of an idiot?
+        if member is None:
+            return
+        # Is the person being banned me? No we don't allow that
+        elif member.id == '95953002774413312':
+            await self.bot.say("http://i.imgur.com/BSbBniw.png")
+            return
+        # Bans the user
+        await self.bot.kick(member)
+        # Prints to console
+        print("{0.name} has been kicked".format(member))
+
+    ###############################################
+    ## Community Member Commands                 ##
+    ## For adding and removing community members ##
+    ###############################################
 
     #Adds a community member
     @commands.command(pass_context=True)
@@ -82,6 +89,11 @@ class Moderation():
         await self.bot.remove_roles(member, role)
         print("{0.name} is no longer a community member".format(member))
 
+    #################################
+    ## Information commands        ##
+    ## Server info and member info ##
+    #################################
+
     #Gives the user some basic info on a user
     @commands.command(pass_context=True)
     async def info(self, ctx, member : discord.Member = None):
@@ -99,7 +111,7 @@ class Moderation():
             "\n{0.avatar_url}".format(member))
         print("Run: info on {0.name}".format(member))
 
-    #Server Info
+    # Server Info
     @commands.command(pass_context=True)
     async def serverinfo(self, ctx):
         """Basic info on the server."""
@@ -117,7 +129,7 @@ class Moderation():
             "```")
         print("Run: Server Info")
 
-    #Displays members
+    # Displays members
     @commands.command(hidden=True, pass_context=True)
     async def members(self, ctx):
         """Basic info on the server."""
@@ -132,15 +144,6 @@ class Moderation():
             "Members: {0}\n".format(members) +
             "```")
         print("Run: Member List")
-
-    #Tells the user their ID
-    @commands.command(pass_context=True)
-    async def id(self, ctx):
-        """Tells you your ID."""
-        member = ctx.message.author
-        message = "You ID is {0.id}"
-        await self.bot.say(message.format(member))
-        print("Run: ID for {0.name}".format(member))
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

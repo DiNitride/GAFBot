@@ -13,14 +13,14 @@ class Memes():
     #     await self.bot.say("Command")
     #     print("Run: Command")
 
-    #Noided
+    # Noided
     @commands.command()
     async def noided(self):
         """Shows Noided image."""
         await self.bot.say("http://i.imgur.com/Q2nGkFB.png")
         print("Run: Noided")
 
-    #Random delet this image
+    # Random delet this image
     @commands.command()
     async def deletthis(self):
         """Shows a random delet this image."""
@@ -36,7 +36,7 @@ class Memes():
         await self.bot.say(delet)
         print("Run: Delete This")
 
-    #Prints a random amount of white emojiss
+    # Prints a random amount of white emojiss
     @commands.command()
     async def funny(self, times : int):
         """Prints random white emoji's a certain amount of times."""
@@ -47,7 +47,7 @@ class Memes():
         await self.bot.say(msg)
         print("Run: Funny White Girl Hands")
 
-    #Idk it's an image of an african slapping a liquid with a sandal ask Cam
+    # Idk it's an image of an african slapping a liquid with a sandal ask Cam
     @commands.command()
     async def bpoil(self):
         """Real life footage of the BP oil spill"""
@@ -77,6 +77,7 @@ class Memes():
         await self.bot.say("{0.mention} you should kill yourself".format(member))
         print("{0.name} told {1.name} to kill themselves".format(ctx.message.author, member))
 
+    # F to pay resepects
     @commands.command()
     async def f(self):
         """Pay respects"""
