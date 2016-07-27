@@ -3,7 +3,7 @@ from discord.ext import commands
 from utils import checks
 
 # Set's bot's desciption and prefixes in a list
-description = "I'm rebuilding GAF BOT"
+description = "An autistic bot for an autistic group"
 bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True, command_not_found="No command called {}")
 
 ###################
@@ -19,7 +19,7 @@ async def on_ready():
     print(bot.user.id)
     print("---------------------------")
     # Changes the bot's game to default
-    await bot.change_status(discord.Game(name="rebuilding"))
+    await bot.change_status(discord.Game(name="where is everyone"))
 
     # Outputs the state of loading the modules to the console
     # So I know they have loaded correctly

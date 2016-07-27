@@ -23,3 +23,9 @@ def is_admin():
             return True
         return is_admin_check(ctx.message, lambda r: r.id == '172426922947641344')
     return commands.check(predicate)
+
+def is_gaf_server():
+    return commands.check(lambda ctx: is_gaf_server_check(ctx.message))
+
+def is_gaf_server_check(message):
+    return message.server.id == '172425299559055381'
