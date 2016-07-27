@@ -23,11 +23,3 @@ def is_admin():
             return True
         return is_admin_check(ctx.message, lambda r: r.id == '172426922947641344')
     return commands.check(predicate)
-
-# Returns T/F to whether the server ID is the GAF Server ID
-def is_gaf_server_check(message):
-    return message.server.id == '172425299559055381'
-
-# Checks whether server ID == GAF Server ID
-def is_gaf_server():
-    return commands.check(lambda ctx: is_gaf_server_check(ctx.message))

@@ -24,7 +24,7 @@ class Moderation():
     ## Banning and Kicking commands ##
     ##################################
 
-    #Bans a member
+    # Bans a member
     @commands.command()
     @checks.is_admin()
     async def ban(self, member: discord.Member = None):
@@ -60,41 +60,12 @@ class Moderation():
         # Prints to console
         print("{0.name} has been kicked".format(member))
 
-    ###############################################
-    ## Community Member Commands                 ##
-    ## For adding and removing community members ##
-    ###############################################
-
-    #Adds a community member
-    @commands.command(pass_context=True)
-    @checks.is_admin()
-    async def addcommunity(self, ctx, member: discord.Member = None):
-        """Adds a community member"""
-        server = ctx.message.server
-        role = discord.utils.get(server.roles, id='172427010310799361')
-        if member is None:
-            return
-        await self.bot.add_roles(member, role)
-        print("{0.name} is now a community member".format(member))
-
-    #Removes a community member
-    @commands.command(pass_context=True)
-    @checks.is_admin()
-    async def removecommunity(self, ctx, member: discord.Member = None):
-        """Removes a community member"""
-        server = ctx.message.server
-        role = discord.utils.get(server.roles, id='172427010310799361')
-        if member is None:
-            return
-        await self.bot.remove_roles(member, role)
-        print("{0.name} is no longer a community member".format(member))
-
     #################################
     ## Information commands        ##
     ## Server info and member info ##
     #################################
 
-    #Gives the user some basic info on a user
+    # Gives the user some basic info on a user
     @commands.command(pass_context=True)
     async def info(self, ctx, member : discord.Member = None):
         """Gives basic info and shows profile image of a user."""
@@ -128,22 +99,6 @@ class Moderation():
             "Member Count: {0.member_count}\n".format(server) +
             "```")
         print("Run: Server Info")
-
-    # Displays members
-    @commands.command(hidden=True, pass_context=True)
-    async def members(self, ctx):
-        """Basic info on the server."""
-        server = ctx.message.server
-        members = []
-        for user in server.members:
-            members.extend(user.name)
-        await self.bot.say(
-            "```xl\n" +
-            "Name: {0.name}\n".format(server) +
-            "Owner: {0.owner}\n".format(server) +
-            "Members: {0}\n".format(members) +
-            "```")
-        print("Run: Member List")
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
