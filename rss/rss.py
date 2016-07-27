@@ -1,4 +1,4 @@
-import discord
+eimport discord
 from discord.ext import commands
 import feedparser
 import asyncio
