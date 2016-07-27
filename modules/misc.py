@@ -29,6 +29,7 @@ class Misc():
                 await self.bot.say("Meme %s has been added with output <%s> :thumbsup:" %(command, output))
             else:
                 await self.bot.say("Meme %s has been added with output %s :thumbsup:"  % (command, output))
+            print("Registered meme %s" % command)
 
     # Allowed the removal of a meme from the data file
     @checks.is_owner()
@@ -43,10 +44,12 @@ class Misc():
                 save = json.dumps(memes)
                 file.write(save)
                 await self.bot.say("Meme %s has been removed :thumbsup:" %command)
+                print("Unregistered meme %s" %command)
             else:
                 save = json.dumps(memes)
                 file.write(save)
                 await self.bot.say("Meme not registered, could not delete :thumbsdown: ")
+                print("Meme unregister error, no meme %s" %command)
 
     # Lists all the memes currently stored
     # Command output looks really ugly
@@ -60,6 +63,7 @@ class Misc():
             for x in memes.keys():
                 memelist = "%s\n- %s" %(memelist, x)
             await self.bot.say("%s```" %memelist)
+            print("Run: Memes Listed")
 
     # Allows the user to find and execute a meme
     @commands.command()
@@ -69,8 +73,10 @@ class Misc():
             memes = json.load(file)
             if input in memes:
                 await self.bot.say(memes[input])
+                print("Run: Meme %s" %input)
             else:
                 await self.bot.say("That's not a registered meme, pm bot owner to get it registered. :zzz: ")
+                print("Unregistered meme %s executed" %input)
 
     #######################
     ## Copypasta Section ##
@@ -93,6 +99,7 @@ class Misc():
                 await self.bot.say("Copypasta %s has been added with output <%s> :thumbsup:" %(command, output))
             else:
                 await self.bot.say("Copypasta %s has been added with output %s :thumbsup:"  % (command, output))
+            print("Registered copypasta %s" %command)
 
     # Allowed the removal of a meme from the data file
     @checks.is_owner()
@@ -107,10 +114,12 @@ class Misc():
                 save = json.dumps(pasta)
                 file.write(save)
                 await self.bot.say("Copypasta %s has been removed :thumbsup:" %command)
+                print("Unregistered copypasta %s" %command)
             else:
                 save = json.dumps(pasta)
                 file.write(save)
                 await self.bot.say("Copypasta not registered, could not delete :thumbsdown: ")
+                print("Unregister copypasta error, no pasta %s" %command)
 
     # Lists all the memes currently stored
     # Command output looks really ugly
@@ -124,6 +133,7 @@ class Misc():
             for x in pasta.keys():
                 pastalist = "%s\n- %s" %(pastalist, x)
             await self.bot.say("%s```" %pastalist)
+            print("Run: Copypastas Listed")
 
     # Allows the user to find and execute a meme
     @commands.command()
@@ -133,8 +143,11 @@ class Misc():
             pasta = json.load(file)
             if input in pasta:
                 await self.bot.say(pasta[input])
+                print("Run: Copypasta %s" %input)
             else:
                 await self.bot.say("That's not a registered copypasta, pm bot owner to get it registered. :zzz: ")
+                print("Unregistered copypasta %s executed" % input)
+
 
     #####################
     ## Random commands ##

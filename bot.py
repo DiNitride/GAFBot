@@ -73,6 +73,20 @@ async def ping():
     await bot.say("Pong")
     print("Ping Pong")
 
+# Invite link to the bot server
+@bot.command()
+async def server():
+    """The bot's server, for updates or something"""
+    await bot.say("https://discord.gg/Eau7uhf")
+    print("Run: Server")
+
+# Bot's source code
+@bot.command()
+async def source():
+    """Source code"""
+    await bot.say("https://github.com/DiNitride/GAFBot")
+    print("Run: Source")
+
 ################
 ## Announcing ##
 ################
