@@ -1,2 +1,9 @@
 *.pyc
 token.txt
+*.suo
+GAFBot.pyproj
+*.sln
+ignored.json
+serversettings.json
+copypastas.json
+memes.json

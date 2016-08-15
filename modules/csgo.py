@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import random
 
-class Map_Veto():
+class CSGO():
     def __init__(self, bot):
         self.bot = bot
         self.maps = {"Cobblestone":"O","Dust 2":"O"}
@@ -78,4 +78,4 @@ class Map_Veto():
         await self.bot.say("**Availible maps:**\n- {0}".format(maplist))
 
 def setup(bot):
-    bot.add_cog(Map_Veto(bot))
+    bot.add_cog(CSGO(bot))

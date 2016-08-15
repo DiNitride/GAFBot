@@ -12,7 +12,7 @@ class Moderation():
 
     # Changes the bot's game
     @commands.command(pass_conext=True)
-    @checks.is_admin()
+    @commands.check(checks.is_owner)
     async def changegame(self, *, game: str):
         """Updates the Bot's game"""
         # Update the bots game
@@ -26,7 +26,7 @@ class Moderation():
 
     # Bans a member
     @commands.command()
-    @checks.is_admin()
+    @commands.check(checks.perm_ban)
     async def ban(self, member: discord.Member = None):
         """Bans a member"""
         # Are they trying to ban nobody? Are they stupid?
@@ -44,18 +44,17 @@ class Moderation():
 
     # Kicks a member
     @commands.command()
-    @checks.is_admin()
-    async def ban(self, member: discord.Member = None):
+    @commands.check(checks.perm_kick)
+    async def kick(self, member: discord.Member = None):
         """Kicks a member"""
-        # Are they trying to kick nobody? Are they stupid?
-        # Why do they have mod powers if they're this much of an idiot?
+        # Same as above, are they stupid
         if member is None:
             return
-        # Is the person being banned me? No we don't allow that
+        # Still not allowed to kick me
         elif member.id == '95953002774413312':
             await self.bot.say("http://i.imgur.com/BSbBniw.png")
             return
-        # Bans the user
+        # Kicks the user
         await self.bot.kick(member)
         # Prints to console
         print("{0.name} has been kicked".format(member))
@@ -68,7 +67,7 @@ class Moderation():
     # Gives the user some basic info on a user
     @commands.command(pass_context=True)
     async def info(self, ctx, member : discord.Member = None):
-        """Gives basic info and shows profile image of a user."""
+        """Infomation on a user"""
         if member == None:
             member = ctx.message.author
         await self.bot.say(
@@ -85,7 +84,7 @@ class Moderation():
     # Server Info
     @commands.command(pass_context=True)
     async def serverinfo(self, ctx):
-        """Basic info on the server."""
+        """Shows server information"""
         server = ctx.message.server
         afk = server.afk_timeout / 60
         await self.bot.say(

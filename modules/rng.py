@@ -12,6 +12,12 @@ class RNG():
         """Rolls a dice in NdN format."""
         try:
             rolls, limit = map(int, dice.split('d'))
+            if limit > 200:
+                await self.bot.say("Have you ever seen a dice with more that 200 sides? I didn't think so")
+                return
+            if rolls > 400:
+                await self.bot.say("You're expecting me to sit and roll dice all day? 400 or less rolls please")
+                return
         except Exception:
             await self.bot.say('Format has to be in NdN!')
             return
@@ -21,7 +27,7 @@ class RNG():
 
     #Picks a random answer from a list of options
     #the user provides
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, hidden=True)
     async def choice(self, ctx, *, choices : str):
         """Chooses between options provided."""
         choiceslist = choices.split(",")

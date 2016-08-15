@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+import json
+from utils import setting
 from utils import checks
 
 # Set's bot's desciption and prefixes in a list
@@ -19,7 +21,7 @@ async def on_ready():
     print(bot.user.id)
     print("---------------------------")
     # Changes the bot's game to default
-    await bot.change_status(discord.Game(name="where is everyone"))
+    await bot.change_status(discord.Game(name="Long Live GAF"))
 
     # Outputs the state of loading the modules to the console
     # So I know they have loaded correctly
@@ -37,7 +39,18 @@ async def on_ready():
     print("Loaded RSS")
     bot.load_extension("modules.csgo")
     print("Loaded CSGO")
+    bot.load_extension("modules.configsetup")
+    print("Loaded Config")
     print("---------------------------")
+
+@bot.event
+async def on_message(message):
+    with open("ignored.json") as file:
+        ignored = json.load(file)
+    if message.author.id in ignored:
+        return
+    await bot.process_commands(message)
+
 
 ######################
 ## Misc and Testing ##
@@ -46,11 +59,34 @@ async def on_ready():
 # Command to update the bot's profile picture
 # Because Fuyu told me off for doing it every time
 @bot.command(hidden=True)
-@checks.is_admin()
+@commands.check(checks.is_owner)
 async def updateimage():
-    #Loads and sets the bot's profile image
+    """Updates the bot's profile image"""
+    # Loads and sets the bot's profile image
     with open("logo.jpg","rb") as logo:
         await bot.edit_profile(avatar=logo.read())
+
+@bot.command(hidden=True)
+@commands.check(checks.is_owner)
+async def ignore(user: discord.Member = None):
+    """Ignores a user from using the bot"""
+    if user is None:
+        return
+    with open("ignored.json") as file:
+        ignored = json.load(file)
+        if user.id not in ignored:
+            ignored.append(user.id)
+            with open("ignored.json", "w") as file:
+                save = json.dumps(ignored)
+                file.write(save)
+            await bot.say("User {0} ignored :no_entry_sign:".format(user.name))
+        else:
+            ignored.remove(user.id)
+            with open("ignored.json", "w") as file:
+                save = json.dumps(ignored)
+                file.write(save)
+            await bot.say("User {0} unignored :white_check_mark:".format(user.name))
+
 
 # Greet command
 # Also for testing the response of the bot
@@ -67,7 +103,7 @@ async def greet(ctx):
 
 # Ping Pong
 # Testing the response of the bot
-@bot.command(hidden=True)
+@bot.command(pass_context=True,hidden=True)
 async def ping():
     """Pong"""
     await bot.say("Pong")
@@ -87,44 +123,77 @@ async def source():
     await bot.say("https://github.com/DiNitride/GAFBot")
     print("Run: Source")
 
-################
-## Announcing ##
-################
+#############
+## Logging ##
+#############
 
 # Displays a message when a user joins the server
-# Needs reworking so it doesn't just work on the GAF server
-# I'll do it later
 @bot.event
 async def on_member_join(member):
     server = member.server
-    if server.id == "172425299559055381":
-        fmt = '**{0.name}** joined {1.name}'
-        channel = discord.Object('173196847060484097')
-        role = discord.Object('179618172511584256')
-        await bot.add_roles(member, role)
-        await bot.send_message(channel, fmt.format(member, server))
-        print(fmt.format(member, server))
+    if not setting.is_in_data(server):
+        await bot.say("Failed to initialise server file")
+        return
+    with open("serversettings.json") as file:
+        data = json.load(file)
+        if server.id in data:
+            if data[server.id]["logging"] is True:
+                fmt = '**{0.name}** joined {1.name}'
+                channel = discord.Object(data[server.id]["log_channel"])
+                await bot.send_message(channel, fmt.format(member, server))
+                print(fmt.format(member, server))
+            if data[server.id]["role_on_join"] is True:
+                role = discord.Object(data[server.id]["join_role"])
+                await bot.add_roles(member, role)
 
 # Displays a message when a user leaves the server
-# Also needs reworking
 @bot.event
 async def on_member_remove(member):
     server = member.server
-    if server.id == "172425299559055381":
-        fmt = '**{0.name}** left {1.name}'
-        channel = discord.Object('173196847060484097')
-        await bot.send_message(channel, fmt.format(member, server))
-        print(fmt.format(member, server))
+    if not setting.is_in_data(server):
+        await bot.say("Failed to initialise server file")
+        return
+    with open("serversettings.json") as file:
+        data = json.load(file)
+        if data[server.id]["logging"] is True:
+            fmt = '**{0.name}** left {1.name}'
+            channel = discord.Object(data[server.id]["log_channel"])
+            await bot.send_message(channel, fmt.format(member, server))
+            print(fmt.format(member, server))
+        else:
+            return
+
 
 # Displays a message when a user is banned
 @bot.event
 async def on_member_ban(member):
     server = member.server
-    if server.id == "172425299559055381":
-        fmt = '**{0.name}** was banned from {1.name}'
-        channel = discord.Object('173196847060484097')
-        await bot.send_message(channel, fmt.format(member, server))
-        print(fmt.format(member, server))
+    if not setting.is_in_data(server):
+        await bot.say("Failed to initialise server file")
+        return
+    with open("serversettings.json") as file:
+        data = json.load(file)
+        if data[server.id]["logging"] is True:
+            fmt = '**{0.name}** was banned from {1.name}'
+            channel = discord.Object(data[server.id]["log_channel"])
+            await bot.send_message(channel, fmt.format(member, server))
+            print(fmt.format(member, server))
+
+# Displays a message when a user is unbanned
+@bot.event
+async def on_member_unban(member):
+    server = member.server
+    if not setting.is_in_data(server):
+        await bot.say("Failed to initialise server file")
+        return
+    with open("serversettings.json") as file:
+        data = json.load(file)
+        if data[server.id]["logging"] is True:
+            fmt = '**{0.name}** was unbanned from {1.name}'
+            channel = discord.Object(data[server.id]["log_channel"])
+            await bot.send_message(channel, fmt.format(member, server))
+            print(fmt.format(member, server))
+
 
 ##############################
 ## FANCY TOKEN LOGIN STUFFS ##

@@ -1,28 +1,67 @@
 from discord.ext import commands
 import discord
 
-# Checks if the message author's id matches the owner
-# Owner being me because I'm better than you all
-def is_owner_check(message):
-    return message.author.id == '95953002774413312'
+# Checks if it is bot owner
+def is_owner(ctx):
+    return ctx.message.author.id == '95953002774413312'
 
-# Runs the commands module check thing
-def is_owner():
-    return commands.check(lambda ctx: is_owner_check(ctx.message))
+# Checks if user is an admin
+def is_admin(ctx):
+    if is_owner(ctx):
+        return True
+    message = ctx.message
+    channel = message.channel
+    perms = channel.permissions_for(message.author)
+    return perms.administrator
 
-# Checks if the message author's roles
-def is_admin_check(message, check):
-    author = message.author
-    role = discord.utils.find(check, author.roles)
-    return role is not None
+# Checks specific permissions
+def perm_manage_roles(ctx):
+    if is_owner(ctx):
+        return True
+    message = ctx.message
+    channel = message.channel
+    perms = channel.permissions_for(message.author)
+    return perms.manage_roles
 
-# Checks whether the message author has admin role or is
-def is_admin():
-    def predicate(ctx):
-        if is_owner_check(ctx.message):
-            return True
-        return is_admin_check(ctx.message, lambda r: r.id == '172426922947641344')
-    return commands.check(predicate)
+def perm_manager_server(ctx):
+    if is_owner(ctx):
+        return True
+    message = ctx.message
+    channel = message.channel
+    perms = channel.permissions_for(message.author)
+    return perms.manage_server
+
+def perm_manage_messages(ctx):
+    if is_owner(ctx):
+        return True
+    message = ctx.message
+    channel = message.channel
+    perms = channel.permissions_for(message.author)
+    return perms.manage_messages
+
+def perm_manage_channels(ctx):
+    if is_owner(ctx):
+        return True
+    message = ctx.message
+    channel = message.channel
+    perms = channel.permissions_for(message.author)
+    return perms.manage_channels
+
+def perm_ban(ctx):
+    if is_owner(ctx):
+        return True
+    message = ctx.message
+    channel = message.channel
+    perms = channel.permissions_for(message.author)
+    return perms.ban_members
+
+def perm_kick(ctx):
+    if is_owner(ctx):
+        return True
+    message = ctx.message
+    channel = message.channel
+    perms = channel.permissions_for(message.author)
+    return perms.kick_members
 
 def is_gaf_server():
     return commands.check(lambda ctx: is_gaf_server_check(ctx.message))

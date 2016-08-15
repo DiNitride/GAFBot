@@ -42,8 +42,8 @@ class RSS():
                     f.close()
             await asyncio.sleep(900)
 
-    @checks.is_gaf_server()
     @commands.command(hidden=True)
+    @commands.check(checks.is_owner)
     async def forcerss(self):
         """Forces an RSS pull"""
         d = feedparser.parse('http://steamcommunity.com/groups/TheNeverEndingGAF/rss/')
@@ -60,8 +60,8 @@ class RSS():
                 f.close()
         print("Run: Force RSS")
 
-    @checks.is_gaf_server()
     @commands.command(hidden=True)
+    @commands.check(checks.is_owner)
     async def forceredditrss(self):
         """Forces an RSS pull"""
         d = feedparser.parse('https://www.reddit.com/r/TheNeverEndingGAF/.rss')

@@ -15,13 +15,13 @@ class Misc():
     # Allows the addition of a meme to the data file
     # Requires the command and ouput
     # Can only be used by bot owner
-    @checks.is_owner()
     @commands.command(hidden=True)
+    @commands.check(checks.is_owner)
     async def addmeme(self, command : str, *, output : str):
-        with open("memes.txt") as file:
+        with open("memes.json") as file:
             memes = json.load(file)
             file.close()
-        with open("memes.txt","w") as file:
+        with open("memes.json","w") as file:
             memes[command] = output
             save = json.dumps(memes)
             file.write(save)
@@ -32,13 +32,13 @@ class Misc():
             print("Registered meme %s" % command)
 
     # Allowed the removal of a meme from the data file
-    @checks.is_owner()
     @commands.command(hidden=True)
+    @commands.check(checks.is_owner)
     async def delmeme(self, command: str):
-        with open("memes.txt") as file:
+        with open("memes.json") as file:
             memes = json.load(file)
             file.close()
-        with open("memes.txt", "w") as file:
+        with open("memes.json", "w") as file:
             if command in memes:
                 del memes[command]
                 save = json.dumps(memes)
@@ -57,7 +57,7 @@ class Misc():
     @commands.command()
     async def memes(self):
         """Lists the memes availible to output"""
-        with open("memes.txt") as file:
+        with open("memes.json") as file:
             memes = json.load(file)
             memelist = "```Memes:"
             for x in memes.keys():
@@ -69,7 +69,7 @@ class Misc():
     @commands.command()
     async def meme(self, input):
         """Outputs a selected meme"""
-        with open("memes.txt") as file:
+        with open("memes.json") as file:
             memes = json.load(file)
             if input in memes:
                 await self.bot.say(memes[input])
@@ -85,13 +85,13 @@ class Misc():
     # Allows the addition of a meme to the data file
     # Requires the command and ouput
     # Can only be used by bot owner
-    @checks.is_owner()
     @commands.command(hidden=True)
+    @commands.check(checks.is_owner)
     async def addpasta(self, command : str, *, output : str):
-        with open("copypastas.txt") as file:
+        with open("copypastas.json") as file:
             pasta = json.load(file)
             file.close()
-        with open("copypastas.txt","w") as file:
+        with open("copypastas.json","w") as file:
             pasta[command] = output
             save = json.dumps(pasta)
             file.write(save)
@@ -102,13 +102,13 @@ class Misc():
             print("Registered copypasta %s" %command)
 
     # Allowed the removal of a meme from the data file
-    @checks.is_owner()
     @commands.command(hidden=True)
+    @commands.check(checks.is_owner)
     async def delpasta(self, command: str):
-        with open("copypastas.txt") as file:
+        with open("copypastas.json") as file:
             pasta = json.load(file)
             file.close()
-        with open("copypastas.txt", "w") as file:
+        with open("copypastas.json", "w") as file:
             if command in pasta:
                 del pasta[command]
                 save = json.dumps(pasta)
@@ -127,7 +127,7 @@ class Misc():
     @commands.command()
     async def copypastas(self):
         """Lists the copypastas availible to output"""
-        with open("copypastas.txt") as file:
+        with open("copypastas.json") as file:
             pasta = json.load(file)
             pastalist = "```Memes:"
             for x in pasta.keys():
@@ -139,7 +139,7 @@ class Misc():
     @commands.command()
     async def pasta(self, input):
         """Outputs a selected copypasta"""
-        with open("copypastas.txt") as file:
+        with open("copypastas.json") as file:
             pasta = json.load(file)
             if input in pasta:
                 await self.bot.say(pasta[input])
