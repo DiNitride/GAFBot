@@ -1,4 +1,4 @@
-# GAFBot
+# GAF Bot
 ## A Discord Server bot for the GAF Gaming Community
 
 ###### About
