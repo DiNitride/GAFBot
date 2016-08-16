@@ -174,6 +174,9 @@ class Misc():
     # Tells the @'d user to kill themselves
     # This is a special meme that requires input arguments
     # So also is not part of the meme command
+    # Just a meme, don't take seriously
+    # Was a requested feature on the GAF server
+    # IT'S JUST A PRANK BRO
     @commands.command(pass_context=True)
     async def kys(self, ctx, member: discord.Member = None):
         """Tells the mentioned user to kill themselves."""
