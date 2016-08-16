@@ -1,5 +1,5 @@
 # GAFBot
-## A Discord Server bot for the GAF Gaming Community, however can be used on other servers.
+## A Discord Server bot for the GAF Gaming Community
 
 ###### About
 GAF Bot was originally written as a bot just for the GAF Gaming Community, however the bot can be used on other servers
