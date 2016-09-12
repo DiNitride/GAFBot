@@ -11,6 +11,7 @@ class Config():
     @commands.command(pass_context=True)
     @commands.check(checks.is_admin)
     async def logging(self, ctx):
+        """Turns logging on or off in the desired channel"""
         server = ctx.message.server
         if not setting.is_in_data(ctx.message):
             await bot.say("Failed to initialise server file")
@@ -30,6 +31,7 @@ class Config():
     @commands.command(pass_context=True)
     @commands.check(checks.is_admin)
     async def join_role_off(self, ctx):
+        """Turns the role on join system off"""
         server = ctx.message.server
         if not setting.is_in_data(ctx.message):
             await bot.say("Failed to initialise server file")
@@ -45,6 +47,7 @@ class Config():
     @commands.command(pass_context=True)
     @commands.check(checks.is_admin)
     async def join_role(self, ctx, role):
+        """Turns the role on join system on and selects role"""
         server = ctx.message.server
         if not setting.is_in_data(ctx.message):
             await bot.say("Failed to initialise server file")

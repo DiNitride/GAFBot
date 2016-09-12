@@ -6,14 +6,29 @@ GAF Bot was originally written as a bot just for the GAF Gaming Community, howev
 
 ###### Features and to-do
 - [x] Basic Moderation tools
-- [x] Meme and Copypasta listings
 - [x] Adding a role when user joins server
-- [ ] Role subscription module
+- [x] F to pay respects
 - [x] CS:GO Map Veto system
 - [x] CS:GO Stats
-- [ ] Custom commands
 - [x] Server logging
-- [ ] Tag system
-- [x] F to pay respects
+- [x] Tag system
+
 - [ ] Overwatch Stats
 - [ ] Diablo 3 Stats
+- [ ] Role subscription module
+- [ ] Further moderation commands
+- [ ] Custom commands
+- [ ] Custom RSS Feeds
+- [ ] Twitter Alerts
+- [ ] eSports Notifcations
+- [ ] Google command
+- [ ] Music playback from YouTube / Soundcloud etc.
+- [ ] GAF Module
+- [ ] Guild management
+
+###### Requirements
+- Python 3.5
+- Discord.py
+- feedparser
+
+###### Lot's of love, DiNitride

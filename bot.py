@@ -39,10 +39,12 @@ async def on_ready():
     print("Loaded RSS")
     bot.load_extension("modules.csgo")
     print("Loaded CSGO")
-    bot.load_extension("modules.configsetup")
+    bot.load_extension("modules.config")
     print("Loaded Config")
     bot.load_extension("modules.tags")
     print("Loaded Tags")
+    bot.load_extension("modules.gaf")
+    print("Loaded GAF")
     print("---------------------------")
 
 @bot.event

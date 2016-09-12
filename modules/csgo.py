@@ -16,7 +16,7 @@ class CSGO():
 
     @commands.command(pass_context=True)
     async def veto(self, ctx, user_1: discord.User = None, user_2: discord.User = None):
-        """Starts a CS:GO map veto. Uses the current active duty maps."""
+        """Starts a CS:GO map veto. Uses the current active duty maps"""
 
         channel = ctx.message.channel
         author = ctx.message.channel
