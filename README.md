@@ -9,8 +9,11 @@ GAF Bot was originally written as a bot just for the GAF Gaming Community, howev
 - [x] Meme and Copypasta listings
 - [x] Adding a role when user joins server
 - [ ] Role subscription module
-- [ ] CS:GO Map Veto system
+- [x] CS:GO Map Veto system
+- [x] CS:GO Stats
 - [ ] Custom commands
 - [x] Server logging
 - [ ] Tag system
 - [x] F to pay respects
+- [ ] Overwatch Stats
+- [ ] Diablo 3 Stats
