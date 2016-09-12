@@ -5,15 +5,13 @@
 GAF Bot was originally written as a bot just for the GAF Gaming Community, however the bot can be used on other servers
 
 ###### Features and to-do
+- [x] Tag system
 - [x] Basic Moderation tools
 - [x] Adding a role when user joins server
 - [x] F to pay respects
 - [x] CS:GO Map Veto system
 - [x] CS:GO Stats
 - [x] Server logging
-- [x] Tag system
-
-- [ ] Overwatch Stats
 - [ ] Diablo 3 Stats
 - [ ] Role subscription module
 - [ ] Further moderation commands
@@ -25,6 +23,7 @@ GAF Bot was originally written as a bot just for the GAF Gaming Community, howev
 - [ ] Music playback from YouTube / Soundcloud etc.
 - [ ] GAF Module
 - [ ] Guild management
+- [ ] Overwatch Stats
 
 ###### Requirements
 - Python 3.5
