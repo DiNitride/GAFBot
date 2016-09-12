@@ -200,7 +200,6 @@ async def on_member_unban(member):
 ## FANCY TOKEN LOGIN STUFFS ##
 ##############################
 
-with open("config.json") as data:
-    tokens = json.load(data)
-    bot.run(tokens["api_keys"]["discord"])
-data.close()
+with open("token.txt") as token:
+    bot.run(token.read())
+token.close()
