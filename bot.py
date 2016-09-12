@@ -6,7 +6,7 @@ from utils import checks
 
 # Set's bot's desciption and prefixes in a list
 description = "An autistic bot for an autistic group"
-bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True, command_not_found="No command called {}")
+bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True)
 
 ###################
 ## Startup Stuff ##
@@ -39,7 +39,7 @@ async def on_ready():
     print("Loaded RSS")
     bot.load_extension("modules.csgo")
     print("Loaded CSGO")
-    bot.load_extension("modules.configsetup")
+    #bot.load_extension("modules.configsetup")
     print("Loaded Config")
     print("---------------------------")
 
@@ -47,10 +47,10 @@ async def on_ready():
 async def on_message(message):
     with open("ignored.json") as file:
         ignored = json.load(file)
+    file.close()
     if message.author.id in ignored:
         return
     await bot.process_commands(message)
-
 
 ######################
 ## Misc and Testing ##
@@ -60,7 +60,7 @@ async def on_message(message):
 # Because Fuyu told me off for doing it every time
 @bot.command(hidden=True)
 @commands.check(checks.is_owner)
-async def updateimage():
+async def updateprofile():
     """Updates the bot's profile image"""
     # Loads and sets the bot's profile image
     with open("logo.jpg","rb") as logo:
@@ -71,6 +71,8 @@ async def updateimage():
 async def ignore(user: discord.Member = None):
     """Ignores a user from using the bot"""
     if user is None:
+        return
+    if user.id is "95953002774413312":
         return
     with open("ignored.json") as file:
         ignored = json.load(file)
@@ -103,7 +105,7 @@ async def greet(ctx):
 
 # Ping Pong
 # Testing the response of the bot
-@bot.command(pass_context=True,hidden=True)
+@bot.command(pass_context=True, hidden=True)
 async def ping():
     """Pong"""
     await bot.say("Pong")
@@ -163,7 +165,6 @@ async def on_member_remove(member):
         else:
             return
 
-
 # Displays a message when a user is banned
 @bot.event
 async def on_member_ban(member):
@@ -199,5 +200,7 @@ async def on_member_unban(member):
 ## FANCY TOKEN LOGIN STUFFS ##
 ##############################
 
-with open("token.txt","r") as token:
-    bot.run(token.read())
+with open("config.json") as data:
+    tokens = json.load(data)
+    bot.run(tokens["api_keys"]["discord"])
+data.close()
