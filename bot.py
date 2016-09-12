@@ -45,6 +45,8 @@ async def on_ready():
     print("Loaded Tags")
     bot.load_extension("modules.gaf")
     print("Loaded GAF")
+    bot.load_extension("modules.overwatch")
+    print("Loaded Overwatch")
     print("---------------------------")
 
 @bot.event

@@ -12,7 +12,8 @@ class GAF():
                            "engage in many diferent homoerotic autistic activities. We're not an organisation,"
                            "just a group of close friends that hang out and tell each other to kill ourselfs reguarly.\n\n"
                            "Simply put, GAF isn't a way of life, GAF is the lack of having a way of life.\n"
-                           "Server Invite: https://discord.gg/tK4uQEU")
+                           "Server Invite: https://discord.gg/tK4uQEU\n"
+                           "Steam Page: <http://steamcommunity.com/groups/TheNeverEndingGAF>")
 
 def setup(bot):
     bot.add_cog(GAF(bot))
