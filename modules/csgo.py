@@ -11,7 +11,7 @@ class CSGO():
     def __init__(self, bot):
         self.bot = bot
         self.instances = []
-        with open("config.json") as data:
+        with open("config/config.json") as data:
             self.tokens = json.load(data)
 
     @commands.command(pass_context=True)

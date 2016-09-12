@@ -39,13 +39,15 @@ async def on_ready():
     print("Loaded RSS")
     bot.load_extension("modules.csgo")
     print("Loaded CSGO")
-    #bot.load_extension("modules.configsetup")
+    bot.load_extension("modules.configsetup")
     print("Loaded Config")
+    bot.load_extension("modules.tags")
+    print("Loaded Tags")
     print("---------------------------")
 
 @bot.event
 async def on_message(message):
-    with open("ignored.json") as file:
+    with open("config/ignored.json") as file:
         ignored = json.load(file)
     file.close()
     if message.author.id in ignored:
@@ -74,17 +76,17 @@ async def ignore(user: discord.Member = None):
         return
     if user.id is "95953002774413312":
         return
-    with open("ignored.json") as file:
+    with open("config/ignored.json") as file:
         ignored = json.load(file)
         if user.id not in ignored:
             ignored.append(user.id)
-            with open("ignored.json", "w") as file:
+            with open("config/ignored.json", "w") as file:
                 save = json.dumps(ignored)
                 file.write(save)
             await bot.say("User {0} ignored :no_entry_sign:".format(user.name))
         else:
             ignored.remove(user.id)
-            with open("ignored.json", "w") as file:
+            with open("config/ignored.json", "w") as file:
                 save = json.dumps(ignored)
                 file.write(save)
             await bot.say("User {0} unignored :white_check_mark:".format(user.name))
@@ -125,6 +127,11 @@ async def source():
     await bot.say("https://github.com/DiNitride/GAFBot")
     print("Run: Source")
 
+@bot.command()
+async def botinfo():
+    """Info on the bot"""
+    await bot.say("""```xl\nOwner: DiNitride\nGithub: https://github.com/DiNitride/GAFBot\nServer: https://discord.gg/Eau7uhf\n```""")
+
 #############
 ## Logging ##
 #############
@@ -136,7 +143,7 @@ async def on_member_join(member):
     if not setting.is_in_data(server):
         await bot.say("Failed to initialise server file")
         return
-    with open("serversettings.json") as file:
+    with open("config/serversettings.json") as file:
         data = json.load(file)
         if server.id in data:
             if data[server.id]["logging"] is True:
@@ -155,7 +162,7 @@ async def on_member_remove(member):
     if not setting.is_in_data(server):
         await bot.say("Failed to initialise server file")
         return
-    with open("serversettings.json") as file:
+    with open("config/serversettings.json") as file:
         data = json.load(file)
         if data[server.id]["logging"] is True:
             fmt = '**{0.name}** left {1.name}'
@@ -172,7 +179,7 @@ async def on_member_ban(member):
     if not setting.is_in_data(server):
         await bot.say("Failed to initialise server file")
         return
-    with open("serversettings.json") as file:
+    with open("config/serversettings.json") as file:
         data = json.load(file)
         if data[server.id]["logging"] is True:
             fmt = '**{0.name}** was banned from {1.name}'
@@ -187,7 +194,7 @@ async def on_member_unban(member):
     if not setting.is_in_data(server):
         await bot.say("Failed to initialise server file")
         return
-    with open("serversettings.json") as file:
+    with open("config/serversettings.json") as file:
         data = json.load(file)
         if data[server.id]["logging"] is True:
             fmt = '**{0.name}** was unbanned from {1.name}'
@@ -200,6 +207,6 @@ async def on_member_unban(member):
 ## FANCY TOKEN LOGIN STUFFS ##
 ##############################
 
-with open("token.txt") as token:
+with open("config/token.txt") as token:
     bot.run(token.read())
 token.close()
