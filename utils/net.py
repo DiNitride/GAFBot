@@ -6,4 +6,9 @@ import aiohttp
 async def get_url(url, ua):
     with aiohttp.ClientSession() as session:
         async with session.get(url, headers={"user-agent" : ua}) as response:
-            return response
+            status = response.status
+            if status != 200:
+                json = None
+                return response, json, status
+            json = await response.json()
+            return response, json, status

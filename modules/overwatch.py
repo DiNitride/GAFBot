@@ -20,13 +20,15 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/general"
         battlenet_for_api = battlenet.replace("#","-")
 
-        response = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
 
-        if response.status_code == 404:
-            await self.bot.say("Error: User doesn't exist or, Battle.net was entered incorrectly")
+        if status == 404:
+            await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
             return
 
-        stats = response.json()
+        elif status == 504:
+            await self.bot.say("Server error")
+            return
 
         damage_done_avg = stats["average_stats"]["damage_done_avg"]
         deaths_avg = stats["average_stats"]["deaths_avg"]
@@ -54,17 +56,19 @@ class Overwatch():
 
     @commands.command()
     async def owstats(self, battlenet):
-        """Average player stats for Overwatch"""
+        """Player stats for Overwatch"""
         api_url = "https://owapi.net/api/v2/u/{0}/stats/general"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
 
-        if response.status == 404:
-            await self.bot.say("Error: User doesn't exist or, Battle.net was entered incorrectly")
+        if status == 404:
+            await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
             return
 
-        stats = await response.json()
+        elif status == 504:
+            await self.bot.say("Server error")
+            return
 
         damage_done = stats["game_stats"]["damage_done"]
         deaths = stats["game_stats"]["deaths"]
@@ -113,16 +117,19 @@ class Overwatch():
 
     @commands.command()
     async def owcompavgstats(self, battlenet):
-        """Average player stats for Overwatch"""
+        """Average competitive player stats for Overwatch"""
         api_url = "https://owapi.net/api/v2/u/{0}/stats/competitive"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
 
-        if response.status_code == 404:
+        if status == 404:
             await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
             return
-        stats = response.json()
+
+        elif status == 504:
+            await self.bot.say("Server error")
+            return
 
         damage_done_avg = stats["average_stats"]["damage_done_avg"]
         deaths_avg = stats["average_stats"]["deaths_avg"]
@@ -150,16 +157,19 @@ class Overwatch():
 
     @commands.command()
     async def owcompstats(self, battlenet):
-        """Average player stats for Overwatch"""
+        """Competitive player stats for Overwatch"""
         api_url = "https://owapi.net/api/v2/u/{0}/stats/competitive"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
 
-        if response.status_code == 404:
+        if status == 404:
             await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
             return
-        stats = response.json()
+
+        elif status == 504:
+            await self.bot.say("Server error")
+            return
 
         damage_done = stats["game_stats"]["damage_done"]
         deaths = stats["game_stats"]["deaths"]

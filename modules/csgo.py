@@ -145,27 +145,18 @@ class CSGO():
         xml_url = "http://steamcommunity.com/id/{0}/?xml=1"
         steam_api_key = self.tokens["api_keys"]["steam"]
 
-        # requests
-        # response = requests.get(api_url.format(steam_api_key, id))
-        # aiohttp
-        response = await net.get_url(api_url.format(steam_api_key, id), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(steam_api_key, id), "GAFBot")
 
-
-        if response.status == 400:
+        if status == 400:
             xml_str = request.urlopen(xml_url.format(id)).read()
             root = ET.fromstring(xml_str)
             id = root.find('steamID64').text
 
-        # Requests
-        # response = requests.get(api_url.format(steam_api_key, id))
-        # aiohttp
-        response = await net.get_url(api_url.format(steam_api_key, id), "GAFBot")
+        elif status == 504:
+            await self.bot.say("Server error")
+            return
 
-        print(response)
-        # requests
-        # stats = response.json()
-        # aiohttp
-        stats = await response.json()
+        response, stats, status = await net.get_url(api_url.format(steam_api_key, id), "GAFBot")
 
         for entry in range(len(stats["playerstats"]["stats"])):
             if stats["playerstats"]["stats"][entry]["name"] == "total_kills":
