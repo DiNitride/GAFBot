@@ -6,6 +6,8 @@ import requests
 import xml.etree.ElementTree as ET
 from urllib import request
 import json
+import grequests
+from utils import net
 
 class CSGO():
     def __init__(self, bot):
@@ -143,15 +145,27 @@ class CSGO():
         xml_url = "http://steamcommunity.com/id/{0}/?xml=1"
         steam_api_key = self.tokens["api_keys"]["steam"]
 
-        response = requests.get(api_url.format(steam_api_key, id))
+        # requests
+        # response = requests.get(api_url.format(steam_api_key, id))
+        # aiohttp
+        response = await net.get_url(api_url.format(steam_api_key, id))
 
-        if response.status_code == 400:
+
+        if response.status == 400:
             xml_str = request.urlopen(xml_url.format(id)).read()
             root = ET.fromstring(xml_str)
             id = root.find('steamID64').text
 
-        response = requests.get(api_url.format(steam_api_key, id))
-        stats = response.json()
+        # Requests
+        # response = requests.get(api_url.format(steam_api_key, id))
+        # aiohttp
+        response = await net.get_url(api_url.format(steam_api_key, id))
+
+        print(response)
+        # requests
+        # stats = response.json()
+        # aiohttp
+        stats = await response.json()
 
         for entry in range(len(stats["playerstats"]["stats"])):
             if stats["playerstats"]["stats"][entry]["name"] == "total_kills":
@@ -164,7 +178,7 @@ class CSGO():
                 total_planted_bombs = stats["playerstats"]["stats"][entry]["value"]
             if stats["playerstats"]["stats"][entry]["name"] == "total_money_earned":
                 total_money_earned = stats["playerstats"]["stats"][entry]["value"]
-            if stats["playerstats"]["stats"][entry]["name"] == "total_kills_knife":
+            if stats["playerstats"]["stats"][entry]["name"]  == "total_kills_knife":
                 total_kills_knife = stats["playerstats"]["stats"][entry]["value"]
             if stats["playerstats"]["stats"][entry]["name"] == "last_match_kills":
                 last_match_kills = stats["playerstats"]["stats"][entry]["value"]

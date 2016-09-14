@@ -213,4 +213,4 @@ async def on_member_unban(member):
 
 with open("config/token.txt") as token:
     bot.run(token.read())
-token.close()
+
