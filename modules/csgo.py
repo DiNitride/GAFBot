@@ -148,7 +148,7 @@ class CSGO():
         # requests
         # response = requests.get(api_url.format(steam_api_key, id))
         # aiohttp
-        response = await net.get_url(api_url.format(steam_api_key, id))
+        response = await net.get_url(api_url.format(steam_api_key, id), "GAFBot")
 
 
         if response.status == 400:
@@ -159,7 +159,7 @@ class CSGO():
         # Requests
         # response = requests.get(api_url.format(steam_api_key, id))
         # aiohttp
-        response = await net.get_url(api_url.format(steam_api_key, id))
+        response = await net.get_url(api_url.format(steam_api_key, id), "GAFBot")
 
         print(response)
         # requests

@@ -20,7 +20,7 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/general"
         battlenet_for_api = battlenet.replace("#","-")
 
-        response = await net.get_url(api_url.format(battlenet_for_api))
+        response = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
 
         if response.status_code == 404:
             await self.bot.say("Error: User doesn't exist or, Battle.net was entered incorrectly")
@@ -58,7 +58,7 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/general"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response = await net.get_url(api_url.format(battlenet_for_api))
+        response = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
 
         if response.status == 404:
             await self.bot.say("Error: User doesn't exist or, Battle.net was entered incorrectly")
@@ -117,7 +117,7 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/competitive"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response = await net.get_url(api_url.format(battlenet_for_api))
+        response = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
 
         if response.status_code == 404:
             await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
@@ -154,7 +154,7 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/competitive"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response = await net.get_url(api_url.format(battlenet_for_api))
+        response = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
 
         if response.status_code == 404:
             await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
