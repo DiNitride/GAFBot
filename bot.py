@@ -3,6 +3,10 @@ from discord.ext import commands
 import json
 from utils import setting
 from utils import checks
+from utils import rates
+
+with open("config/config.json") as data:
+    config = json.load(data)
 
 # Set's bot's desciption and prefixes in a list
 description = "An autistic bot for an autistic group"
@@ -47,15 +51,23 @@ async def on_ready():
     print("Loaded GAF")
     bot.load_extension("modules.overwatch")
     print("Loaded Overwatch")
+    bot.load_extension("modules.tools")
+    print("Loaded Tools")
     print("---------------------------")
 
 @bot.event
 async def on_message(message):
+
     with open("config/ignored.json") as file:
         ignored = json.load(file)
     file.close()
     if message.author.id in ignored:
         return
+
+    check = await rates.check(command="general", id=message.author.id, timer=config["settings"]["ratelimit"])
+    if check is False:
+        return
+
     await bot.process_commands(message)
 
 ######################

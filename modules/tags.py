@@ -11,7 +11,7 @@ class Tags():
     # Allowed the removal of a tag from the data file
     @commands.command(hidden=True)
     @commands.check(checks.is_owner)
-    async def deltag(self, command: str):
+    async def rmtag(self, command: str):
         with open("config/tags.json") as file:
             tags = json.load(file)
             file.close()

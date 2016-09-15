@@ -1,18 +1,16 @@
 import discord
 from discord.ext import commands
-import random
-import asyncio
-import requests
 import json
-import aiohttp
 from utils import net
+
+with open("config/config.json") as data:
+    config = json.load(data)
 
 class Overwatch():
     def __init__(self, bot):
         self.bot = bot
         self.instances = []
-        with open("config/config.json") as data:
-            self.tokens = json.load(data)
+
 
     @commands.command()
     async def owavgstats(self, battlenet):
