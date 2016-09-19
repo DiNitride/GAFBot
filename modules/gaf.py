@@ -6,6 +6,7 @@ class GAF():
 
     @commands.command()
     async def GAF(self):
+        """Information on The Never Ending GAF"""
         await self.bot.say("**What is GAF?**\nGAF is a small community/clan/group that reside on this Discord server to "
                            "engage in many diferent homoerotic autistic activities. We're not an organisation,"
                            "just a group of close friends that hang out and tell each other to kill ourselfs reguarly.\n\n"

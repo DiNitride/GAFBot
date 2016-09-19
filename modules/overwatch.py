@@ -3,9 +3,6 @@ from discord.ext import commands
 import json
 from utils import net
 
-with open("config/config.json") as data:
-    config = json.load(data)
-
 class Overwatch():
     def __init__(self, bot):
         self.bot = bot
@@ -18,7 +15,7 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/general"
         battlenet_for_api = battlenet.replace("#","-")
 
-        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), {"user-agent" : "GAF Bot"})
 
         if status == 404:
             await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
@@ -58,7 +55,7 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/general"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), {"user-agent" : "GAF Bot"})
 
         if status == 404:
             await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
@@ -119,7 +116,7 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/competitive"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), {"user-agent" : "GAF Bot"})
 
         if status == 404:
             await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")
@@ -159,7 +156,7 @@ class Overwatch():
         api_url = "https://owapi.net/api/v2/u/{0}/stats/competitive"
         battlenet_for_api = battlenet.replace("#", "-")
 
-        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(battlenet_for_api), {"user-agent" : "GAF Bot"})
 
         if status == 404:
             await self.bot.say("Error: User has no competitive stats, or Battle.net was entered incorrectly")

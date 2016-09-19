@@ -4,11 +4,7 @@ import random
 import asyncio
 import xml.etree.ElementTree as ET
 from urllib import request
-import json
 from utils import net
-
-with open("config/config.json") as data:
-    config = json.load(data)
 
 class CSGO():
     def __init__(self, bot):
@@ -142,9 +138,9 @@ class CSGO():
         """Player stats for Counter Strike: Global Offensive. ID must be Steam ID or Vanity ID"""
         api_url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key={0}&steamid={1}"
         xml_url = "http://steamcommunity.com/id/{0}/?xml=1"
-        steam_api_key = config["api_keys"]["steam"]
+        steam_api_key = self.bot.config["api_keys"]["steam"]
 
-        response, stats, status = await net.get_url(api_url.format(steam_api_key, id), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(steam_api_key, id), {"user-agent" : "GAF Bot"})
 
         if status == 400:
             xml_str = request.urlopen(xml_url.format(id)).read()
@@ -155,7 +151,7 @@ class CSGO():
             await self.bot.say("Server error")
             return
 
-        response, stats, status = await net.get_url(api_url.format(steam_api_key, id), "GAFBot")
+        response, stats, status = await net.get_url(api_url.format(steam_api_key, id), {"user-agent" : "GAF Bot"})
 
         for entry in range(len(stats["playerstats"]["stats"])):
             if stats["playerstats"]["stats"][entry]["name"] == "total_kills":

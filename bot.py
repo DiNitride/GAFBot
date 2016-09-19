@@ -5,9 +5,6 @@ from utils import setting
 from utils import checks
 from utils import rates
 
-with open("config/config.json") as data:
-    config = json.load(data)
-
 # Set's bot's desciption and prefixes in a list
 description = "An autistic bot for an autistic group"
 bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True)
@@ -42,7 +39,7 @@ async def on_ready():
     bot.load_extension("rss.rss")
     print("Loaded RSS")
     bot.load_extension("modules.csgo")
-    print("Loaded CSGO")
+    print("Loaded CS:GO")
     bot.load_extension("modules.config")
     print("Loaded Config")
     bot.load_extension("modules.tags")
@@ -51,9 +48,32 @@ async def on_ready():
     print("Loaded GAF")
     bot.load_extension("modules.overwatch")
     print("Loaded Overwatch")
-    bot.load_extension("modules.tools")
-    print("Loaded Tools")
+    bot.load_extension("modules.spotify")
+    print("Loaded Spotify")
+    bot.load_extension("modules.admin")
+    print("Loaded Admin")
     print("---------------------------")
+
+    with open("config/config.json") as data:
+        bot.config = json.load(data)
+    data.close()
+
+def get_category(self):
+    if self.instance is not None:
+        return type(self.instance).__name__
+    else:
+        try:
+            return self._category
+        except AttributeError:
+            return None
+
+
+def set_category(self, category):
+    self._category = category
+
+commands.Command.cog_name = property(get_category, set_category)
+
+
 
 @bot.event
 async def on_message(message):
@@ -64,7 +84,7 @@ async def on_message(message):
     if message.author.id in ignored:
         return
 
-    check = await rates.check(command="general", id=message.author.id, timer=config["settings"]["ratelimit"])
+    check = await rates.check(command="general", id=message.author.id, timer=bot.config["settings"]["ratelimit"])
     if check is False:
         return
 
@@ -123,7 +143,7 @@ async def greet(ctx):
 
 # Ping Pong
 # Testing the response of the bot
-@bot.command(pass_context=True, hidden=True)
+@bot.command(pass_context=True)
 async def ping():
     """Pong"""
     await bot.say("Pong")
@@ -218,6 +238,16 @@ async def on_member_unban(member):
             await bot.send_message(channel, fmt.format(member, server))
             print(fmt.format(member, server))
 
+
+#################################
+## Changing Command Categories ##
+#################################
+
+bot.get_command("help").cog_name = "..Core.."
+bot.get_command("server").cog_name = "..Core.."
+bot.get_command("botinfo").cog_name = "..Core.."
+bot.get_command("source").cog_name = "..Core.."
+bot.get_command("ping").cog_name = "Fuck Fuzen"
 
 ##############################
 ## FANCY TOKEN LOGIN STUFFS ##
