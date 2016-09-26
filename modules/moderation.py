@@ -6,9 +6,7 @@ class Moderation():
     def __init__(self, bot):
         self.bot = bot
 
-    ##################################
-    ## Banning and Kicking commands ##
-    ##################################
+    # Banning and Kicking commands
 
     # Bans a member
     @commands.command()
@@ -45,10 +43,8 @@ class Moderation():
         # Prints to console
         print("{0.name} has been kicked".format(member))
 
-    #################################
-    ## Information commands        ##
-    ## Server info and member info ##
-    #################################
+    # Information commands
+    # Server info and member info
 
     # Gives the user some basic info on a user
     @commands.command(pass_context=True)
@@ -83,7 +79,31 @@ class Moderation():
             "AFK Timeout and Channel: {0} minutes in '{1.afk_channel}'\n".format(afk, server) +
             "Member Count: {0.member_count}\n".format(server) +
             "```")
-        print("Run: Server Info")
+        print("Provide server info for {0}".format(server.name))
+
+
+    @commands.command(pass_context=True)
+    @commands.check(checks.perm_manage_messages)
+    async def purge(self, ctx, amount: int = None, user: discord.User = None):
+        """Removes a specified amount of messages, either from a specific user or all.
+        Usage, $purge 100 @User"""
+        channel = ctx.message.channel
+
+        if amount is None:
+            amount = 100
+
+        def check_user(m):
+            return m.author == user
+
+        if user is None:
+            purged = await self.bot.purge_from(channel, limit=amount, check=None)
+        else:
+            purged = await self.bot.purge_from(channel, limit=amount, check=check_user)
+
+        await self.bot.say("Removed {0} messages by {1.name}".format(len(purged), user))
+        print("Removed {0} messages by {1} from #{2} on {3}".format(len(purged), user.name, channel.name, channel.server.name))
+
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

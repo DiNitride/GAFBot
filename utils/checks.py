@@ -1,9 +1,14 @@
 from discord.ext import commands
 import discord
+import json
+
+with open("config/config.json") as data:
+    config = json.load(data)
+data.close()
 
 # Checks if it is bot owner
 def is_owner(ctx):
-    return ctx.message.author.id == '95953002774413312'
+    return ctx.message.author.id == config["ids"]["owner"]
 
 # Checks if user is an admin
 def is_admin(ctx):
@@ -68,3 +73,4 @@ def is_gaf_server():
 
 def is_gaf_server_check(message):
     return message.server.id == '172425299559055381'
+

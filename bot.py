@@ -15,19 +15,30 @@ bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True)
 
 @bot.event
 async def on_ready():
+
+    # Load config file
+    with open("config/config.json") as data:
+        bot.config = json.load(data)
+    data.close()
+
     # Outputs login data to console
-    print("---------------------------")
+    print("-----------------------------------------")
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
-    print("---------------------------")
+    print("-----------------------------------------")
+
     # Changes the bot's game to default
-    await bot.change_status(discord.Game(name="Long Live GAF"))
+    with open("config/variables.json") as data:
+        variables = json.load(data)
+        await bot.change_status(discord.Game(name=variables["status"]))
+        print("Set Status to {}".format(variables["status"]))
+    print("-----------------------------------------")
 
     # Outputs the state of loading the modules to the console
     # So I know they have loaded correctly
     print("Loading Modules")
-    print("---------------------------")
+    print("-----------------------------------------")
     bot.load_extension("modules.misc")
     print("Loaded Misc")
     bot.load_extension("modules.moderation")
@@ -52,12 +63,17 @@ async def on_ready():
     print("Loaded Spotify")
     bot.load_extension("modules.admin")
     print("Loaded Admin")
-    print("---------------------------")
+    print("-----------------------------------------")
 
-    with open("config/config.json") as data:
-        bot.config = json.load(data)
-    data.close()
 
+
+
+
+
+# Setting category of commands in core file
+# Because "no category" bothered me
+# I don't know how this works tbh
+# Emoticon told me what to do
 def get_category(self):
     if self.instance is not None:
         return type(self.instance).__name__
@@ -66,7 +82,6 @@ def get_category(self):
             return self._category
         except AttributeError:
             return None
-
 
 def set_category(self, category):
     self._category = category
@@ -78,12 +93,14 @@ commands.Command.cog_name = property(get_category, set_category)
 @bot.event
 async def on_message(message):
 
+    # Check if user is ignored
     with open("config/ignored.json") as file:
         ignored = json.load(file)
     file.close()
     if message.author.id in ignored:
         return
 
+    # General Ratelimiting
     check = await rates.check(command="general", id=message.author.id, timer=bot.config["settings"]["ratelimit"])
     if check is False:
         return
