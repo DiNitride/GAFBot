@@ -8,7 +8,12 @@ class Config():
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(pass_context=True)
+    @commands.group()
+    async def config(self):
+        """Offers server config commands"""
+
+
+    @config.command(pass_context=True)
     @commands.check(checks.is_admin)
     async def logging(self, ctx):
         """Turns logging on or off in the desired channel
@@ -51,7 +56,7 @@ class Config():
                                    .format(data[server.id]["logging"], channel.name, server.name))
                 return
 
-    @commands.command(pass_context=True)
+    @config.command(pass_context=True)
     @commands.check(checks.is_admin)
     async def join_role(self, ctx, role = None):
         """Turns the role on join system on and selects role
