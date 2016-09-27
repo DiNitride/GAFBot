@@ -86,11 +86,16 @@ class Moderation():
     @commands.check(checks.perm_manage_messages)
     async def purge(self, ctx, amount: int = None, user: discord.User = None):
         """Removes a specified amount of messages, either from a specific user or all.
-        Usage, $purge 100 @User"""
+        Usage, $purge 100 @User
+        Limit: 150"""
         channel = ctx.message.channel
 
         if amount is None:
             amount = 100
+
+        if ctx.message.author.id != self.bot.config["ids"]["owner"]:
+            if amount > 150:
+                amount = 150
 
         def check_user(m):
             return m.author == user
@@ -100,8 +105,13 @@ class Moderation():
         else:
             purged = await self.bot.purge_from(channel, limit=amount, check=check_user)
 
-        await self.bot.say("Removed {0} messages by {1.name}".format(len(purged), user))
-        print("Removed {0} messages by {1} from #{2} on {3}".format(len(purged), user.name, channel.name, channel.server.name))
+        if user is None:
+            output = "Removed {0} messages".format(len(purged))
+        else:
+            output = "Removed {0} messages by {1.name}".format(len(purged), user)
+
+        await self.bot.say(output)
+        print(output, "from #{2} on {3}".format(len(purged), user, channel.name, channel.server.name))
 
 
 

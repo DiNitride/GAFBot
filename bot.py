@@ -27,12 +27,8 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print("-----------------------------------------")
-
-    # Changes the bot's game to default
-    with open("config/variables.json") as data:
-        variables = json.load(data)
-        await bot.change_status(discord.Game(name=variables["status"]))
-        print("Set Status to {}".format(variables["status"]))
+    await bot.change_status(discord.Game(name="Long Live GAF"))
+    print("Set Status to Long Live GAF")
     print("-----------------------------------------")
 
     # Outputs the state of loading the modules to the console
@@ -64,11 +60,6 @@ async def on_ready():
     bot.load_extension("modules.admin")
     print("Loaded Admin")
     print("-----------------------------------------")
-
-
-
-
-
 
 # Setting category of commands in core file
 # Because "no category" bothered me
