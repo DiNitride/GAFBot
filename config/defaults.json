@@ -1,0 +1,6 @@
+{
+    "logging" : false,
+    "log_channel" : "",
+    "role_on_join" : false,
+    "join_role" : ""
+}

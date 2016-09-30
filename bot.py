@@ -19,7 +19,6 @@ async def on_ready():
     # Load config file
     with open("config/config.json") as data:
         bot.config = json.load(data)
-    data.close()
 
     # Outputs login data to console
     print("-----------------------------------------")
@@ -27,7 +26,7 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print("-----------------------------------------")
-    await bot.change_status(discord.Game(name="Long Live GAF"))
+    await bot.change_presence(game=discord.Game(name="Long Live GAF"))
     print("Set Status to Long Live GAF")
     print("-----------------------------------------")
 
@@ -78,8 +77,6 @@ def set_category(self, category):
     self._category = category
 
 commands.Command.cog_name = property(get_category, set_category)
-
-
 
 @bot.event
 async def on_message(message):
@@ -184,67 +181,44 @@ async def botinfo():
 @bot.event
 async def on_member_join(member):
     server = member.server
-    if not setting.is_in_data(server):
-        await bot.say("Failed to initialise server file")
-        return
-    with open("config/serversettings.json") as file:
-        data = json.load(file)
-        if server.id in data:
-            if data[server.id]["logging"] is True:
-                fmt = '**{0.name}** joined {1.name}'
-                channel = discord.Object(data[server.id]["log_channel"])
-                await bot.send_message(channel, fmt.format(member, server))
-                print(fmt.format(member, server))
-            if data[server.id]["role_on_join"] is True:
-                role = discord.Object(data[server.id]["join_role"])
-                await bot.add_roles(member, role)
+    if setting.retrieve(server, "logging") is True:
+        fmt = '**{0.name}** joined {1.name}'
+        channel = discord.Object(setting.retrieve(server, "log_channel"))
+        await bot.send_message(channel, fmt.format(member, server))
+        print(fmt.format(member, server))
+    if setting.retrieve(server, "role_on_join") is True:
+        role = discord.Object(setting.retrieve(server, "join_role"))
+        await bot.add_roles(member, role)
 
 # Displays a message when a user leaves the server
 @bot.event
 async def on_member_remove(member):
     server = member.server
-    if not setting.is_in_data(server):
-        await bot.say("Failed to initialise server file")
-        return
-    with open("config/serversettings.json") as file:
-        data = json.load(file)
-        if data[server.id]["logging"] is True:
-            fmt = '**{0.name}** left {1.name}'
-            channel = discord.Object(data[server.id]["log_channel"])
-            await bot.send_message(channel, fmt.format(member, server))
-            print(fmt.format(member, server))
-        else:
-            return
+    if setting.retrieve(server, "logging") is True:
+        fmt = '**{0.name}** left {1.name}'
+        channel = discord.Object(setting.retrieve(server, "log_channel"))
+        await bot.send_message(channel, fmt.format(member, server))
+        print(fmt.format(member, server))
+
 
 # Displays a message when a user is banned
 @bot.event
 async def on_member_ban(member):
     server = member.server
-    if not setting.is_in_data(server):
-        await bot.say("Failed to initialise server file")
-        return
-    with open("config/serversettings.json") as file:
-        data = json.load(file)
-        if data[server.id]["logging"] is True:
-            fmt = '**{0.name}** was banned from {1.name}'
-            channel = discord.Object(data[server.id]["log_channel"])
-            await bot.send_message(channel, fmt.format(member, server))
-            print(fmt.format(member, server))
+    if setting.retrieve(server, "logging") is True:
+        fmt = '**{0.name}** was banned from {1.name}'
+        channel = discord.Object(setting.retrieve(server, "log_channel"))
+        await bot.send_message(channel, fmt.format(member, server))
+        print(fmt.format(member, server))
 
 # Displays a message when a user is unbanned
 @bot.event
-async def on_member_unban(member):
-    server = member.server
-    if not setting.is_in_data(server):
-        await bot.say("Failed to initialise server file")
-        return
-    with open("config/serversettings.json") as file:
-        data = json.load(file)
-        if data[server.id]["logging"] is True:
-            fmt = '**{0.name}** was unbanned from {1.name}'
-            channel = discord.Object(data[server.id]["log_channel"])
-            await bot.send_message(channel, fmt.format(member, server))
-            print(fmt.format(member, server))
+async def on_member_unban(server, member):
+    if setting.retrieve(server, "logging") is True:
+        fmt = '**{0.name}** was unbanned from {1.name}'
+        channel = discord.Object(setting.retrieve(server, "log_channel"))
+        await bot.send_message(channel, fmt.format(member, server))
+        print(fmt.format(member, server))
 
 
 #################################

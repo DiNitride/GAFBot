@@ -78,7 +78,6 @@ class Overwatch():
         medals_bronze = stats["game_stats"]["medals_bronze"]
         medals_gold = stats["game_stats"]["medals_gold"]
         medals_silver = stats["game_stats"]["medals_silver"]
-        multikill = stats["game_stats"]["multikill"]
         objective_kills = stats["game_stats"]["objective_kills"]
         objective_time = stats["game_stats"]["objective_time"]
         solo_kills = stats["game_stats"]["solo_kills"]
@@ -94,18 +93,17 @@ class Overwatch():
                            "Deaths: {6}\n"
                            "Kills to Deaths: {7}\n"
                            "Environmental Deaths: {8}\n"
-                           "Enviromental Kills: {9}\n"
-                           "Healing Done: {10}\n"
+                           "Healing Done: {9}\n"
                            "Medals:\n"
-                           "Total: {11}\n"
-                           "Gold: {12}\n"
-                           "Silver: {13}\n"
-                           "Bronze: {14}\n"
-                           "Objective Kills: {15}\n"
-                           "Objective Time: {16}\n"
-                           "Time Played: {17}\n"
-                           "Games Won: {18}\n"
-                           "```".format(battlenet, damage_done, eliminations, final_blows, multikill,
+                           "Total: {10}\n"
+                           "Gold: {11}\n"
+                           "Silver: {12}\n"
+                           "Bronze: {13}\n"
+                           "Objective Kills: {14}\n"
+                           "Objective Time: {15}\n"
+                           "Time Played: {16}\n"
+                           "Games Won: {17}\n"
+                           "```".format(battlenet, damage_done, eliminations, final_blows,
                                                     solo_kills, deaths, kpd, environmental_deaths, environmental_kill,
                                                     healing_done, medals, medals_gold, medals_silver, medals_bronze,
                                                     objective_kills, objective_time, time_played, games_won))
@@ -179,7 +177,6 @@ class Overwatch():
         medals_bronze = stats["game_stats"]["medals_bronze"]
         medals_gold = stats["game_stats"]["medals_gold"]
         medals_silver = stats["game_stats"]["medals_silver"]
-        multikill = stats["game_stats"]["multikill"]
         objective_kills = stats["game_stats"]["objective_kills"]
         objective_time = stats["game_stats"]["objective_time"]
         solo_kills = stats["game_stats"]["solo_kills"]
@@ -190,23 +187,22 @@ class Overwatch():
                            "Damage Done: {1}\n"
                            "Eliminations: {2}\n"
                            "Final Blows: {3}\n"
-                           "Multikills: {4}\n"
-                           "Solo Kills: {5}\n"
-                           "Deaths: {6}\n"
-                           "Kills to Deaths: {7}\n"
-                           "Environmental Deaths: {8}\n"
-                           "Enviromental Kills: {9}\n"
-                           "Healing Done: {10}\n"
+                           "Solo Kills: {4}\n"
+                           "Deaths: {5}\n"
+                           "Kills to Deaths: {6}\n"
+                           "Environmental Deaths: {7}\n"
+                           "Enviromental Kills: {8}\n"
+                           "Healing Done: {9}\n"
                            "Medals:\n"
-                           "Total: {11}\n"
-                           "Gold: {12}\n"
-                           "Silver: {13}\n"
-                           "Bronze: {14}\n"
-                           "Objective Kills: {15}\n"
-                           "Objective Time: {16}\n"
-                           "Time Played: {17}\n"
-                           "Games Won: {18}\n"
-                           "```".format(battlenet, damage_done, eliminations, final_blows, multikill,
+                           "Total: {10}\n"
+                           "Gold: {11}\n"
+                           "Silver: {12}\n"
+                           "Bronze: {13}\n"
+                           "Objective Kills: {14}\n"
+                           "Objective Time: {15}\n"
+                           "Time Played: {16}\n"
+                           "Games Won: {17}\n"
+                           "```".format(battlenet, damage_done, eliminations, final_blows,
                                         solo_kills, deaths, kpd, environmental_deaths, environmental_kill,
                                         healing_done, medals, medals_gold, medals_silver, medals_bronze,
                                         objective_kills, objective_time, time_played, games_won))
