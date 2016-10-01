@@ -44,7 +44,7 @@ class Admin():
 
     @servers.command()
     @commands.check(checks.is_owner)
-    async def invite(self, *server: str = None):
+    async def invite(self, *server: str):
         """Creates a server invite"""
         server = discord.utils.get(self.bot.servers, name=server)
         if server is None:
