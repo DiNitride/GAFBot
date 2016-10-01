@@ -18,12 +18,12 @@ class Admin():
         print("Updated Bot's status to {}".format(status))
 
     # Lists bot's servers
-    @commands.check(checks.is_admin)
     @commands.group()
     async def servers(self):
         """Manages the servers the bot is in"""
 
     @servers.command()
+    @commands.check(checks.is_owner)
     async def list(self):
         """Lists the servers the bot is in"""
         list = []
@@ -33,7 +33,8 @@ class Admin():
 
     # Makes the bot leave a server
     @servers.command()
-    async def leave(self, *, server: str):
+    @commands.check(checks.is_owner)
+    async def leave(self, *server: str):
         """Leaves a server the bot is in"""
         server = discord.utils.get(self.bot.servers, name=server)
         if server is None:
@@ -42,7 +43,8 @@ class Admin():
         await self.bot.leave_server(server)
 
     @servers.command()
-    async def invite(self, *, server: str = None):
+    @commands.check(checks.is_owner)
+    async def invite(self, *server: str = None):
         """Creates a server invite"""
         server = discord.utils.get(self.bot.servers, name=server)
         if server is None:
