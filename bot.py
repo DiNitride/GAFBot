@@ -110,6 +110,7 @@ async def updateprofile():
     # Loads and sets the bot's profile image
     with open("logo.jpg","rb") as logo:
         await bot.edit_profile(avatar=logo.read())
+    print("Update Bot's image")
 
 @bot.command(hidden=True)
 @commands.check(checks.is_owner)
@@ -127,12 +128,14 @@ async def ignore(user: discord.Member = None):
                 save = json.dumps(ignored)
                 file.write(save)
             await bot.say("User {0} ignored :no_entry_sign:".format(user.name))
+            print("Ignored {0}".format(user.name))
         else:
             ignored.remove(user.id)
             with open("config/ignored.json", "w") as file:
                 save = json.dumps(ignored)
                 file.write(save)
             await bot.say("User {0} unignored :white_check_mark:".format(user.name))
+            print("Unignored {0}".format(user.name))
 
 # Greet command
 # Also for testing the response of the bot
@@ -160,19 +163,34 @@ async def ping():
 async def server():
     """The bot's server, for updates or something"""
     await bot.say("https://discord.gg/Eau7uhf")
-    print("Run: Server")
+    print("Out: Bot Server")
 
 # Bot's source code
 @bot.command()
 async def source():
     """Source code"""
     await bot.say("https://github.com/DiNitride/GAFBot")
-    print("Run: Source")
+    print("Out: Source Code")
 
 @bot.command()
-async def botinfo():
+async def about():
     """Info on the bot"""
-    await bot.say("""```xl\nOwner: DiNitride\nGithub: https://github.com/DiNitride/GAFBot\nServer: https://discord.gg/Eau7uhf\n```""")
+    list = []
+    for x in bot.servers:
+        list.append(x.name)
+
+    await bot.say("Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written by "
+                  "DiNitride, through many hours of hard work and swearing at my PC.\n"
+                  "I'm kind of like a spork, I'm multifunctional, but still kind of shit. "
+                  "Something you get for novelty rather than functionality.\n\n"
+                  "**Owner:** DiNitride\n"
+                  "**Github:** <https://github.com/DiNitride/GAFBot>\n"
+                  "**Server:** https://discord.gg/Eau7uhf\n"
+                  "**Servers:** {}\n"
+                  "**Invite Link:** "
+                  "<https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>"
+                  .format(len(list)))
+
 
 #############
 ## Logging ##
@@ -228,7 +246,7 @@ async def on_member_unban(server, member):
 
 bot.get_command("help").cog_name = "..Core.."
 bot.get_command("server").cog_name = "..Core.."
-bot.get_command("botinfo").cog_name = "..Core.."
+bot.get_command("about").cog_name = "..Core.."
 bot.get_command("source").cog_name = "..Core.."
 bot.get_command("ping").cog_name = "Fuck Fuzen"
 

@@ -15,7 +15,7 @@ class Admin():
         # Update the bots game
         await self.bot.change_status(discord.Game(name=status))
         await self.bot.say("Status updated to {}".format(status))
-        print("Updated Bot's status to {}".format(status))
+        print("Exec: Updated Bot's status to {}".format(status))
 
     # Lists bot's servers
     @commands.group()
@@ -30,6 +30,7 @@ class Admin():
         for x in self.bot.servers:
             list.append(x.name)
         await self.bot.say(list)
+        print("Exec: Server list")
 
     # Makes the bot leave a server
     @servers.command()
@@ -41,6 +42,8 @@ class Admin():
             await self.bot.say("No server found")
             return
         await self.bot.leave_server(server)
+        print("Exec: Left Server {}".format(server.name))
+
 
     @servers.command()
     @commands.check(checks.is_owner)
