@@ -4,7 +4,7 @@
 ###### About
 GAF Bot was originally written as a bot just for the GAF Gaming Community, however the bot can be used on other servers
 
-###### Features and to-do
+###### Features
 - [x] Get a working bot lmao
 - [x] Tag system
 - [x] Basic Moderation tools
@@ -14,6 +14,10 @@ GAF Bot was originally written as a bot just for the GAF Gaming Community, howev
 - [x] CS:GO Stats
 - [x] Server logging
 - [x] RSS Feed for GAF Announcements and Subreddit posts
+- [x] Guild management
+- [x] GAF Module
+
+###### To-do
 - [ ] Diablo 3 Stats
 - [ ] Role subscription module
 - [ ] Further moderation commands
@@ -23,8 +27,6 @@ GAF Bot was originally written as a bot just for the GAF Gaming Community, howev
 - [ ] eSports Notifcations
 - [ ] Google command
 - [ ] Music playback from YouTube / Soundcloud etc.
-- [ ] GAF Module
-- [ ] Guild management
 - [ ] Overwatch Stats
 
 ###### Requirements
