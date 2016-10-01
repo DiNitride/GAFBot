@@ -22,47 +22,18 @@ class Config():
         server = ctx.message.server
         channel = ctx.message.channel
 
-        if setting.retrieve(server, "logging"):
-            setting.edit(server, "logging", False)
-            setting.edit(server, "log_channel", "")
+        if self.bot.settings.retrieve(server, "logging"):
+            self.bot.settings.edit(server, "logging", False)
+            self.bot.settings.edit(server, "log_channel", "")
             await self.bot.say("Logging disabled for **{0}**".format(server.name))
             return
 
         else:
-            setting.edit(server, "logging", True)
-            setting.edit(server, "log_channel", channel.id)
+            self.bot.settings.edit(server, "logging", True)
+            self.bot.settings.edit(server, "log_channel", channel.id)
             await self.bot.say("Logging set to **{0}** in channel **{1}** for **{2}**:pencil: "
-                               .format(setting.retrieve(server, "logging"), channel.name, server.name))
+                               .format(self.bot.settings.retrieve(server, "logging"), channel.name, server.name))
             return
-
-        # # Open file
-        # with open("config/serversettings.json") as file:
-        #     data = json.load(file)
-        #
-        #     # If logging is active in channel > Disable
-        #     if channel.id == data[server.id]["log_channel"]:
-        #         data[server.id]["logging"] = False
-        #         data[server.id]["log_channel"] = ""
-        #         await self.bot.say("Logging disabled for **{0}**".format(server.name))
-        #
-        #         with open("config/serversettings.json", "w") as edit:
-        #             save = json.dumps(data)
-        #             edit.write(save)
-        #
-        #         return
-        #
-        #     # Change channel to new channel
-        #     else:
-        #         data[server.id]["logging"] = True
-        #         data[server.id]["log_channel"] = channel.id
-        #
-        #         with open("config/serversettings.json", "w") as edit:
-        #             save = json.dumps(data)
-        #             edit.write(save)
-        #
-        #         await self.bot.say("Logging set to **{0}** in channel **{1}** for **{2}**:pencil: "
-        #                            .format(data[server.id]["logging"], channel.name, server.name))
-        #         return
 
     @config.command(pass_context=True)
     @commands.check(checks.is_admin)
@@ -76,7 +47,7 @@ class Config():
         server = ctx.message.server
 
         if role.lower() == "false":
-            setting.edit(server, "role_on_join", False)
+            self.bot.settings.edit(server, "role_on_join", False)
             await self.bot.say("Role on join disabled for {0.name} :pencil:".format(server))
             return
 
@@ -87,8 +58,8 @@ class Config():
             await self.bot.say("No role found.\n(This is case sensitive, it may help if you @mention the role)")
             return
         else:
-            setting.edit(server, "role_on_join", True)
-            setting.edit(server, "join_role", role.id)
+            self.bot.settings.edit(server, "role_on_join", True)
+            self.bot.settings.edit(server, "join_role", role.id)
             await self.bot.say("Role {0.name} will be granted to users as they join {1.name}".format(role, server))
             return
 
