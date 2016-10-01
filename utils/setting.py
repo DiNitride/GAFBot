@@ -7,46 +7,41 @@ with open("config/defaults.json") as data:
 
 config = "config/serversettings.json"
 
-# Checks if the server has a config file
-# Makes one if not
-def check(server):
-    with open(config) as file:
-        data = json.load(file)
-        if server.id in data:
+
+class Settings():
+
+    def __init__(self):
+        with open("config/serversettings.json") as data:
+            self.settings = json.load(data)
+
+    # Checks if the server has a config file
+    # Makes one if not
+    def check(self, server):
+        if server.id in self.settings:
             return True
         else:
 
             try:
-                with open(config, "w") as file:
-                    data[server.id] = default
-                    save = json.dumps(data)
-                    file.write(save)
-                    return True
+                self.settings[server.id] = default
+                return True
             except Exception():
                 return False
 
-# Retrieves the value of an option from the config
-def retrieve(server: discord.Server, option: str):
-    if check(server):
-        with open(config) as file:
-            data = json.load(file)
+    # Retrieves the value of an option from the config
+    def retrieve(self, server: discord.Server, option: str):
+        if self.check(server):
             try:
-                out = data[server.id][option]
+                out = self.settings[server.id][option]
             except KeyError:
                 try:
-                    data[server.id][option] = default[option]
+                    self.settings[server.id][option] = default[option]
                 except KeyError:
                     return False
-                out = data[server.id][option]
+                out = self.settings[server.id][option]
             return out
 
-# Edits the value of an option in config
-def edit(server: discord.Server, option: str, new):
-    if check(server):
-        with open(config) as file:
-            data = json.load(file)
-            data[server.id][option] = new
-        with open(config, "w") as edit:
-            save = json.dumps(data)
-            edit.write(save)
-        return True
+    # Edits the value of an option in config
+    def edit(self, server: discord.Server, option: str, new):
+        if self.check(server):
+            self.settings[server.id][option] = new
+            return True

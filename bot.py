@@ -20,6 +20,8 @@ async def on_ready():
     with open("config/config.json") as data:
         bot.config = json.load(data)
 
+    bot.settings = setting.Settings()
+
     # Outputs login data to console
     print("-----------------------------------------")
     print('Logged in as')
@@ -181,22 +183,22 @@ async def botinfo():
 @bot.event
 async def on_member_join(member):
     server = member.server
-    if setting.retrieve(server, "logging") is True:
+    if bot.settings.retrieve(server, "logging") is True:
         fmt = '**{0.name}** joined {1.name}'
-        channel = discord.Object(setting.retrieve(server, "log_channel"))
+        channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
         await bot.send_message(channel, fmt.format(member, server))
         print(fmt.format(member, server))
-    if setting.retrieve(server, "role_on_join") is True:
-        role = discord.Object(setting.retrieve(server, "join_role"))
+    if bot.settings.retrieve(server, "role_on_join") is True:
+        role = discord.Object(bot.settings.retrieve(server, "join_role"))
         await bot.add_roles(member, role)
 
 # Displays a message when a user leaves the server
 @bot.event
 async def on_member_remove(member):
     server = member.server
-    if setting.retrieve(server, "logging") is True:
+    if bot.settings.retrieve(server, "logging") is True:
         fmt = '**{0.name}** left {1.name}'
-        channel = discord.Object(setting.retrieve(server, "log_channel"))
+        channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
         await bot.send_message(channel, fmt.format(member, server))
         print(fmt.format(member, server))
 
@@ -205,18 +207,18 @@ async def on_member_remove(member):
 @bot.event
 async def on_member_ban(member):
     server = member.server
-    if setting.retrieve(server, "logging") is True:
+    if bot.settings.retrieve(server, "logging") is True:
         fmt = '**{0.name}** was banned from {1.name}'
-        channel = discord.Object(setting.retrieve(server, "log_channel"))
+        channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
         await bot.send_message(channel, fmt.format(member, server))
         print(fmt.format(member, server))
 
 # Displays a message when a user is unbanned
 @bot.event
 async def on_member_unban(server, member):
-    if setting.retrieve(server, "logging") is True:
+    if bot.settings.retrieve(server, "logging") is True:
         fmt = '**{0.name}** was unbanned from {1.name}'
-        channel = discord.Object(setting.retrieve(server, "log_channel"))
+        channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
         await bot.send_message(channel, fmt.format(member, server))
         print(fmt.format(member, server))
 
