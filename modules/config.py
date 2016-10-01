@@ -32,7 +32,7 @@ class Config():
             self.bot.settings.edit(server, "logging", True)
             self.bot.settings.edit(server, "log_channel", channel.id)
             await self.bot.say("Logging set to **{0}** in channel **{1}** for **{2}**:pencil: "
-                               .format(setting.retrieve(server, "logging"), channel.name, server.name))
+                               .format(self.bot.settings.retrieve(server, "logging"), channel.name, server.name))
             return
 
     @config.command(pass_context=True)

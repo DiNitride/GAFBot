@@ -81,7 +81,6 @@ class Moderation():
             "```")
         print("Provide server info for {0}".format(server.name))
 
-
     @commands.command(pass_context=True)
     @commands.check(checks.perm_manage_messages)
     async def purge(self, ctx, amount: int = None, user: discord.User = None):

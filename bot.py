@@ -134,7 +134,6 @@ async def ignore(user: discord.Member = None):
                 file.write(save)
             await bot.say("User {0} unignored :white_check_mark:".format(user.name))
 
-
 # Greet command
 # Also for testing the response of the bot
 # Was originally a trial for me learning how to mention people

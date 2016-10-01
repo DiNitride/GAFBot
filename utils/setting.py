@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord
 import json
+import asyncio
 
 with open("config/defaults.json") as data:
     default = json.load(data)
@@ -8,11 +9,13 @@ with open("config/defaults.json") as data:
 config = "config/serversettings.json"
 
 
-class Settings():
+class Settings:
 
     def __init__(self):
         with open("config/serversettings.json") as data:
             self.settings = json.load(data)
+
+        asyncio.Task(self.save())
 
     # Checks if the server has a config file
     # Makes one if not
@@ -45,3 +48,12 @@ class Settings():
         if self.check(server):
             self.settings[server.id][option] = new
             return True
+
+    async def save(self):
+        while True:
+            save = json.dumps(self.settings)
+            with open("config/serversettings.json", "w") as data:
+                data.write(save)
+            print("Saved Server Config to disk")
+            await asyncio.sleep(60)
+
