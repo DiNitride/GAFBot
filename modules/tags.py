@@ -11,6 +11,9 @@ class Tags():
     @commands.command(hidden=True)
     @commands.check(checks.is_owner)
     async def rmtag(self, command: str):
+        """Removes a tag
+        Usage:
+        $rmtag tag"""
         with open("config/tags.json") as file:
             tags = json.load(file)
             file.close()
@@ -33,7 +36,9 @@ class Tags():
     @commands.command()
     @commands.check(checks.is_owner)
     async def tags(self):
-        """Lists the tags availible to output"""
+        """Lists the tags added
+        Usage:
+        $tags"""
         with open("config/tags.json") as file:
             tags = json.load(file)
             taglist = "```Tags:"
@@ -46,7 +51,11 @@ class Tags():
     @commands.command()
     @commands.check(checks.is_owner)
     async def tag(self, input : str, *, output : str = None):
-        """Adds or displays a tag"""
+        """Adds or displays a tag
+        Usage:
+        $tag tag_name tag_data
+        If 'tag_name' is a saved tag it will display that, else it will
+        create a new tag using 'tag_data'"""
         with open("config/tags.json") as file:
             tags = json.load(file)
             if input in tags:

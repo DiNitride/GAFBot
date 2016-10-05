@@ -13,7 +13,9 @@ class CSGO():
 
     @commands.command(pass_context=True)
     async def veto(self, ctx, user_1: discord.User = None, user_2: discord.User = None):
-        """Starts a CS:GO map veto. Uses the current active duty maps"""
+        """Starts a CS:GO map veto. Uses the current active duty maps
+        Usage:
+        $veto @TeamLeader1 @TeamLeader2"""
 
         channel = ctx.message.channel
         author = ctx.message.channel
@@ -135,7 +137,9 @@ class CSGO():
 
     @commands.command()
     async def csgostats(self, id):
-        """Player stats for Counter Strike: Global Offensive. ID must be Steam ID or Vanity ID"""
+        """Player stats for Counter Strike: Global Offensive. ID must be Steam ID or Vanity ID
+        Usage:
+        $csgostats dinitride"""
         api_url = "http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key={0}&steamid={1}"
         xml_url = "http://steamcommunity.com/id/{0}/?xml=1"
         steam_api_key = self.bot.config["api_keys"]["steam"]

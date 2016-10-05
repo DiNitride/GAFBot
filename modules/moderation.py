@@ -12,7 +12,10 @@ class Moderation():
     @commands.command()
     @commands.check(checks.perm_ban)
     async def ban(self, member: discord.Member = None):
-        """Bans a member"""
+        """Bans a member
+        Usage:
+        $ban @recchan
+        User and bot must both have ban member permissions"""
         # Are they trying to ban nobody? Are they stupid?
         # Why do they have mod powers if they're this much of an idiot?
         if member is None:
@@ -30,7 +33,10 @@ class Moderation():
     @commands.command()
     @commands.check(checks.perm_kick)
     async def kick(self, member: discord.Member = None):
-        """Kicks a member"""
+        """Kicks a member
+        Usage:
+        $kick @recchan
+        User and bot must both have kick member permissions"""
         # Same as above, are they stupid
         if member is None:
             return
@@ -49,7 +55,10 @@ class Moderation():
     # Gives the user some basic info on a user
     @commands.command(pass_context=True)
     async def info(self, ctx, member : discord.Member = None):
-        """Infomation on a user"""
+        """Infomation on a user
+        Usage:
+        $info @DiNitride
+        If no member is specified, it defaults to the sender"""
         if member == None:
             member = ctx.message.author
         await self.bot.say(
@@ -66,7 +75,9 @@ class Moderation():
     # Server Info
     @commands.command(pass_context=True)
     async def serverinfo(self, ctx):
-        """Shows server information"""
+        """Shows server information
+        Usage:
+        $serverinfo"""
         server = ctx.message.server
         afk = server.afk_timeout / 60
         await self.bot.say(
@@ -85,8 +96,10 @@ class Moderation():
     @commands.check(checks.perm_manage_messages)
     async def purge(self, ctx, amount: int = None, user: discord.User = None):
         """Removes a specified amount of messages, either from a specific user or all.
-        Usage, $purge 100 @User
-        Limit: 150"""
+        Usage:
+        $purge 100 @User
+        Limit: 150
+        User and bot must both have manage messages permissions"""
         channel = ctx.message.channel
 
         if amount is None:

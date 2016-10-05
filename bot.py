@@ -5,6 +5,12 @@ from utils import setting
 from utils import checks
 from utils import rates
 
+"""
+GAF Bot - https://github.com/DiNitride/GAFBot
+Written with love by DiNitride
+https://github.com/DiNitride
+"""
+
 # Set's bot's desciption and prefixes in a list
 description = "An autistic bot for an autistic group"
 bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True)
@@ -115,7 +121,9 @@ async def updateprofile():
 @bot.command(hidden=True)
 @commands.check(checks.is_owner)
 async def ignore(user: discord.Member = None):
-    """Ignores a user from using the bot"""
+    """Ignores or uningores a user from using the bot
+    Usage:
+    $ignore @recchan"""
     if user is None:
         return
     if user.id is "95953002774413312":
@@ -143,7 +151,9 @@ async def ignore(user: discord.Member = None):
 # But I couldn't really think of a use so here it is
 @bot.command(pass_context=True, hidden=True)
 async def greet(ctx):
-    """Greets the user"""
+    """Greets the user
+    Usage:
+    $greet"""
     member = ctx.message.author
     server = member.server
     message = "Hello {0.mention}, you're on {1.name}"
@@ -154,27 +164,35 @@ async def greet(ctx):
 # Testing the response of the bot
 @bot.command(pass_context=True)
 async def ping():
-    """Pong"""
+    """Pong
+    Usage:
+    Ask Fuzen"""
     await bot.say("Pong")
     print("Ping Pong")
 
 # Invite link to the bot server
 @bot.command()
 async def server():
-    """The bot's server, for updates or something"""
+    """The bot's server, for updates or something
+    Usage:
+    $server"""
     await bot.say("https://discord.gg/Eau7uhf")
     print("Out: Bot Server")
 
 # Bot's source code
 @bot.command()
 async def source():
-    """Source code"""
+    """Source code
+    Usage:
+    $source"""
     await bot.say("https://github.com/DiNitride/GAFBot")
     print("Out: Source Code")
 
 @bot.command()
 async def about():
-    """Info on the bot"""
+    """Info on the bot
+    Usage:
+    $about"""
     list = []
     for x in bot.servers:
         list.append(x.name)
@@ -190,7 +208,6 @@ async def about():
                   "**Invite Link:** "
                   "<https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>"
                   .format(len(list)))
-
 
 #############
 ## Logging ##
@@ -218,7 +235,6 @@ async def on_member_remove(member):
         channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
         await bot.send_message(channel, fmt.format(member, server))
         print(fmt.format(member, server))
-
 
 # Displays a message when a user is banned
 @bot.event

@@ -17,7 +17,9 @@ class Config():
     @commands.check(checks.is_admin)
     async def logging(self, ctx):
         """Turns logging on or off in the desired channel
-        Logging may only be active in one channel per sever"""
+        Logging may only be active in one channel per sever.
+        Usage:
+        $config logging"""
 
         server = ctx.message.server
         channel = ctx.message.channel
@@ -39,7 +41,8 @@ class Config():
     @commands.check(checks.is_admin)
     async def join_role(self, ctx, role: str = None):
         """Turns the role on join system on and selects role
-        e.g. $join_role Guest
+        Usage:
+        $join_role Guest
         Will grant the role Guest to users as they join
         To disable:
         $join_role False"""

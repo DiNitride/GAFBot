@@ -12,11 +12,11 @@ class Spotify():
 
     @commands.command(pass_context=True)
     async def spotify(self, ctx, *, search):
-        """Searches Spotify for a song.
-               Search by song name, e.g.
-               $spotify songname
-               To specify and artist, us 'by', e.g.
-               $spotify songname by artist"""
+        """Searches Spotify for a song
+        Usage:
+        $spotify song_name
+        To filter by artist, use 'by'
+        $spotify song_name by artist"""
 
         author = ctx.message.author
 
@@ -79,7 +79,9 @@ class Spotify():
 
     @commands.command(pass_context=True)
     async def playlists(self, ctx):
-        """Get's Spotifys daily playlists"""
+        """Get's Spotifys daily playlists
+        Usage:
+        $playlists"""
 
         author = ctx.message.author
         client_id = self.bot.config["api_keys"]["spotify_client"]

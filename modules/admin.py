@@ -11,21 +11,20 @@ class Admin():
     @commands.command(pass_conext=True)
     @commands.check(checks.is_owner)
     async def status(self, *, status: str):
-        """Updates the Bot's status"""
+        """Updates the Bot's status
+        Usage:
+        $status This is my status"""
         # Update the bots game
         await self.bot.change_status(discord.Game(name=status))
         await self.bot.say("Status updated to {}".format(status))
         print("Exec: Updated Bot's status to {}".format(status))
 
     # Lists bot's servers
-    @commands.group()
-    async def servers(self):
-        """Manages the servers the bot is in"""
-
-    @servers.command()
+    @commands.group(invoke_without_command=True)
     @commands.check(checks.is_owner)
-    async def list(self):
-        """Lists the servers the bot is in"""
+    async def servers(self):
+        """Commands for managing what servers the bot is part of
+        Defaults to showing the server list"""
         list = []
         for x in self.bot.servers:
             list.append(x.name)
@@ -36,7 +35,9 @@ class Admin():
     @servers.command()
     @commands.check(checks.is_owner)
     async def leave(self, *server: str):
-        """Leaves a server the bot is in"""
+        """Leaves a server the bot is in
+        Usage:
+        $leave The Never Ending GAF"""
         server = discord.utils.get(self.bot.servers, name=server)
         if server is None:
             await self.bot.say("No server found")
@@ -48,7 +49,9 @@ class Admin():
     @servers.command()
     @commands.check(checks.is_owner)
     async def invite(self, *server: str):
-        """Creates a server invite"""
+        """Creates a server invite
+        Usage:
+        $invite The Never Ending GAF"""
         server = discord.utils.get(self.bot.servers, name=server)
         if server is None:
             await self.bot.say("No server found")

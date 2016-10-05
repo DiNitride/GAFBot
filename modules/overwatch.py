@@ -11,7 +11,9 @@ class Overwatch():
 
     @commands.command()
     async def owavgstats(self, battlenet):
-        """Average player stats for Overwatch"""
+        """Average player stats for an Overwatch user
+        Usage:
+        $owavgstats DiNitride#2961"""
         api_url = "https://owapi.net/api/v2/u/{0}/stats/general"
         battlenet_for_api = battlenet.replace("#","-")
 
@@ -51,7 +53,9 @@ class Overwatch():
 
     @commands.command()
     async def owstats(self, battlenet):
-        """Player stats for Overwatch"""
+        """Player stats for an Overwatch user
+        Usage:
+        $owstats DiNitride#2961"""
         api_url = "https://owapi.net/api/v2/u/{0}/stats/general"
         battlenet_for_api = battlenet.replace("#", "-")
 
@@ -110,7 +114,10 @@ class Overwatch():
 
     @commands.command()
     async def owcompavgstats(self, battlenet):
-        """Average competitive player stats for Overwatch"""
+        """Average competitive player stats for an Overwatch user
+        User must have played at least 1 competitive game
+        Usage:
+        $owcompavgstats DiNitride#2961"""
         api_url = "https://owapi.net/api/v2/u/{0}/stats/competitive"
         battlenet_for_api = battlenet.replace("#", "-")
 
@@ -150,7 +157,10 @@ class Overwatch():
 
     @commands.command()
     async def owcompstats(self, battlenet):
-        """Competitive player stats for Overwatch"""
+        """Competitive player stats for an Overwatch user
+        User must have played at least 1 competitive game
+        Usage:
+        $owcompstats DiNitride#2961"""
         api_url = "https://owapi.net/api/v2/u/{0}/stats/competitive"
         battlenet_for_api = battlenet.replace("#", "-")
 
@@ -206,7 +216,6 @@ class Overwatch():
                                         solo_kills, deaths, kpd, environmental_deaths, environmental_kill,
                                         healing_done, medals, medals_gold, medals_silver, medals_bronze,
                                         objective_kills, objective_time, time_played, games_won))
-
 
 def setup(bot):
     bot.add_cog(Overwatch(bot))

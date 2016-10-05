@@ -9,7 +9,15 @@ class RNG():
     #Rolls a dice
     @commands.command()
     async def dice(self, dice : str):
-        """Rolls a dice in NdN format."""
+        """Rolls a dice in NdN format
+        Usage:
+        $dice NdN
+        NdN Format:
+        First N : Number of dice
+        Second N : Number of sides
+        E.g. 5,6 six sided dice:
+        $dice 5d6
+        """
         try:
             rolls, limit = map(int, dice.split('d'))
             if limit > 200:
@@ -29,7 +37,9 @@ class RNG():
     #the user provides
     @commands.command(pass_context=True, hidden=True)
     async def choice(self, ctx, *, choices : str):
-        """Chooses between options provided."""
+        """Chooses between options provided
+        Usage:
+        $choice A, B, C"""
         choiceslist = choices.split(",")
         member = ctx.message.author
         choice = random.choice(choiceslist)

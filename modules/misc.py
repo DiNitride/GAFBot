@@ -13,7 +13,9 @@ class Misc():
     # so this can stay separate
     @commands.command()
     async def deletthis(self):
-        """Shows a random delet this image."""
+        """Shows a random delet this image
+        Usage:
+        $deletthis"""
         deletthisimages=["http://i.imgur.com/ccC9nzl.jpg",
                          "http://i.imgur.com/o3n6Kms.jpg",
                          "http://i.imgur.com/WK8o9Nr.jpg",
