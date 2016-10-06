@@ -16,6 +16,7 @@ Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written
 - [x] RSS Feed for GAF Announcements and Subreddit posts
 - [x] Guild management
 - [x] GAF Module
+- [x] Overwatch Stats
 
 ###### To-do
 - [ ] Diablo 3 Stats
@@ -27,7 +28,7 @@ Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written
 - [ ] eSports Notifcations
 - [ ] Google command
 - [ ] Music playback from YouTube / Soundcloud etc.
-- [ ] Overwatch Stats
+
 
 ###### Requirements
 - Python 3.5
