@@ -2,6 +2,10 @@ from discord.ext import commands
 import discord
 import json
 import asyncio
+from utils import logging
+
+log = logging.Logging
+
 
 with open("config/defaults.json") as data:
     default = json.load(data)
@@ -54,6 +58,6 @@ class Settings:
             save = json.dumps(self.settings)
             with open("config/serversettings.json", "w") as data:
                 data.write(save)
-            print("Saved Server Config to disk")
+            logging.log("[SYSTEM]", "Saved Server Config to file")
             await asyncio.sleep(60)
 

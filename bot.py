@@ -12,7 +12,16 @@ https://github.com/DiNitride
 """
 
 # Set's bot's desciption and prefixes in a list
-description = "An autistic bot for an autistic group"
+description = """
+Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written by DiNitride,
+through many hours of hard work and swearing at my PC.
+I'm kind of like a spork, I'm multifunctional, but still kind of shit. Something you get for novelty
+rather than functionality.
+
+Owner: DiNitride
+Github: https://github.com/DiNitride/GAFBot
+Invite Link: https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8
+"""
 bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True)
 
 ###################
@@ -42,6 +51,8 @@ async def on_ready():
     # So I know they have loaded correctly
     print("Loading Modules")
     print("-----------------------------------------")
+    bot.load_extension("utils.logging")
+    print("Loaded Logging")
     bot.load_extension("modules.misc")
     print("Loaded Misc")
     bot.load_extension("modules.moderation")
@@ -208,53 +219,6 @@ async def about():
                   "**Invite Link:** "
                   "<https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>"
                   .format(len(list)))
-
-#############
-## Logging ##
-#############
-
-# Displays a message when a user joins the server
-@bot.event
-async def on_member_join(member):
-    server = member.server
-    if bot.settings.retrieve(server, "logging") is True:
-        fmt = '**{0.name}** joined {1.name}'
-        channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
-        await bot.send_message(channel, fmt.format(member, server))
-        print(fmt.format(member, server))
-    if bot.settings.retrieve(server, "role_on_join") is True:
-        role = discord.Object(bot.settings.retrieve(server, "join_role"))
-        await bot.add_roles(member, role)
-
-# Displays a message when a user leaves the server
-@bot.event
-async def on_member_remove(member):
-    server = member.server
-    if bot.settings.retrieve(server, "logging") is True:
-        fmt = '**{0.name}** left {1.name}'
-        channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
-        await bot.send_message(channel, fmt.format(member, server))
-        print(fmt.format(member, server))
-
-# Displays a message when a user is banned
-@bot.event
-async def on_member_ban(member):
-    server = member.server
-    if bot.settings.retrieve(server, "logging") is True:
-        fmt = '**{0.name}** was banned from {1.name}'
-        channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
-        await bot.send_message(channel, fmt.format(member, server))
-        print(fmt.format(member, server))
-
-# Displays a message when a user is unbanned
-@bot.event
-async def on_member_unban(server, member):
-    if bot.settings.retrieve(server, "logging") is True:
-        fmt = '**{0.name}** was unbanned from {1.name}'
-        channel = discord.Object(bot.settings.retrieve(server, "log_channel"))
-        await bot.send_message(channel, fmt.format(member, server))
-        print(fmt.format(member, server))
-
 
 #################################
 ## Changing Command Categories ##
