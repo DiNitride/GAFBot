@@ -8,7 +8,7 @@ def time():
     return datetime.datetime.now().strftime("[%b/%d/%Y %H:%M:%S]")
 
 def log(type: str, message: str):
-    print("{:24} {:25} {}".format(time(), type, message))
+    print("{:24} {:15} {}".format(time(), type, message))
 
 class Logging():
     def __init__(self, bot):
