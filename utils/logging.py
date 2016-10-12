@@ -63,7 +63,7 @@ class Logging():
             content = "Image Attachement: {} {}".format(message.attachments[0]["filename"], message.attachments[0]["url"])
         else:
             content = str(message.content)
-        msg = "{} #{} {} : {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
+        msg = "{} | #{} | {} : {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
         log("[MSG RECIEVE]", msg)
 
     async def on_message_delete(self, message):
@@ -71,11 +71,11 @@ class Logging():
             content = "Image Attachement: {} {}".format(message.attachments[0]["filename"], message.attachments[0]["url"])
         else:
             content = str(message.content)
-        msg = "{} #{} {} : {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
+        msg = "{} | #{} | {} : {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
         log("[MSG DELETE]", msg)
 
     async def on_message_edit(self, message, edit):
-        msg = "{} #{} {} : {} to {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(message.content), str(edit.content))
+        msg = "{} | #{} | {} : {} to {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(message.content), str(edit.content))
         log("[MSG EDIT]", msg)
 
 
