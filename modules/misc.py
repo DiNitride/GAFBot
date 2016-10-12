@@ -26,7 +26,6 @@ class Misc():
                          "http://i.imgur.com/h4mtF8M.jpg"]
         delet=random.choice(deletthisimages)
         await self.bot.say(delet)
-        print("Run: Delete This")
 
     # F to pay resepects
     # This is separate because I want it to be
@@ -46,7 +45,6 @@ class Misc():
     async def f(self):
         """Pay respects"""
         await self.bot.say("Respect")
-        print("F to pay respects")
 
 def setup(bot):
     bot.add_cog(Misc(bot))

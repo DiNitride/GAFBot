@@ -78,8 +78,5 @@ class Logging():
         msg = "{} | #{} | {} : {} to {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(message.content), str(edit.content))
         log("[MSG EDIT]", msg)
 
-
-
-
 def setup(bot):
     bot.add_cog(Logging(bot))

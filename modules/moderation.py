@@ -27,7 +27,6 @@ class Moderation():
         # Bans the user
         await self.bot.ban(member, delete_message_days=1)
         # Prints to console
-        print("{0.name} has been banned".format(member))
 
     # Kicks a member
     @commands.command()
@@ -47,7 +46,6 @@ class Moderation():
         # Kicks the user
         await self.bot.kick(member)
         # Prints to console
-        print("{0.name} has been kicked".format(member))
 
     # Information commands
     # Server info and member info
@@ -70,7 +68,6 @@ class Moderation():
             "Bot?: {0.bot}\n".format(member) +
             "```" +
             "\n{0.avatar_url}".format(member))
-        print("Run: info on {0.name}".format(member))
 
     # Server Info
     @commands.command(pass_context=True)
@@ -90,7 +87,6 @@ class Moderation():
             "AFK Timeout and Channel: {0} minutes in '{1.afk_channel}'\n".format(afk, server) +
             "Member Count: {0.member_count}\n".format(server) +
             "```")
-        print("Provide server info for {0}".format(server.name))
 
     @commands.command(pass_context=True)
     @commands.check(checks.perm_manage_messages)
@@ -123,7 +119,6 @@ class Moderation():
             output = "Removed {0} messages by {1.name}".format(len(purged), user)
 
         await self.bot.say(output)
-        print(output, "from #{2} on {3}".format(len(purged), user, channel.name, channel.server.name))
 
 
 

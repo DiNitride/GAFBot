@@ -23,12 +23,10 @@ class Tags():
                 save = json.dumps(tags)
                 file.write(save)
                 await self.bot.say("Tag %s has been removed :thumbsup:" %command)
-                print("Unregistered tag %s" %command)
             else:
                 save = json.dumps(tags)
                 file.write(save)
                 await self.bot.say("Tag not registered, could not delete :thumbsdown: ")
-                print("Tag unregister error, no tag %s" %command)
 
     # Lists all the tags currently stored
     # Command output looks really ugly
@@ -45,7 +43,6 @@ class Tags():
             for x in tags.keys():
                 taglist = "%s\n- %s" %(taglist, x)
             await self.bot.say("{0} ```".format(taglist))
-            print("Run: Tags Listed")
 
     # Allows the user to find and execute a tags
     @commands.command()
@@ -60,7 +57,6 @@ class Tags():
             tags = json.load(file)
             if input in tags:
                 await self.bot.say(tags[input])
-                print("Run: Tag %s" %input)
             else:
                 with open("config/tags.json", "w") as file:
                     tags[input] = output
@@ -70,7 +66,6 @@ class Tags():
                         await self.bot.say("Tag %s has been added with output <%s> :thumbsup:" % (input, output))
                     else:
                         await self.bot.say("Tag %s has been added with output %s :thumbsup:" % (input, output))
-                    print("Registered tag %s" % input)
 
 def setup(bot):
     bot.add_cog(Tags(bot))

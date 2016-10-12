@@ -127,7 +127,6 @@ async def updateprofile():
     # Loads and sets the bot's profile image
     with open("logo.jpg","rb") as logo:
         await bot.edit_profile(avatar=logo.read())
-    print("Update Bot's image")
 
 @bot.command(hidden=True)
 @commands.check(checks.is_owner)
@@ -147,14 +146,12 @@ async def ignore(user: discord.Member = None):
                 save = json.dumps(ignored)
                 file.write(save)
             await bot.say("User {0} ignored :no_entry_sign:".format(user.name))
-            print("Ignored {0}".format(user.name))
         else:
             ignored.remove(user.id)
             with open("config/ignored.json", "w") as file:
                 save = json.dumps(ignored)
                 file.write(save)
             await bot.say("User {0} unignored :white_check_mark:".format(user.name))
-            print("Unignored {0}".format(user.name))
 
 # Greet command
 # Also for testing the response of the bot
@@ -169,7 +166,6 @@ async def greet(ctx):
     server = member.server
     message = "Hello {0.mention}, you're on {1.name}"
     await bot.say(message.format(member, server))
-    print("Greeted {0.name}".format(member))
 
 # Ping Pong
 # Testing the response of the bot
@@ -179,7 +175,6 @@ async def ping():
     Usage:
     Ask Fuzen"""
     await bot.say("Pong")
-    print("Ping Pong")
 
 # Invite link to the bot server
 @bot.command()
@@ -188,7 +183,6 @@ async def server():
     Usage:
     $server"""
     await bot.say("https://discord.gg/Eau7uhf")
-    print("Out: Bot Server")
 
 # Bot's source code
 @bot.command()
@@ -197,7 +191,6 @@ async def source():
     Usage:
     $source"""
     await bot.say("https://github.com/DiNitride/GAFBot")
-    print("Out: Source Code")
 
 @bot.command()
 async def about():

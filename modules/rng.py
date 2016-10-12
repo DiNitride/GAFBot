@@ -31,7 +31,6 @@ class RNG():
             return
         result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
         await self.bot.say(result)
-        print("Run: Dice")
 
     #Picks a random answer from a list of options
     #the user provides
@@ -53,7 +52,6 @@ class RNG():
             #this outputs messy as fuck and it's disgusting, try it on the server
             message = "{0.mention} asked me to choose between {1}, and I chose {2}"
         await self.bot.say(message.format(member, choiceslist, choice))
-        print("Run: Choice")
 
 def setup(bot):
     bot.add_cog(RNG(bot))
