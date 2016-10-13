@@ -22,7 +22,7 @@ class Logging():
             await self.bot.send_message(channel, fmt.format(member, server))
 
         msg = "{} joined {}".format(member.name, server.name)
-        log("[JOIN]", msg)
+        log("[USER JOIN]", msg)
 
 
         if self.bot.settings.retrieve(server, "role_on_join") is True:
@@ -37,7 +37,7 @@ class Logging():
             await self.bot.send_message(channel, fmt.format(member, server))
 
         msg = "{} left {}".format(member.name, server.name)
-        log("[LEAVE]", msg)
+        log("[USER LEAVE]", msg)
 
     async def on_member_ban(self, member):
         server = member.server
@@ -47,7 +47,7 @@ class Logging():
             await self.bot.send_message(channel, fmt.format(member, server))
 
         msg = "{} was banned from {}".format(member.name, server.name)
-        log("[BAN]", msg)
+        log("[USER BAN]", msg)
 
     async def on_member_unban(self, server, member):
         if self.bot.settings.retrieve(server, "logging") is True:
@@ -56,7 +56,7 @@ class Logging():
             await self.bot.send_message(channel, fmt.format(member, server))
 
         msg = "{} was unbanned from {}".format(member.name, server.name)
-        log("[UNBAN]", msg)
+        log("[USER UNBAN]", msg)
 
     async def on_message(self, message):
         if str(message.content) == "":
@@ -64,18 +64,21 @@ class Logging():
         else:
             content = str(message.content)
         msg = "{} | #{} | {} : {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
-        log("[MSG RECIEVE]", msg)
+        if message.author.id == "173709318133121024" or message.author.id == "195466701360332803":
+            log("[MSG SEND]", msg)
+        else:
+            log("[MSG RECIEVE]", msg)
 
     async def on_message_delete(self, message):
         if str(message.content) == "":
             content = "Image Attachement: {} {}".format(message.attachments[0]["filename"], message.attachments[0]["url"])
         else:
             content = str(message.content)
-        msg = "{} | #{} | {} : {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
+        msg = "{} | #{} | {} : [DEL] {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
         log("[MSG DELETE]", msg)
 
     async def on_message_edit(self, message, edit):
-        msg = "{} | #{} | {} : {} to {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(message.content), str(edit.content))
+        msg = "{} | #{} | {} : {} >> {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(message.content), str(edit.content))
         log("[MSG EDIT]", msg)
 
 def setup(bot):
