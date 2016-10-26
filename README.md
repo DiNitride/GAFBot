@@ -28,6 +28,7 @@ Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written
 - [ ] eSports Notifcations
 - [ ] Google command
 - [ ] Music playback from YouTube / Soundcloud etc.
+- [ ] Database
 
 
 ###### Requirements
