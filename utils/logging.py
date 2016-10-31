@@ -17,9 +17,9 @@ class Logging():
     async def on_member_join(self, member):
         server = member.server
         if self.bot.settings.retrieve(server, "logging") is True:
-            fmt = '**{0.name}** joined {1.name}'
+            fmt = '`{0}` **{1.name}** joined {2.name}'
             channel = discord.Object(self.bot.settings.retrieve(server, "log_channel"))
-            await self.bot.send_message(channel, fmt.format(member, server))
+            await self.bot.send_message(channel, fmt.format(time(), member, server))
 
         msg = "{} joined {}".format(member.name, server.name)
         log("[USER JOIN]", msg)
@@ -32,9 +32,9 @@ class Logging():
     async def on_member_remove(self, member):
         server = member.server
         if self.bot.settings.retrieve(server, "logging") is True:
-            fmt = '**{0.name}** left {1.name}'
+            fmt = '`{0}` **{1.name}** left {2.name}'
             channel = discord.Object(self.bot.settings.retrieve(server, "log_channel"))
-            await self.bot.send_message(channel, fmt.format(member, server))
+            await self.bot.send_message(channel, fmt.format(time(), member, server))
 
         msg = "{} left {}".format(member.name, server.name)
         log("[USER LEAVE]", msg)
@@ -42,18 +42,18 @@ class Logging():
     async def on_member_ban(self, member):
         server = member.server
         if self.bot.settings.retrieve(server, "logging") is True:
-            fmt = '**{0.name}** was banned from {1.name}'
+            fmt = '`{0}` **{1.name}** was banned from {2.name}'
             channel = discord.Object(self.bot.settings.retrieve(server, "log_channel"))
-            await self.bot.send_message(channel, fmt.format(member, server))
+            await self.bot.send_message(channel, fmt.format(time(), member, server))
 
         msg = "{} was banned from {}".format(member.name, server.name)
         log("[USER BAN]", msg)
 
     async def on_member_unban(self, server, member):
         if self.bot.settings.retrieve(server, "logging") is True:
-            fmt = '**{0.name}** was unbanned from {1.name}'
+            fmt = '`{0}` **{1.name}** was unbanned from {2.name}'
             channel = discord.Object(self.bot.settings.retrieve(server, "log_channel"))
-            await self.bot.send_message(channel, fmt.format(member, server))
+            await self.bot.send_message(channel, fmt.format(time(), member, server))
 
         msg = "{} was unbanned from {}".format(member.name, server.name)
         log("[USER UNBAN]", msg)
