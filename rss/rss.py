@@ -20,7 +20,7 @@ class RSS():
                 if post.title not in posted:
                     print("Posted: " + post.title + "\n" + post.link + "\n")
                     channel = discord.Object('172425708507758594')
-                    await self.bot.send_message(channel, "==============================\n@everyone\n*ANNOUNCEMENT*\n**{0.title}**\nRead: {0.link}\n==============================\n".format(post))
+                    await self.bot.send_message(channel, "==============================\n@everyone\n*ANNOUNCEMENT*\n**{0.title}**\nRead: <{0.link}>\n==============================\n".format(post))
                     with open("posted.txt", 'a') as f:
                         f.write(post.title + '\n')
                     f.close()
@@ -36,7 +36,7 @@ class RSS():
                 if post.title not in posted:
                     print("Posted: " + post.title + "\n" + post.link + "\n")
                     channel = discord.Object('172425708507758594')
-                    await self.bot.send_message(channel,"==============================\n*New Reddit Post:*\n**{0.title}**\nRead: {0.link}\n==============================\n".format(post))
+                    await self.bot.send_message(channel,"==============================\n*New Reddit Post:*\n**{0.title}**\nRead: <{0.link}>\n==============================\n".format(post))
                     with open("subreddit.txt", 'a') as f:
                         f.write(post.title + '\n')
                     f.close()
@@ -54,7 +54,7 @@ class RSS():
             if post.title not in posted:
                 print("Posted: " + post.title + "\n" + post.link + "\n")
                 channel = discord.Object('172425708507758594')
-                await self.bot.send_message(channel,"==============================\n@everyone\n*ANNOUNCEMENT*\n**{0.title}**\nRead: {0.link}\n==============================\n".format(post))
+                await self.bot.send_message(channel,"==============================\n@everyone\n*ANNOUNCEMENT*\n**{0.title}**\nRead: <{0.link}>\n==============================\n".format(post))
                 with open("posted.txt", 'a') as f:
                     f.write(post.title + '\n')
                 f.close()
@@ -75,7 +75,7 @@ class RSS():
                 print("Posted: " + post.title + "\n" + post.link + "\n")
                 channel = discord.Object('172425708507758594')
                 await self.bot.send_message(channel,
-                                       "==============================\n*New Reddit Post:*\n**{0.title}**\nRead: {0.link}\n==============================\n".format(
+                                       "==============================\n*New Reddit Post:*\n**{0.title}**\nRead: <{0.link}>\n==============================\n".format(
                                            post))
                 with open("subreddit.txt", 'a') as f:
                     f.write(post.title + '\n')
