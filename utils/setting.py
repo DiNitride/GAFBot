@@ -6,12 +6,8 @@ from utils import logging
 
 log = logging.Logging
 
-
 with open("config/defaults.json") as data:
     default = json.load(data)
-
-config = "config/serversettings.json"
-
 
 class Settings:
 

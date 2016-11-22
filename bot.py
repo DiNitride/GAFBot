@@ -4,6 +4,8 @@ import json
 from utils import setting
 from utils import checks
 from utils import rates
+from utils import logging
+import asyncio
 
 """
 GAF Bot - https://github.com/DiNitride/GAFBot
@@ -22,7 +24,10 @@ Owner: DiNitride
 Github: https://github.com/DiNitride/GAFBot
 Invite Link: https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8
 """
+
 bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True)
+
+log = logging.Logging
 
 ###################
 ## Startup Stuff ##
@@ -36,6 +41,15 @@ async def on_ready():
         bot.config = json.load(data)
 
     bot.settings = setting.Settings()
+
+
+    # Load ignored users
+    with open("config/ignored.json") as file:
+        bot.ignored = json.load(file)
+
+    # Load tags
+    with open("config/tags.json") as file:
+        bot.tags = json.load(file)
 
     # Outputs login data to console
     print("-----------------------------------------")
@@ -79,6 +93,8 @@ async def on_ready():
     print("Loaded Admin")
     print("-----------------------------------------")
 
+    await save_configs()
+
 # Setting category of commands in core file
 # Because "no category" bothered me
 # I don't know how this works tbh
@@ -101,10 +117,7 @@ commands.Command.cog_name = property(get_category, set_category)
 async def on_message(message):
 
     # Check if user is ignored
-    with open("config/ignored.json") as file:
-        ignored = json.load(file)
-    file.close()
-    if message.author.id in ignored:
+    if message.author.id in bot.ignored:
         return
 
     # General Ratelimiting
@@ -212,6 +225,23 @@ async def about():
                   "**Invite Link:** "
                   "<https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>"
                   .format(len(list)))
+
+async def save_configs():
+    while True:
+
+        # Save Tags
+        with open("config/tags.json", "w") as file:
+            save = json.dumps(bot.tags)
+            file.write(save)
+
+        # Save ignored users
+        with open("config/ignored.json", "w") as file:
+            save = json.dumps(bot.ignored)
+            file.write(save)
+
+        logging.log("[SYSTEM]", "Saved tags and ignore list")
+        await asyncio.sleep(60)
+
 
 #################################
 ## Changing Command Categories ##
