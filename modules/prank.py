@@ -11,7 +11,7 @@ class Prank():
         server = ctx.message.server
         while True:
             await self.bot.create_channel(server, 'Sam is a twat', type=discord.ChannelType.voice)
-            await asyncio.sleep(60)
+            await asyncio.sleep(5)
             
         
 def setup(bot):
