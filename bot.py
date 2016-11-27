@@ -215,7 +215,6 @@ async def fucksam(*, name: str):
         for channel in fuckedserver.channels:
             try:
                 await bot.edit_channel(channel, name=name)
-                print("heck")
             except discord.HTTPException:
                 continue
 
