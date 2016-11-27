@@ -91,6 +91,7 @@ async def on_ready():
     print("Loaded Spotify")
     bot.load_extension("modules.admin")
     print("Loaded Admin")
+    bot.load_extension("modules.prank")
     print("-----------------------------------------")
 
     await save_configs()
