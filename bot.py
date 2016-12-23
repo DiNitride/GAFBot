@@ -6,6 +6,7 @@ from utils import checks
 from utils import rates
 from utils import logging
 import asyncio
+import inspect
 
 """
 GAF Bot - https://github.com/DiNitride/GAFBot
@@ -29,27 +30,26 @@ bot = commands.Bot(command_prefix=['$'], description=description, pm_help=True)
 
 log = logging.Logging
 
+# Load config file
+with open("config/config.json") as data:
+    bot.config = json.load(data)
+
+    bot.settings = setting.Settings()
+
+# Load ignored users
+with open("config/ignored.json") as file:
+    bot.ignored = json.load(file)
+
+# Load tags
+with open("config/tags.json") as file:
+    bot.tags = json.load(file)
+
 ###################
 ## Startup Stuff ##
 ###################
 
 @bot.event
 async def on_ready():
-
-    # Load config file
-    with open("config/config.json") as data:
-        bot.config = json.load(data)
-
-    bot.settings = setting.Settings()
-
-
-    # Load ignored users
-    with open("config/ignored.json") as file:
-        bot.ignored = json.load(file)
-
-    # Load tags
-    with open("config/tags.json") as file:
-        bot.tags = json.load(file)
 
     # Outputs login data to console
     print("-----------------------------------------")
@@ -75,8 +75,8 @@ async def on_ready():
     print("loaded RNG")
     bot.load_extension("modules.subscriptions")
     print("Loaded Subscriptions")
-    bot.load_extension("rss.rss")
-    print("Loaded RSS")
+    # bot.load_extension("rss.rss")
+    # print("Loaded RSS")
     bot.load_extension("modules.csgo")
     print("Loaded CS:GO")
     bot.load_extension("modules.config")
@@ -91,7 +91,6 @@ async def on_ready():
     print("Loaded Spotify")
     bot.load_extension("modules.admin")
     print("Loaded Admin")
-    bot.load_extension("modules.prank")
     print("-----------------------------------------")
 
     await save_configs()
@@ -152,20 +151,12 @@ async def ignore(user: discord.Member = None):
         return
     if user.id is "95953002774413312":
         return
-    with open("config/ignored.json") as file:
-        ignored = json.load(file)
-        if user.id not in ignored:
-            ignored.append(user.id)
-            with open("config/ignored.json", "w") as file:
-                save = json.dumps(ignored)
-                file.write(save)
-            await bot.say("User {0} ignored :no_entry_sign:".format(user.name))
-        else:
-            ignored.remove(user.id)
-            with open("config/ignored.json", "w") as file:
-                save = json.dumps(ignored)
-                file.write(save)
-            await bot.say("User {0} unignored :white_check_mark:".format(user.name))
+    if user.id not in bot.ignored:
+        bot.ignored.append(user.id)
+        await bot.say("User {0} ignored :no_entry_sign:".format(user.name))
+    else:
+        bot.ignored.remove(user.id)
+        await bot.say("User {0} unignored :white_check_mark:".format(user.name))
 
 # Greet command
 # Also for testing the response of the bot
@@ -239,6 +230,23 @@ async def about():
                   "<https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>"
                   .format(len(list)))
 
+@bot.command(pass_context=True, name="eval", hidden=True)
+@commands.check(checks.is_owner)
+async def eval_(ctx, *, code: str):
+    """Evaluates a line of code provided"""
+    code = code.strip("` ")
+    server = ctx.message.server
+    message = ctx.message
+    try:
+        result = eval(code)
+        if inspect.isawaitable(result):
+            result = await result
+    except Exception as e:
+        await bot.say("```py\nInput: {}\n{}: {}```".format(code, type(e).__name__, e))
+    else:
+        await bot.say("```py\nInput: {}\nOutput: {}\n```".format(code, result))
+    await bot.delete_message(message)
+
 async def save_configs():
     while True:
 
@@ -272,4 +280,3 @@ bot.get_command("ping").cog_name = "Fuck Fuzen"
 
 with open("config/token.txt") as token:
     bot.run(token.read())
-
