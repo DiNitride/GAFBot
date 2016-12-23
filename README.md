@@ -36,4 +36,4 @@ Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written
 - Discord.py
 - feedparser
 
-###### Lot's of love, DiNitride
+###### Lot's of love, DiNitride xoxo
