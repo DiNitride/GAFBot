@@ -63,7 +63,10 @@ class Logging():
             content = "Image Attachement: {} {}".format(message.attachments[0]["filename"], message.attachments[0]["url"])
         else:
             content = str(message.content)
-        msg = "{} | #{} | {} : {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
+        if message.server == None:
+            msg = "{} | {} : {}".format("PRIVATE MESSAGE", str(message.author), str(content))
+        else:
+            msg = "{} | #{} | {} : {}".format(str(message.server.name), str(message.channel.name), str(message.author), str(content))
         if message.author.id == "173709318133121024" or message.author.id == "195466701360332803":
             log("[MSG SEND]", msg)
         else:
