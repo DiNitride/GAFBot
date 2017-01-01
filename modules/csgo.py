@@ -88,7 +88,7 @@ class CSGO():
                     self.instances.remove(author.id)
                     return
 
-                if veto == "quit":
+                if veto.content == "quit":
                     await self.bot.say("Cancelling veto...")
                     await self.bot.say("Veto cancelled")
                     self.instances.remove(author.id)
