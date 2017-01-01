@@ -61,6 +61,14 @@ class Tags():
 
         tag = tag.lower()
 
+        if "@everyone" in tag:
+            await self.bot.say("No thanks")
+            return
+
+        if "@here" in tag:
+            await self.bot.say("No thanks")
+            return
+
         if tag in self.bot.tags.keys():
             await self.bot.say("A tag already exists with that name")
             return
@@ -71,6 +79,14 @@ class Tags():
 
         if tag_content is None:
             await self.bot.say("Timed out, aborted creating tag :broken_heart:")
+            return
+
+        if "@everyone" in tag_content.content:
+            await self.bot.say("No thanks")
+            return
+
+        if "@here" in tag_content.content:
+            await self.bot.say("No thanks")
             return
 
         await self.bot.delete_message(ctx.message)
