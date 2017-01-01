@@ -6,7 +6,7 @@ from utils import logging
 
 log = logging.Logging
 
-with open("config/defaults.json") as data:
+with open("config/server_setting_defaults.json") as data:
     default = json.load(data)
 
 class Settings:

@@ -73,7 +73,10 @@ class Overwatch():
         deaths = stats["game_stats"]["deaths"]
         eliminations = stats["game_stats"]["eliminations"]
         environmental_deaths = stats["game_stats"]["environmental_deaths"]
-        environmental_kill = stats["game_stats"]["environmental_kill"]
+        try:
+            environmental_kill = stats["game_stats"]["environmental_kill"]
+        except KeyError:
+            environmental_kill = 0
         final_blows = stats["game_stats"]["final_blows"]
         games_won = stats["game_stats"]["games_won"]
         healing_done = stats["game_stats"]["healing_done"]
@@ -178,7 +181,10 @@ class Overwatch():
         deaths = stats["game_stats"]["deaths"]
         eliminations = stats["game_stats"]["eliminations"]
         environmental_deaths = stats["game_stats"]["environmental_deaths"]
-        environmental_kill = stats["game_stats"]["environmental_kill"]
+        try:
+            environmental_kill = stats["game_stats"]["environmental_kill"]
+        except KeyError:
+            environmental_kill = 0
         final_blows = stats["game_stats"]["final_blows"]
         games_won = stats["game_stats"]["games_won"]
         healing_done = stats["game_stats"]["healing_done"]

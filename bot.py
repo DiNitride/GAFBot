@@ -57,8 +57,12 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print("-----------------------------------------")
-    await bot.change_presence(game=discord.Game(name="Long Live GAF"))
-    print("Set Status to Long Live GAF")
+    if bot.user.id == "195466701360332803":
+        await bot.change_presence(game=discord.Game(name="Development"))
+        print("Set Status to Development")
+    else:
+        await bot.change_presence(game=discord.Game(name="Long Live GAF"))
+        print("Set Status to Long Live GAF")
     print("-----------------------------------------")
 
     # Outputs the state of loading the modules to the console
@@ -197,18 +201,6 @@ async def source():
     $source"""
     await bot.say("https://github.com/DiNitride/GAFBot")
 
-
-@bot.command()
-@commands.check(checks.is_owner)
-async def fucksam(*, name: str):
-    fuckedserver = bot.get_server("186530718560681984")
-    while True:
-        for channel in fuckedserver.channels:
-            try:
-                await bot.edit_channel(channel, name=name)
-            except discord.HTTPException:
-                continue
-
 @bot.command()
 async def about():
     """Info on the bot
@@ -278,5 +270,13 @@ bot.get_command("ping").cog_name = "Fuck Fuzen"
 ## FANCY TOKEN LOGIN STUFFS ##
 ##############################
 
-with open("config/token.txt") as token:
-    bot.run(token.read())
+print("Logging into dev account")
+try:
+    with open("dev_token.txt") as token:
+        bot.run(token.read())
+except FileNotFoundError:
+    print("Logging into main account")
+    token = bot.config["api_keys"]["discord"]
+    bot.run(token)
+
+print("Logging out of bot")
