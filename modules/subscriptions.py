@@ -15,8 +15,11 @@ class Subscriptions():
         self.archageoptions = ['243851872262160384', "aa", "archage", "Archeage"]
         self.diablooptions = ['239751503877767168', "diablo", "d3", "Diablo III"]
         self.rustoptions = ['221901793246969857', 'rust', 'Rust']
+        self.gtaoptions = ['268121332590444556', 'gta', 'gtav', 'gtao', 'GTA V Online']
+        self.tosooptions = ['268493563631894538', 'tos', 'town', 'Town of Salem']
+        self.ps2options = ['268493413140267019', 'planetside', 'ps2', 'Planetside 2']
 
-        self.allOptions = [self.csgooptions, self.owoptions, self.archageoptions, self.diablooptions, self.rustoptions]
+        self.allOptions = [self.csgooptions, self.owoptions, self.archageoptions, self.diablooptions, self.rustoptions, self.gtaoptions, self.ps2options, self.tosooptions]
 
         # Creates a string of availible games to Subscribe to
         listStr = ""

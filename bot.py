@@ -14,7 +14,7 @@ Written with love by DiNitride
 https://github.com/DiNitride
 """
 
-# Set's bot's desciption and prefixes in a list
+# Set's bot's description and prefixes in a list
 description = """
 Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written by DiNitride,
 through many hours of hard work and swearing at my PC.
