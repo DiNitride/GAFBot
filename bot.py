@@ -1,3 +1,10 @@
+"""
+GAF Bot - https://github.com/DiNitride/GAFBot
+Written with love by DiNitride
+https://github.com/DiNitride
+"""
+
+# Fine china imports
 import discord
 from discord.ext import commands
 import json
@@ -7,12 +14,6 @@ from utils import rates
 from utils import logging
 import asyncio
 import inspect
-
-"""
-GAF Bot - https://github.com/DiNitride/GAFBot
-Written with love by DiNitride
-https://github.com/DiNitride
-"""
 
 # Set's bot's description and prefixes in a list
 description = """
