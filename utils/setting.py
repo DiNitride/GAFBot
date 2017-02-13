@@ -51,9 +51,10 @@ class Settings:
 
     async def save(self):
         while True:
+            await asyncio.sleep(60)
             save = json.dumps(self.settings)
             with open("config/serversettings.json", "w") as data:
                 data.write(save)
             logging.log("[SYSTEM]", "Saved Server Config to file")
-            await asyncio.sleep(60)
+
 
