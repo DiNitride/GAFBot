@@ -15,6 +15,8 @@ from utils import logging
 import asyncio
 import inspect
 
+print(discord.__version__)
+
 # Set's bot's description and prefixes in a list
 description = """
 Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written by DiNitride,
@@ -96,6 +98,7 @@ async def on_ready():
     print("Loaded Spotify")
     bot.load_extension("modules.admin")
     print("Loaded Admin")
+    bot.load_extension("modules.voice")
     print("-----------------------------------------")
 
     await save_configs()
@@ -242,7 +245,7 @@ async def eval_(ctx, *, code: str):
 
 async def save_configs():
     while True:
-
+        await asyncio.sleep(60)
         # Save Tags
         with open("config/tags.json", "w") as file:
             save = json.dumps(bot.tags)
@@ -254,7 +257,7 @@ async def save_configs():
             file.write(save)
 
         logging.log("[SYSTEM]", "Saved tags and ignore list")
-        await asyncio.sleep(60)
+
 
 
 #################################

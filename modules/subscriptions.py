@@ -20,8 +20,10 @@ class Subscriptions():
         self.ps2options = ['268493413140267019', 'planetside', 'ps2', 'Planetside 2']
         self.r6soptions = ['274901339610415104', 'r6s', 'rainbow 6 siege', 'Rainbow 6 Siege']
         self.dayzoptions = ['243852627195068416', 'dayz', 'DayZ']
+        self.armaoptions = ['289020320688373762', 'arma', 'Arma 3']
+        self.bboptions = ['284691346172936194', 'blood bowl', 'bloodbowl', 'bb', 'Blood Bowl 2']
 
-        self.allOptions = [self.csgooptions, self.owoptions, self.archageoptions, self.diablooptions, self.rustoptions, self.gtaoptions, self.ps2options, self.tosooptions, self.r6soptions, self.dayzoptions]
+        self.allOptions = [self.csgooptions, self.owoptions, self.archageoptions, self.diablooptions, self.rustoptions, self.gtaoptions, self.ps2options, self.tosooptions, self.r6soptions, self.dayzoptions, self.armaoptions, self.bboptions]
 
         # Creates a string of availible games to Subscribe to
         listStr = ""
