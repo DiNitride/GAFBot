@@ -1,0 +1,8 @@
+{
+  "loggingOn": false,
+  "loggingChannel": "",
+  "welcomeOn": false,
+  "welcomeChannel": "",
+  "prefix": "$",
+  "roles": {}
+}

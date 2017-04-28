@@ -13,3 +13,5 @@ config/tags.json
 desktop.ini
 dev_token.txt
 Rum.mp3
+bot/config/modules.json
+bot/config/serverSettings.db
