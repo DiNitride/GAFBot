@@ -20,10 +20,12 @@ class Config:
                        "You can set a new one with `{}prefix set 'new_prefix'`".format(server["prefix"], server["prefix"]))
         self.bot.cmd_log(ctx, "Prefix check")
 
-    @prefix.command()
+    @prefix.command(name="set")
     @checks.perms_manage_guild()
-    async def set(self, ctx, *, new_prefix: str):
+    async def _set(self, ctx, new_prefix: str):
         """Updates the bot's prefix"""
+        if new_prefix is None:
+            return
         server = await self.bot.get_server_data(ctx.guild.id)
         server["prefix"] = new_prefix
         await self.bot.update_prefix_cache(ctx.guild.id, new_prefix)
