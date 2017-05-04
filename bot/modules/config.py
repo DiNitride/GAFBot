@@ -12,8 +12,8 @@ class Config:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(invoke_without_command=True)
-    async def prefix(self, ctx):
+    @commands.group(name="prefix", invoke_without_command=True)
+    async def _prefix(self, ctx):
         """Show's prefix"""
         server = await self.bot.get_server_data(ctx.guild.id)
         await ctx.send("The prefix for the bot on this server is: `{}`\n"
