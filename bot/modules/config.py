@@ -12,8 +12,8 @@ class Config:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(name="prefix", invoke_without_command=True)
-    async def _prefix(self, ctx):
+    @commands.group(invoke_without_command=True)
+    async def prefix(self, ctx):
         """Show's prefix"""
         server = await self.bot.get_server_data(ctx.guild.id)
         await ctx.send("The prefix for the bot on this server is: `{}`\n"
@@ -22,14 +22,14 @@ class Config:
 
     @prefix.command()
     @checks.perms_manage_guild()
-    async def set(self, ctx, *, prefix: str):
+    async def set(self, ctx, *, new_prefix: str):
         """Updates the bot's prefix"""
         server = await self.bot.get_server_data(ctx.guild.id)
-        server["prefix"] = prefix
-        await self.bot.update_prefix_cache(ctx.guild.id, prefix)
+        server["prefix"] = new_prefix
+        await self.bot.update_prefix_cache(ctx.guild.id, new_prefix)
         await self.bot.update_server_data(ctx.guild.id, server)
         await ctx.send("Updated bot prefix to: {}".format(server["prefix"]))
-        self.bot.cmd_log(ctx, "Prefix updated to {}".format(prefix))
+        self.bot.cmd_log(ctx, "Prefix updated to {}".format(new_prefix))
 
     @commands.group(invoke_without_command=True)
     async def logging(self, ctx):
