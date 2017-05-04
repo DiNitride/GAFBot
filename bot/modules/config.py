@@ -22,7 +22,7 @@ class Config:
 
     @prefix.command()
     @checks.perms_manage_guild()
-    async def set(self, ctx, *, new_prefix: str):
+    async def set(self, ctx, *new_prefix: str):
         """Updates the bot's prefix"""
         server = await self.bot.get_server_data(ctx.guild.id)
         server["prefix"] = new_prefix
