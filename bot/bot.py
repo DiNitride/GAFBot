@@ -8,6 +8,7 @@ import sys
 import inspect
 import sqlite3
 import asyncio
+from utils import checks
 
 StreamHandler(sys.stdout).push_application()
 log = Logger("GAF Bot")
@@ -55,31 +56,44 @@ if not exists[0]:
     c.execute('''CREATE TABLE serverSettings (id bigint, settings long)''')
     log.notice("Settings table did not exist, created new table")
 
-async def _get_server_data(server_id):
+async def get_server_data(server_id):
     c.execute("SELECT * FROM serverSettings WHERE id=?", (server_id,))
     _data = c.fetchone()
     if _data is None:
-        c.execute("INSERT INTO serverSettings VALUES (?, ?)", (server_id, default_server_settings))
+        c.execute("INSERT INTO serverSettings VALUES (?, ?)", (server_id, json.dumps(default_server_settings)))
         conn.commit()
         return default_server_settings
     s_settings = json.loads(_data[1])
     return s_settings
 
-async def _update_server_data(server_id, json_blob):
+async def update_server_data(server_id, json_blob):
     save_data = json.dumps(json_blob)
-    c.execute("UPDATE serverSettings SET settings='?' WHERE id=?", (save_data, server_id))
+    c.execute("UPDATE serverSettings SET settings=? WHERE id=?", (save_data, server_id))
     conn.commit()
 
 _prefixes = {}
 
-async def get_prefix(self, ctx):
+async def get_prefix(_bot, ctx):
+    r = [_bot.user.mention + " ", "<@!{}s> ".format(_bot.user.id)]
     if ctx.guild.id in _prefixes:
-        return _prefixes[ctx.guild.id]
+        r.append(_prefixes[ctx.guild.id])
+        return r
     else:
-        settings = await _get_server_data(ctx.guild.id)
-        print(settings)
+        settings = await get_server_data(ctx.guild.id)
         _prefixes[ctx.guild.id] = settings["prefix"]
-        return _prefixes[ctx.guild.id]
+        r.append(_prefixes[ctx.guild.id])
+        return r
+
+async def update_prefix_cache(guild_id: int, prefix: str):
+    _prefixes[guild_id] = prefix
+
+async def get_prefix_via_id(guild_id):
+    if guild_id in _prefixes:
+        return _prefixes[guild_id]
+    else:
+        settings = await get_server_data(guild_id)
+        _prefixes[guild_id] = settings["prefix"]
+        return _prefixes[guild_id]
 
 description = """Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written by DiNitride,
                 through many hours of hard work and swearing at my PC.
@@ -96,6 +110,11 @@ bot.log.info("Config linked to bot")
 bot.modules = _modules
 bot.log.info("Module loading linked to bot")
 
+bot.get_server_data = get_server_data
+bot.update_server_data = update_server_data
+bot.update_prefix_cache = update_prefix_cache
+
+
 def command_debug_message(ctx, name):
     if isinstance(ctx.channel, discord.DMChannel):
         bot.log.debug("Command: {} run in DM's by user {}/{}".format(name, ctx.author, ctx.author.id))
@@ -108,19 +127,29 @@ def command_debug_message(ctx, name):
 
 bot.cmd_log = command_debug_message
 
+
 @bot.event
 async def on_ready():
     bot.log.notice("Logged in as {} with ID {}".format(bot.user.name, bot.user.id))
     _users = 0
     _channels = 0
-    for user in bot.get_all_members():
+    for x in bot.get_all_members():
         _users += 1
-    for channel in bot.get_all_channels():
+    for x in bot.get_all_channels():
         _channels += 1
     bot.log.notice("I can see {} users in {} channels on {} guilds".format(_users, _channels, len(bot.guilds)))
 
+    # Load Modules
+    bot.load_extension("modules.config")
+    bot.log.notice("Loaded Config Module")
+    bot.load_extension("modules.stats")
+    bot.log.notice("Loaded Statistics Module")
+    bot.load_extension("modules.roles")
+    bot.log.notice("Loaded Roles Module")
+
 
 @bot.command()
+@checks.is_owner()
 async def ping(ctx):
     """Pong"""
     before = time.monotonic()
@@ -130,4 +159,8 @@ async def ping(ctx):
     await ctx.send("Ping Pong :ping_pong: **{0:.0f}ms**".format(_ping))
     bot.cmd_log(ctx, "Ping Pong")
 
-bot.run(bot.config["token"])
+
+try:
+    bot.run(bot.config["token"])
+except discord.errors.LoginFailure:
+    bot.log.critical("Improper token passed, quitting process")

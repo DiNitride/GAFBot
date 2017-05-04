@@ -1,70 +1,100 @@
 import discord
 from discord.ext import commands
-import json
 from utils import checks
-from utils import setting
+import datetime
 
-class Config():
+
+def time():
+    return datetime.datetime.now().strftime("[%b/%d/%Y %H:%M:%S]")
+
+
+class Config:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group()
-    async def config(self):
-        """Offers server config commands"""
+    @commands.group(invoke_without_command=True)
+    async def prefix(self, ctx):
+        """Show's prefix"""
+        server = await self.bot.get_server_data(ctx.guild.id)
+        await ctx.send("The prefix for the bot on this server is: `{}`\n"
+                       "You can set a new one with `{}prefix set 'new_prefix'`".format(server["prefix"], server["prefix"]))
+        self.bot.cmd_log(ctx, "Prefix check")
 
+    @prefix.command()
+    @checks.perms_manage_guild()
+    async def set(self, ctx, *, prefix: str):
+        """Updates the bot's prefix"""
+        server = await self.bot.get_server_data(ctx.guild.id)
+        server["prefix"] = prefix
+        await self.bot.update_prefix_cache(ctx.guild.id, prefix)
+        await self.bot.update_server_data(ctx.guild.id, server)
+        await ctx.send("Updated bot prefix to: {}".format(server["prefix"]))
+        self.bot.cmd_log(ctx, "Prefix updated to {}".format(prefix))
 
-    @config.command(pass_context=True)
-    @commands.check(checks.is_admin)
+    @commands.group(invoke_without_command=True)
     async def logging(self, ctx):
-        """Turns logging on or off in the desired channel
-        Logging may only be active in one channel per sever.
-        Usage:
-        $config logging"""
-
-        server = ctx.message.server
-        channel = ctx.message.channel
-
-        if self.bot.settings.retrieve(server, "logging"):
-            self.bot.settings.edit(server, "logging", False)
-            self.bot.settings.edit(server, "log_channel", "")
-            await self.bot.say("Logging disabled for **{0}**".format(server.name))
-            return
-
+        """Shows status of server logging"""
+        server = await self.bot.get_server_data(ctx.guild.id)
+        if server["loggingOn"] is False:
+            await ctx.send("`Logging for this server is turned off`")
         else:
-            self.bot.settings.edit(server, "logging", True)
-            self.bot.settings.edit(server, "log_channel", channel.id)
-            await self.bot.say("Logging set to **{0}** in channel **{1}** for **{2}**:pencil: "
-                               .format(self.bot.settings.retrieve(server, "logging"), channel.name, server.name))
-            return
+            print(server["loggingChannel"])
+            channel = ctx.guild.get_channel(int(server["loggingChannel"]))
+            await ctx.send("`Logging for this server is turned on in channel #{}`".format(channel))
+        self.bot.cmd_log(ctx, "Logging check")
 
-    @config.command(pass_context=True)
-    @commands.check(checks.is_admin)
-    async def join_role(self, ctx, role: str = None):
-        """Turns the role on join system on and selects role
-        Usage:
-        $join_role Guest
-        Will grant the role Guest to users as they join
-        To disable:
-        $join_role False"""
+    @logging.command()
+    @checks.perms_manage_guild()
+    async def enable(self, ctx):
+        server = await self.bot.get_server_data(ctx.guild.id)
+        if server["loggingChannel"] == "":
+            channel = ctx.channel.id
+        server["loggingOn"] = True
+        await self.bot.update_server_data(ctx.guild.id, server)
+        await ctx.send("`Logging has been enabled`")
+        self.bot.cmd_log(ctx, "Server logging enabled")
 
-        server = ctx.message.server
+    @logging.command()
+    @checks.perms_manage_guild()
+    async def disable(self, ctx):
+        server = await self.bot.get_server_data(ctx.guild.id)
+        server["loggingOn"] = False
+        await self.bot.update_server_data(ctx.guild.id, server)
+        await ctx.send("`Logging has been disabled`")
+        self.bot.cmd_log(ctx, "Server logging disabled")
 
-        if role.lower() == "false":
-            self.bot.settings.edit(server, "role_on_join", False)
-            await self.bot.say("Role on join disabled for {0.name} :pencil:".format(server))
-            return
+    @logging.command()
+    @checks.perms_manage_guild()
+    async def set(self, ctx):
+        server = await self.bot.get_server_data(ctx.guild.id)
+        server["loggingChannel"] = ctx.channel.id
+        await self.bot.update_server_data(ctx.guild.id, server)
+        await ctx.send("`Logging channel has been set to #{}`".format(ctx.channel))
 
-        # Search for role
-        role = discord.utils.find(lambda m: m.name == role, server.roles)
-        # Return if nothing is found
-        if role is None:
-            await self.bot.say("No role found.\n(This is case sensitive, it may help if you @mention the role)")
-            return
-        else:
-            self.bot.settings.edit(server, "role_on_join", True)
-            self.bot.settings.edit(server, "join_role", role.id)
-            await self.bot.say("Role {0.name} will be granted to users as they join {1.name}".format(role, server))
-            return
+    async def on_member_join(self, member):
+        server = await self.bot.get_server_data(member.guild.id)
+        if server["loggingOn"] is True:
+            channel = member.guild.get_channel(server["loggingChannel"])
+            await channel.send("`{}` **{}** joined {}".format(time(), member, member.guild))
+
+    async def on_member_remove(self, member):
+        server = await self.bot.get_server_data(member.guild.id)
+        if server["loggingOn"] is True:
+            channel = member.guild.get_channel(server["loggingChannel"])
+            await channel.send("`{}` **{}** left {}".format(time(), member, member.guild))
+
+    async def on_member_ban(self, member):
+        server = await self.bot.get_server_data(member.guild.id)
+        if server["loggingOn"] is True:
+            channel = member.guild.get_channel(server["loggingChannel"])
+            await channel.send("`{}` **{}** was banned from {}".format(time(), member, member.guild))
+
+    async def on_member_unban(self, guild, user):
+        server = await self.bot.get_server_data(guild.id)
+        if server["loggingOn"] is True:
+            channel = guild.get_channel(server["loggingChannel"])
+            await channel.send("`{}` **{}** was unbanned from {}".format(time(), user, guild))
+
 
 def setup(bot):
     bot.add_cog(Config(bot))

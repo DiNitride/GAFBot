@@ -2,75 +2,95 @@ from discord.ext import commands
 import discord
 import json
 
-with open("config/config.json") as data:
-    config = json.load(data)
-data.close()
 
-# Checks if it is bot owner
-def is_owner(ctx):
-    return ctx.message.author.id == config["ids"]["owner"]
+def is_owner_check(ctx):
+    return ctx.message.author.id == 95953002774413312
 
-# Checks if user is an admin
-def is_admin(ctx):
-    if is_owner(ctx):
-        return True
-    message = ctx.message
-    channel = message.channel
-    perms = channel.permissions_for(message.author)
-    return perms.administrator
 
-# Checks specific permissions
-def perm_manage_roles(ctx):
-    if is_owner(ctx):
-        return True
-    message = ctx.message
-    channel = message.channel
-    perms = channel.permissions_for(message.author)
-    return perms.manage_roles
+def is_owner():
+    return commands.check(is_owner_check)
 
-def perm_manager_server(ctx):
-    if is_owner(ctx):
-        return True
-    message = ctx.message
-    channel = message.channel
-    perms = channel.permissions_for(message.author)
-    return perms.manage_server
 
-def perm_manage_messages(ctx):
-    if is_owner(ctx):
-        return True
-    message = ctx.message
-    channel = message.channel
-    perms = channel.permissions_for(message.author)
-    return perms.manage_messages
+def is_admin():
+    def predicate(ctx):
+        if is_owner_check(ctx):
+            return True
+        message = ctx.message
+        channel = message.channel
+        perms = channel.permissions_for(message.author)
+        perms = channel.permissions_for(message.author)
+        return perms.administrator
+    return commands.check(predicate)
 
-def perm_manage_channels(ctx):
-    if is_owner(ctx):
-        return True
-    message = ctx.message
-    channel = message.channel
-    perms = channel.permissions_for(message.author)
-    return perms.manage_channels
 
-def perm_ban(ctx):
-    if is_owner(ctx):
-        return True
-    message = ctx.message
-    channel = message.channel
-    perms = channel.permissions_for(message.author)
-    return perms.ban_members
+def perms_manage_roles():
+    def predicate(ctx):
+        if is_owner_check(ctx):
+            return True
+        message = ctx.message
+        channel = message.channel
+        perms = channel.permissions_for(message.author)
+        return perms.manage_roles
+    return commands.check(predicate)
 
-def perm_kick(ctx):
-    if is_owner(ctx):
-        return True
-    message = ctx.message
-    channel = message.channel
-    perms = channel.permissions_for(message.author)
-    return perms.kick_members
+
+def perms_manage_guild():
+    def predicate(ctx):
+        if is_owner_check(ctx):
+            return True
+        message = ctx.message
+        channel = message.channel
+        perms = channel.permissions_for(message.author)
+        return perms.manage_guild
+    return commands.check(predicate)
+
+
+def perms_manage_messages():
+    def predicate(ctx):
+        if is_owner_check(ctx):
+            return True
+        message = ctx.message
+        channel = message.channel
+        perms = channel.permissions_for(message.author)
+        return perms.manage_messages
+    return commands.check(predicate)
+
+
+def perms_manage_channels():
+    def predicate(ctx):
+        if is_owner_check(ctx):
+            return True
+        message = ctx.message
+        channel = message.channel
+        perms = channel.permissions_for(message.author)
+        return perms.manage_channels
+    return commands.check(predicate)
+
+
+def perms_ban():
+    def predicate(ctx):
+        if is_owner_check(ctx):
+            return True
+        message = ctx.message
+        channel = message.channel
+        perms = channel.permissions_for(message.author)
+        return perms.ban_members
+    return commands.check(predicate)
+
+
+def perms_kick():
+    def predicate(ctx):
+        if is_owner_check(ctx):
+            return True
+        message = ctx.message
+        channel = message.channel
+        perms = channel.permissions_for(message.author)
+        return perms.kick_members
+    return commands.check(predicate)
+
 
 def is_gaf_server():
-    return commands.check(lambda ctx: is_gaf_server_check(ctx.message))
-
-def is_gaf_server_check(message):
-    return message.server.id == '172425299559055381' if message.server is not None else False
+    def predicate(ctx):
+        return ctx.message.guild.id == 172425299559055381
+    return commands.check(predicate)
 
