@@ -1,0 +1,8 @@
+{
+  "statistics": true,
+  "roles": true,
+  "config": true,
+  "admin": true,
+  "moderation": true,
+  "gaf": true
+}
