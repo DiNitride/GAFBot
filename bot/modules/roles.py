@@ -19,6 +19,7 @@ class Roles:
 
     @commands.group(invoke_without_command=True)
     async def roles(self, ctx):
+        """Shows roles on the server that can be assigned"""
         server = await self.bot.get_server_data(ctx.guild.id)
         options = server["roles"]
         if len(options) == 0:
@@ -54,6 +55,7 @@ class Roles:
     @roles.command()
     @checks.perms_manage_roles()
     async def add(self, ctx, role: discord.Role = None):
+        """Adds a role to the list that can be assigned"""
         if role is None:
             return
         if role.position >= ctx.author.top_role.position:
@@ -68,6 +70,7 @@ class Roles:
     @roles.command()
     @checks.perms_manage_roles()
     async def remove(self, ctx, role: discord.Role = None):
+        """Removes a role from the list that can be assigned"""
         if role is None:
             return
         if role.position >= ctx.author.top_role.position:
