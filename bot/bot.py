@@ -30,8 +30,8 @@ try:
         _modules = json.load(f)
     with open("config/defaults/default.modules.json") as df:
         _df_modules = json.load(df)
-    for x in _df_modules.keys():
-        if x not in _modules.keys():
+    for x in list(_df_modules):
+        if x not in list(_modules):
             _modules[x] = _df_modules[x]
     data = json.dumps(_modules)
     with open("config/modules.json", "w") as f:
@@ -167,6 +167,47 @@ async def on_ready():
     bot.log.notice("Loaded Statistics Module")
     bot.load_extension("modules.roles")
     bot.log.notice("Loaded Roles Module")
+    bot.load_extension("modules.admin")
+    bot.log.notice("Loaded Admin Module")
+    bot.load_extension("modules.moderation")
+    bot.log.notice("Loaded Moderation Module")
+
+
+@bot.command()
+async def about(ctx):
+    """Information about GAF Bot"""
+    if ctx.channel.permissions_for(ctx.guild.me).embed_links:
+        embed = discord.Embed(title="Invite me to your server!", colour=discord.Colour(0x35e4fa),
+                              url="https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8",
+                              description="Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py."
+                                          "I was written by DiNitride, through many hours of hard work and swearing "
+                                          "at my PC. I'm kind of like a spork, I'm multifunctional, but still kind of "
+                                          "shit. Something you get for novelty rather than functionality.",
+                              timestamp=datetime.datetime.utcfromtimestamp(1493993514))
+
+        embed.set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
+
+        embed.add_field(name="Source Code", value="https://github.com/DiNitride/GAFBot")
+        embed.add_field(name="Author", value="GAF Bot is written and maintained by DiNitride#7899")
+        embed.add_field(name="Discord.py Version", value=discord.__version__)
+        embed.add_field(name="The Never Ending GAF", value="GAF Bot is the bot of the awful community known as "
+                                                           "The Never Ending GAF, which you can find out about at "
+                                                           "http://www.neverendinggaf.com")
+
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send("**Hi!** I'm GAF Bot, a Discord bot written in Python using Discord.py."
+                       "I was written by DiNitride, through many hours of hard work and swearing at my PC. "
+                       "*I'm kind of like a spork, I'm multifunctional, but still kind of shit.*"
+                       "Something you get for novelty rather than functionality.\n"
+                        "GAF Bot is the bot of the awful community known as **The Never Ending GAF**, "
+                       "which you can find out about at <http://www.neverendinggaf.com>\n"
+                       "**Invite link:** <https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>\n"
+                       "**Author:** DiNitride#7899\n"
+                       "**Source Code:** <https://github.com/DiNitride/GAFBot>"
+                       )
+    bot.cmd_log(ctx, "Bot Info")
 
 
 @bot.command()

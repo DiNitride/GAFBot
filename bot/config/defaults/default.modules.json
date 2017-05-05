@@ -1,5 +1,7 @@
 {
   "statistics": true,
   "roles": true,
-  "config": true
+  "config": true,
+  "admin": true,
+  "moderation": true
 }
