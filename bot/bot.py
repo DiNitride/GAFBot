@@ -171,6 +171,8 @@ async def on_ready():
     bot.log.notice("Loaded Admin Module")
     bot.load_extension("modules.moderation")
     bot.log.notice("Loaded Moderation Module")
+    bot.load_extension("modules.gaf")
+    bot.log.notice("Loaded GAF Module")
 
 
 @bot.command()

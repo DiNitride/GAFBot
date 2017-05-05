@@ -3,5 +3,6 @@
   "roles": true,
   "config": true,
   "admin": true,
-  "moderation": true
+  "moderation": true,
+  "gaf": true
 }
