@@ -11,6 +11,7 @@ class Statistics:
 
     @commands.command()
     async def scout(self, ctx):
+        """GAF Bot, what do your elf eyes see?"""
         _users = 0
         _channels = 0
         for user in self.bot.get_all_members():
