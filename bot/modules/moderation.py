@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils import checks
 
 
 class Moderation:
@@ -11,6 +12,7 @@ class Moderation:
         self.xban.enabled = bot.modules["moderation"]
 
     @commands.command()
+    @checks.perms_ban()
     async def ban(self, ctx, user: discord.Member, delete_days=1):
         """Bans a user from the guild"""
         self.bot.cmd_log(ctx, "ban")
@@ -21,6 +23,7 @@ class Moderation:
             self.bot.log.notice("Kicked {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
+    @checks.perms_ban()
     async def xban(self, ctx, user_id: int):
         """Allows the banning of a user not int he guild via ID"""
         # Stolen from Joku
@@ -38,6 +41,7 @@ class Moderation:
         self.bot.cmd_log(ctx, "xban")
 
     @commands.command()
+    @checks.perms_kick()
     async def kick(self, ctx, user: discord.Member):
         """Kicks a user from the guild"""
         self.bot.cmd_log(ctx, "kick")
