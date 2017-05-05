@@ -4,5 +4,7 @@
   "welcomeOn": false,
   "welcomeChannel": "",
   "prefix": "$",
-  "roles": {}
+  "roles": {},
+  "modules": {},
+  "tags": {}
 }

@@ -1,1 +1,5 @@
-{}
+{
+  "statistics": true,
+  "roles": true,
+  "config": true
+}

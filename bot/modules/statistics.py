@@ -4,8 +4,10 @@ from utils import checks
 
 
 class Statistics:
+
     def __init__(self, bot):
         self.bot = bot
+        self.scout.enabled = bot.modules["statistics"]
 
     @commands.command()
     async def scout(self, ctx):

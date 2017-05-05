@@ -24,6 +24,7 @@ except FileNotFoundError:
     with open("config/config.json", "w") as f:
         log.info("Saved new config to file")
         f.write(json.dumps(_config))
+
 try:
     with open("config/modules.json") as f:
         _modules = json.load(f)
@@ -42,6 +43,7 @@ except FileNotFoundError:
     with open("config/modules.json", "w") as f:
         log.info("Saved module loading to file")
         f.write(json.dumps(_modules))
+
 log.notice("Loading default server settings")
 with open("config/defaults/default.serverconfig.json") as f:
     default_server_settings = json.load(f)
@@ -64,6 +66,15 @@ async def get_server_data(server_id):
         conn.commit()
         return default_server_settings
     s_settings = json.loads(_data[1])
+    for x in default_server_settings.keys():
+        if x not in s_settings.keys():
+            s_settings[x] = default_server_settings[x]
+    for m in _modules.keys():
+        if m not in s_settings["modules"]:
+            s_settings["modules"][m] = _modules[m]
+    save_data = json.dumps(s_settings)
+    c.execute("UPDATE serverSettings SET settings=? WHERE id=?", (save_data, server_id))
+    conn.commit()
     return s_settings
 
 async def update_server_data(server_id, json_blob):
@@ -100,7 +111,7 @@ description = """Hi! I'm GAF Bot, a Discord bot written in Python using Discord.
                 I'm kind of like a spork, I'm multifunctional, but still kind of shit. Something you get for novelty
                 rather than functionality."""
 
-bot = commands.Bot(command_prefix=get_prefix, description=description)
+bot = commands.Bot(command_prefix=get_prefix, description=description, pm_help=True)
 
 log.info("Transferring configuration data to bot")
 bot.log = log
@@ -127,6 +138,16 @@ def command_debug_message(ctx, name):
 
 bot.cmd_log = command_debug_message
 
+async def check_command(ctx):
+    server = await bot.get_server_data(ctx.guild.id)
+    module = ctx.command.cog_name
+    if module is None:
+        return True
+    module = module.lower()
+    return server["modules"][module]
+
+bot.add_check(check_command)
+
 
 @bot.event
 async def on_ready():
@@ -142,7 +163,7 @@ async def on_ready():
     # Load Modules
     bot.load_extension("modules.config")
     bot.log.notice("Loaded Config Module")
-    bot.load_extension("modules.stats")
+    bot.load_extension("modules.statistics")
     bot.log.notice("Loaded Statistics Module")
     bot.load_extension("modules.roles")
     bot.log.notice("Loaded Roles Module")
@@ -159,6 +180,80 @@ async def ping(ctx):
     await ctx.send("Ping Pong :ping_pong: **{0:.0f}ms**".format(_ping))
     bot.cmd_log(ctx, "Ping Pong")
 
+async def save_module_loading():
+    _data = json.dumps(bot.modules)
+    with open("config/modules.json", "w") as f:
+        f.write(_data)
+        bot.log.notice("Saved module list")
+
+
+@bot.event
+async def on_command_error(error, ctx):
+    if isinstance(error, discord.ext.commands.errors.DisabledCommand):
+        await ctx.message.delete()
+        bot.log.error("Disabled command")
+
+
+@bot.command(name="eval")
+@checks.is_owner()
+async def _eval(ctx, code):
+    """Evaluates a line of code provided"""
+    heck = "off"
+    hel = "yea"
+    fuck = "off"
+    code = code.strip("` ")
+    try:
+        result = eval(code)
+        if inspect.isawaitable(result):
+            result = await result
+    except Exception as e:
+        await ctx.send("```py\nInput: {}\n{}: {}```".format(code, type(e).__name__, e))
+    else:
+        await ctx.send("```py\nInput: {}\nOutput: {}\n```".format(code, result))
+    await ctx.message.delete()
+    bot.cmd_log(ctx, "Evaluation")
+
+
+@bot.command(name="load")
+@checks.is_owner()
+async def _load(ctx, extension: str):
+    """Enables a module"""
+    extension = extension.lower()
+    if extension not in bot.modules.keys():
+        bot.log.error("Tried to enable module {} but it is not a valid module".format(extension))
+        await ctx.send("Invalid module")
+        bot.cmd_log(ctx, "Attempted to enable invalid module")
+    else:
+        bot.modules[extension] = True
+        bot.log.debug("Unloading extension")
+        bot.unload_extension("modules." + extension)
+        bot.log.debug("Loading extension")
+        bot.load_extension("modules." + extension)
+        bot.log.notice("Enabled Module")
+        await ctx.send("Enabled Module")
+        await save_module_loading()
+        bot.cmd_log(ctx, "Enabled module {}".format(extension))
+
+
+@bot.command(name="unload")
+@checks.is_owner()
+async def _unload(ctx, extension: str):
+    """Disables a module"""
+    extension = extension.lower()
+    if extension not in bot.modules.keys():
+        bot.log.error("Tried to disable module {} but it is not a valid module".format(extension))
+        await ctx.send("Invalid module")
+        bot.cmd_log(ctx, "Attempted to disable invalid module")
+    else:
+        bot.modules[extension] = False
+        bot.log.debug("Unloading extension")
+        bot.unload_extension("modules." + extension)
+        bot.log.debug("Loading extension")
+        bot.load_extension("modules." + extension)
+        bot.log.notice("Disabled module {}".format(extension))
+        await ctx.send("Disabled Module")
+        await save_module_loading()
+        bot.cmd_log(ctx, "Disabled module {}".format(extension))
 
 try:
     bot.run(bot.config["token"])
