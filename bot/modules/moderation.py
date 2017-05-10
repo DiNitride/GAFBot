@@ -10,6 +10,7 @@ class Moderation:
         self.ban.enabled = bot.modules["moderation"]
         self.kick.enabled = bot.modules["moderation"]
         self.xban.enabled = bot.modules["moderation"]
+        self.purge.enabled = bot.modules["moderation"]
 
     @commands.command()
     @checks.perms_ban()
@@ -48,6 +49,25 @@ class Moderation:
         if user:
             await ctx.guild.kick(user)
             self.bot.log.notice("Kicked {} from {}".format(user, ctx.guild.name))
+
+    @commands.command()
+    @checks.perms_manage_messages()
+    async def purge(self, ctx, limit: int, user: discord.Member = None):
+        """Purges messages from a channel"""
+        def predicate(m):
+            return m.author == user
+        if ctx.message.author.id != 95953002774413312:
+            if limit > 100:
+                limit = 100
+        if user is None:
+            messages = await ctx.channel.purge(limit=limit, check=None)
+            await ctx.send("Purged {} messages in #{}".format(len(messages), ctx.channel))
+            self.bot.log.notice("Purged {} messages in #{}".format(len(messages), ctx.channel))
+        else:
+            messages = await ctx.channel.purge(limit=limit, check=predicate)
+            await ctx.send("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
+            self.bot.log.notice("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
+        self.bot.cmd_log(ctx, "Purged messages")
 
 
 def setup(bot):

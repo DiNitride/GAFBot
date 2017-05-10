@@ -1,13 +1,14 @@
-import discord
-from discord.ext import commands
 import json
 import datetime
 import time
-from logbook import Logger, StreamHandler
 import sys
 import inspect
 import sqlite3
-import asyncio
+
+import discord
+from discord.ext import commands
+from logbook import Logger, StreamHandler
+
 from utils import checks
 
 StreamHandler(sys.stdout).push_application()
@@ -230,11 +231,11 @@ async def save_module_loading():
         bot.log.notice("Saved module list")
 
 
-@bot.event
-async def on_command_error(error, ctx):
-    if isinstance(error, discord.ext.commands.errors.DisabledCommand):
-        await ctx.message.delete()
-        bot.log.error("Disabled command")
+#@bot.event
+# async def on_command_error(error, ctx):
+#     if isinstance(error, discord.ext.commands.errors.DisabledCommand):
+#         await ctx.message.delete()
+#         bot.log.error("Disabled command")
 
 
 @bot.command(name="eval")
@@ -255,6 +256,11 @@ async def _eval(ctx, code):
         await ctx.send("```py\nInput: {}\nOutput: {}\n```".format(code, result))
     await ctx.message.delete()
     bot.cmd_log(ctx, "Evaluation")
+
+
+@bot.command()
+async def f(ctx):
+    await ctx.send("*Respects*")
 
 
 @bot.command(name="load")
