@@ -152,6 +152,7 @@ bot.add_check(check_command)
 
 @bot.event
 async def on_ready():
+    bot.start_time = datetime.datetime.now()
     bot.log.notice("Logged in as {} with ID {}".format(bot.user.name, bot.user.id))
     _users = 0
     _channels = 0
