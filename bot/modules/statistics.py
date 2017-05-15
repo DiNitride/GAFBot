@@ -14,13 +14,10 @@ class Statistics:
     @commands.command()
     async def scout(self, ctx):
         """GAF Bot, what do your elf eyes see?"""
-        _users = 0
-        _channels = 0
-        for user in self.bot.get_all_members():
-            _users += 1
-        for channel in self.bot.get_all_channels():
-            _channels += 1
-        await ctx.send("I can see {} users in {} channels on {} guilds".format(_users, _channels, len(self.bot.guilds)))
+        members = sum(1 for member in self.bot.get_all_members())
+        channels = sum(1 for channel in self.bot.get_all_channels())
+
+        await ctx.send("I can see {} users in {} channels on {} guilds".format(members, channels, len(self.bot.guilds)))
         self.bot.cmd_log(ctx, "Scouting for girls")
 
     @commands.command()
