@@ -241,7 +241,7 @@ async def save_module_loading():
 
 @bot.command(name="eval")
 @checks.is_owner()
-async def _eval(ctx, code):
+async def _eval(ctx, *, code):
     """Evaluates a line of code provided"""
     heck = "off"
     hel = "yea"
