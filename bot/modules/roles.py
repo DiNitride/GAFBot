@@ -1,9 +1,10 @@
+import asyncio
+
 import discord
 from discord.ext import commands
-from utils import checks
-import datetime
+
 from utils import reaction_menu
-import asyncio
+from utils import checks
 
 header = "=====================================================\n" \
          "All Roles on this server which can be assigned.\n" \
@@ -49,7 +50,6 @@ class Roles:
             r_remove = "None"
         await ctx.author.edit(roles=roles)
         msg = await ctx.send("```\nRoles Added: {}\nRoles Removed: {}\n```".format(r_add, r_remove))
-        self.bot.cmd_log(ctx, "Roles")
         await asyncio.sleep(20)
         await msg.delete()
 
@@ -66,7 +66,6 @@ class Roles:
             server["roles"][role.id] = role.name
             await self.bot.update_server_data(ctx.guild.id, server)
             await ctx.send("Added {} to the role list".format(role.name))
-        self.bot.cmd_log(ctx, "Added new role ({}) to roles list".format(role.name))
 
     @roles.command()
     @checks.perms_manage_roles()
@@ -81,7 +80,6 @@ class Roles:
             del server["roles"][str(role.id)]
             await self.bot.update_server_data(ctx.guild.id, server)
             await ctx.send("Removed {} from the role list".format(role.name))
-        self.bot.cmd_log(ctx, "Removed role ({}) to roles list".format(role.name))
 
 
 def setup(bot):

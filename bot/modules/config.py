@@ -1,7 +1,10 @@
+import datetime
+
 import discord
 from discord.ext import commands
+
 from utils import checks
-import datetime
+
 
 
 def time():
@@ -18,7 +21,6 @@ class Config:
         server = await self.bot.get_server_data(ctx.guild.id)
         await ctx.send("The prefix for the bot on this server is: `{}`\n"
                        "You can set a new one with `{}prefix set 'new_prefix'`".format(server["prefix"], server["prefix"]))
-        self.bot.cmd_log(ctx, "Prefix check")
 
     @prefix.command(name="set")
     @checks.perms_manage_guild()
@@ -31,7 +33,6 @@ class Config:
         await self.bot.update_prefix_cache(ctx.guild.id, new_prefix)
         await self.bot.update_server_data(ctx.guild.id, server)
         await ctx.send("Updated bot prefix to: {}".format(server["prefix"]))
-        self.bot.cmd_log(ctx, "Prefix updated to {}".format(new_prefix))
 
     @commands.group(invoke_without_command=True)
     async def logging(self, ctx):
@@ -43,7 +44,6 @@ class Config:
             print(server["loggingChannel"])
             channel = ctx.guild.get_channel(int(server["loggingChannel"]))
             await ctx.send("`Logging for this server is turned on in channel #{}`".format(channel))
-        self.bot.cmd_log(ctx, "Logging check")
 
     @logging.command()
     @checks.perms_manage_guild()
@@ -55,7 +55,6 @@ class Config:
         server["loggingOn"] = True
         await self.bot.update_server_data(ctx.guild.id, server)
         await ctx.send("`Logging has been enabled`")
-        self.bot.cmd_log(ctx, "Server logging enabled")
 
     @logging.command()
     @checks.perms_manage_guild()
@@ -65,7 +64,6 @@ class Config:
         server["loggingOn"] = False
         await self.bot.update_server_data(ctx.guild.id, server)
         await ctx.send("`Logging has been disabled`")
-        self.bot.cmd_log(ctx, "Server logging disabled")
 
     @logging.command()
     @checks.perms_manage_guild()
@@ -89,7 +87,6 @@ class Config:
             server["modules"][module_name] = True
             await ctx.send("Enabled module {} for this server".format(module_name))
             await self.bot.update_server_data(ctx.guild.id, server)
-            self.bot.cmd_log(ctx, "Enabled module {}".format(module_name))
 
     @commands.command(name="disable")
     @checks.perms_manage_guild()
@@ -101,7 +98,6 @@ class Config:
             server["modules"][module_name] = False
             await ctx.send("Disabled module {} for this server".format(module_name))
             await self.bot.update_server_data(ctx.guild.id, server)
-            self.bot.cmd_log(ctx, "Disabled module {}".format(module_name))
 
     async def on_member_join(self, member):
         server = await self.bot.get_server_data(member.guild.id)

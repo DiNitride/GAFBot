@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+
 from utils import checks
 
 
@@ -39,13 +40,10 @@ class Moderation:
         else:
             await ctx.channel.send(":negative_squared_cross_mark:  Banned user {}.".format(user_id))
 
-        self.bot.cmd_log(ctx, "xban")
-
     @commands.command()
     @checks.perms_kick()
     async def kick(self, ctx, user: discord.Member):
         """Kicks a user from the guild"""
-        self.bot.cmd_log(ctx, "kick")
         if user:
             await ctx.guild.kick(user)
             self.bot.log.notice("Kicked {} from {}".format(user, ctx.guild.name))
@@ -67,7 +65,6 @@ class Moderation:
             messages = await ctx.channel.purge(limit=limit, check=predicate)
             await ctx.send("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
             self.bot.log.notice("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
-        self.bot.cmd_log(ctx, "Purged messages")
 
 
 def setup(bot):

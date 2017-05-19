@@ -126,18 +126,7 @@ bot.get_server_data = get_server_data
 bot.update_server_data = update_server_data
 bot.update_prefix_cache = update_prefix_cache
 
-
-def command_debug_message(ctx, name):
-    if isinstance(ctx.channel, discord.DMChannel):
-        bot.log.debug("Command: {} run in DM's by user {}/{}".format(name, ctx.author, ctx.author.id))
-    elif isinstance(ctx.channel, discord.GroupChannel):
-        bot.log.debug("Command: {} run in group chat {}/{} by user {}/{}".format(name, ctx.channel.name, ctx.channel.id,
-                                                                                 ctx.author, ctx.author.id))
-    else:
-        bot.log.debug("Command: {} run in channel #{}/{} on server {}/{} by user {}/{}".format(name,
-                        ctx.channel.name, ctx.channel.id, ctx.guild, ctx.guild.id, ctx.author, ctx.author.id))
-
-bot.cmd_log = command_debug_message
+bot.command_count = 0
 
 async def check_command(ctx):
     server = await bot.get_server_data(ctx.guild.id)
@@ -154,13 +143,9 @@ bot.add_check(check_command)
 async def on_ready():
     bot.start_time = datetime.datetime.now()
     bot.log.notice("Logged in as {} with ID {}".format(bot.user.name, bot.user.id))
-    _users = 0
-    _channels = 0
-    for x in bot.get_all_members():
-        _users += 1
-    for x in bot.get_all_channels():
-        _channels += 1
-    bot.log.notice("I can see {} users in {} channels on {} guilds".format(_users, _channels, len(bot.guilds)))
+    users = sum(1 for user in bot.get_all_members())
+    channels = sum(1 for channel in bot.get_all_channels())
+    bot.log.notice("I can see {} users in {} channels on {} guilds".format(users, channels, len(bot.guilds)))
 
     # Load Modules
     bot.load_extension("modules.config")
@@ -177,11 +162,25 @@ async def on_ready():
     bot.log.notice("Loaded GAF Module")
 
 
+@bot.event
+async def on_command(ctx):
+    if isinstance(ctx.channel, discord.DMChannel):
+        bot.log.debug("Command: '{}' run in DM's by user {} - ({})".format(
+            ctx.command, ctx.author, ctx.author.id))
+    elif isinstance(ctx.channel, discord.GroupChannel):
+        bot.log.debug("Command: '{}' run in group chat {} - ({}) by user {} - {{}}".format(
+            ctx.command, ctx.channel.name, ctx.channel.id, ctx.author, ctx.author.id))
+    else:
+        bot.log.debug("Command: '{}' run in channel #{} - ({}) on server {} - ({}) by user {} - ({})".format(
+            ctx.command, ctx.channel.name, ctx.channel.id, ctx.guild, ctx.guild.id, ctx.author, ctx.author.id))
+    bot.command_count += 1
+
+
 @bot.command()
 async def about(ctx):
     """Information about GAF Bot"""
     if ctx.channel.permissions_for(ctx.guild.me).embed_links:
-        embed = discord.Embed(title="Invite me to your server!", colour=discord.Colour(0x35e4fa),
+        embed = discord.Embed(title="Invite me to your server!", colour=discord.Colour.gold(),
                               url="https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8",
                               description="Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py."
                                           "I was written by DiNitride, through many hours of hard work and swearing "
@@ -211,7 +210,6 @@ async def about(ctx):
                        "**Author:** DiNitride#7899\n"
                        "**Source Code:** <https://github.com/DiNitride/GAFBot>"
                        )
-    bot.cmd_log(ctx, "Bot Info")
 
 
 @bot.command()
@@ -223,20 +221,6 @@ async def ping(ctx):
     after = time.monotonic()
     _ping = (after - before) * 1000
     await ctx.send("Ping Pong :ping_pong: **{0:.0f}ms**".format(_ping))
-    bot.cmd_log(ctx, "Ping Pong")
-
-async def save_module_loading():
-    _data = json.dumps(bot.modules)
-    with open("config/modules.json", "w") as f:
-        f.write(_data)
-        bot.log.notice("Saved module list")
-
-
-#@bot.event
-# async def on_command_error(error, ctx):
-#     if isinstance(error, discord.ext.commands.errors.DisabledCommand):
-#         await ctx.message.delete()
-#         bot.log.error("Disabled command")
 
 
 @bot.command(name="eval")
@@ -256,12 +240,19 @@ async def _eval(ctx, *, code):
     else:
         await ctx.send("```py\nInput: {}\nOutput: {}\n```".format(code, result))
     await ctx.message.delete()
-    bot.cmd_log(ctx, "Evaluation")
 
 
 @bot.command()
 async def f(ctx):
+    """Pays resepect"""
     await ctx.send("*Respects*")
+
+
+async def save_module_loading():
+    _data = json.dumps(bot.modules)
+    with open("config/modules.json", "w") as f:
+        f.write(_data)
+        bot.log.notice("Saved module list")
 
 
 @bot.command(name="load")
@@ -282,7 +273,6 @@ async def _load(ctx, extension: str):
         bot.log.notice("Enabled Module")
         await ctx.send("Enabled Module")
         await save_module_loading()
-        bot.cmd_log(ctx, "Enabled module {}".format(extension))
 
 
 @bot.command(name="unload")
@@ -293,7 +283,6 @@ async def _unload(ctx, extension: str):
     if extension not in bot.modules.keys():
         bot.log.error("Tried to disable module {} but it is not a valid module".format(extension))
         await ctx.send("Invalid module")
-        bot.cmd_log(ctx, "Attempted to disable invalid module")
     else:
         bot.modules[extension] = False
         bot.log.debug("Unloading extension")
@@ -303,7 +292,6 @@ async def _unload(ctx, extension: str):
         bot.log.notice("Disabled module {}".format(extension))
         await ctx.send("Disabled Module")
         await save_module_loading()
-        bot.cmd_log(ctx, "Disabled module {}".format(extension))
 
 try:
     bot.run(bot.config["token"])
