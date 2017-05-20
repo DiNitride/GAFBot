@@ -107,10 +107,13 @@ async def get_prefix_via_id(guild_id):
         _prefixes[guild_id] = settings["prefix"]
         return _prefixes[guild_id]
 
-description = """Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. I was written by DiNitride,
-                through many hours of hard work and swearing at my PC.
-                I'm kind of like a spork, I'm multifunctional, but still kind of shit. Something you get for novelty
-                rather than functionality."""
+description = "Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. " \
+              "I was written by DiNitride, through many hours of hard work and swearing at my PC. \n" \
+              "I'm kind of like a spork, I'm multifunctional, but still kind of shit. Something you get for novelty " \
+              "rather than functionality. \n\n" \
+              "Many of the commands are subcommands, so do $help <command> for more detail on them. \n" \
+              "For more help, reporting bugs, or speaking to the developer, join GAF Bot's Discord @ " \
+              "http://discord.bot.neverendinggaf.com."
 
 bot = commands.Bot(command_prefix=get_prefix, description=description, pm_help=True)
 
@@ -174,6 +177,11 @@ async def on_command(ctx):
         bot.log.debug("Command: '{}' run in channel #{} - ({}) on server {} - ({}) by user {} - ({})".format(
             ctx.command, ctx.channel.name, ctx.channel.id, ctx.guild, ctx.guild.id, ctx.author, ctx.author.id))
     bot.command_count += 1
+
+@bot.event
+async def on_command_error(ctx, error):
+    if not (isinstance(error, discord.ext.commands.errors.DisabledCommand) or isinstance(error, discord.ext.commands.errors.CommandNotFound)):
+        bot.log.error("Error in command {}: {}".format(ctx.command, error))
 
 
 @bot.command()

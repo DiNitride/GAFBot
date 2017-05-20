@@ -18,7 +18,7 @@ class GAF:
     @checks.is_gaf_server()
     async def chill(self, ctx):
         """Channel 1 and chill?"""
-        await ctx.send(content="<@&172426880543227904> <@&262334316611239937>", file=discord.File("media/chill.jpg"))
+        await ctx.send(content="<@&172426880543227904> <@&262334316611239937>", file=discord.File("resources/chill.jpg"))
         await ctx.message.delete()
 
 
