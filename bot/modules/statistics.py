@@ -57,7 +57,7 @@ class Statistics:
     @commands.command()
     async def scout(self, ctx):
         """GAF Bot, what do your elf eyes see?"""
-        users, channels = self.users_and_guilds()
+        users, channels = self.users_and_channels()
         await ctx.send("`I can see {} users in {} channels on {} guilds`".format(users, channels, len(self.bot.guilds)))
 
     @commands.command()
