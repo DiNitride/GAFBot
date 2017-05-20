@@ -50,7 +50,7 @@ class Config:
     async def enable(self, ctx):
         """Enables logging"""
         server = await self.bot.get_server_data(ctx.guild.id)
-        if server["loggingChannel"] == "":
+        if server["loggingChannel"] == None:
             channel = ctx.channel.id
         server["loggingOn"] = True
         await self.bot.update_server_data(ctx.guild.id, server)
@@ -111,11 +111,11 @@ class Config:
             channel = member.guild.get_channel(server["loggingChannel"])
             await channel.send("`{}` **{}** left {}".format(time(), member, member.guild))
 
-    async def on_member_ban(self, member):
-        server = await self.bot.get_server_data(member.guild.id)
+    async def on_member_ban(self, guild, member):
+        server = await self.bot.get_server_data(guild.id)
         if server["loggingOn"] is True:
-            channel = member.guild.get_channel(server["loggingChannel"])
-            await channel.send("`{}` **{}** was banned from {}".format(time(), member, member.guild))
+            channel = guild.get_channel(server["loggingChannel"])
+            await channel.send("`{}` **{}** was banned from {}".format(time(), member, guild))
 
     async def on_member_unban(self, guild, user):
         server = await self.bot.get_server_data(guild.id)
