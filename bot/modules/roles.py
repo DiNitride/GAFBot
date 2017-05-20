@@ -81,6 +81,23 @@ class Roles:
             await self.bot.update_server_data(ctx.guild.id, server)
             await ctx.send("Removed {} from the role list".format(role.name))
 
+    @roles.command()
+    async def reset(self, ctx):
+        """Warning, completely ereases config for your server!"""
+        guild_data = await self.bot.get_server_data(ctx.guild.id)
+        guild_data["roles"] = {}
+        await self.bot.update_server_data(ctx.guild.id, guild_data)
+        await ctx.send("`All roles have been removed from the bots role menu")
+
+    async def on_guild_role_delete(self, role):
+        guild = role.guild
+        guild_data = await self.bot.get_server_data(guild.id)
+        roles = guild_data["roles"]
+        r_id = str(role.id)
+        if r_id in roles:
+            del guild_data["roles"][r_id]
+        await self.bot.update_server_data(guild.id, guild_data)
+
 
 def setup(bot):
     bot.add_cog(Roles(bot))
