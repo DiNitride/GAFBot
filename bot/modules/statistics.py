@@ -27,6 +27,7 @@ class Statistics:
 
     @commands.command(aliases=["stats"])
     async def statistics(self, ctx):
+        """Shows the bot's session stats"""
         days, hours, minutes, seconds = self.calculate_uptime()
         users, channels = self.users_and_channels()
         if ctx.channel.permissions_for(ctx.guild.me).embed_links:

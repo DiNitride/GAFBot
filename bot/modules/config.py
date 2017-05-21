@@ -6,7 +6,6 @@ from discord.ext import commands
 from utils import checks
 
 
-
 def time():
     return datetime.datetime.now().strftime("[%b/%d/%Y %H:%M:%S]")
 
@@ -102,7 +101,7 @@ class Config:
     @commands.command()
     @checks.perms_manage_guild()
     async def clear(self, ctx):
-        """Clears the config for the server"""
+        """WARNING: Clears the config for the server"""
         guild_settings = await self.bot.get_server_data(ctx.guild.id)
         guild_settings = self.bot.default_guild_config
         await self.bot.update_server_data(ctx.guild.id, guild_settings)
