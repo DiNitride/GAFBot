@@ -129,6 +129,8 @@ bot.get_server_data = get_server_data
 bot.update_server_data = update_server_data
 bot.update_prefix_cache = update_prefix_cache
 
+bot.default_guild_config = default_server_settings
+
 bot.command_count = 0
 
 async def check_command(ctx):
@@ -177,6 +179,7 @@ async def on_command(ctx):
         bot.log.debug("Command: '{}' run in channel #{} - ({}) on server {} - ({}) by user {} - ({})".format(
             ctx.command, ctx.channel.name, ctx.channel.id, ctx.guild, ctx.guild.id, ctx.author, ctx.author.id))
     bot.command_count += 1
+
 
 @bot.event
 async def on_command_error(ctx, error):

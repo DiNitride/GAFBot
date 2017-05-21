@@ -8,10 +8,6 @@ class Moderation:
 
     def __init__(self, bot):
         self.bot = bot
-        self.ban.enabled = bot.modules["moderation"]
-        self.kick.enabled = bot.modules["moderation"]
-        self.xban.enabled = bot.modules["moderation"]
-        self.purge.enabled = bot.modules["moderation"]
 
     @commands.command()
     @checks.perms_ban()
@@ -65,6 +61,60 @@ class Moderation:
             messages = await ctx.channel.purge(limit=limit, check=predicate)
             await ctx.send("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
             self.bot.log.notice("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
+
+    @commands.group(invoke_without_command=True)
+    @checks.perms_manage_roles()
+    async def mute(self, ctx, user: discord.Member):
+        """Mutes a user"""
+        guild_settings = await self.bot.get_server_data(ctx.guild.id)
+        if guild_settings["mute_role"] == "":
+            await ctx.send("No mute role set! Please set one with $mute role <role>")
+            return
+        if user is None:
+            await ctx.send("Not a valid user")
+            return
+        if user.top_role.position >= ctx.author.top_role.position:
+            return
+        mute_role = None
+        for role in ctx.guild.roles:
+            if role.id == int(guild_settings["mute_role"]):
+                mute_role = role
+        if mute_role is None:
+            return
+        if mute_role is None:
+            await ctx.send("Invalid mute role")
+            return
+        if mute_role in user.roles:
+            roles = user.roles
+            roles.remove(mute_role)
+            await user.edit(roles=roles)
+            await ctx.send("`{}` -> :100:".format(user))
+        else:
+            roles = user.roles
+            roles.append(mute_role)
+            await user.edit(roles=roles)
+            await ctx.send("`{}` -> :speak_no_evil:".format(user))
+
+    @mute.command()
+    @checks.perms_manage_roles()
+    async def role(self, ctx, role: discord.Role = None):
+        if role is None:
+            return
+        if role.position >= ctx.author.top_role.position:
+            await ctx.send("Unable to add role due to Hierarchy")
+        else:
+            guild_settings = await self.bot.get_server_data(ctx.guild.id)
+            guild_settings["mute_role"] = role.id
+            await self.bot.update_server_data(ctx.guild.id, guild_settings)
+            await ctx.send("Set the guilds mute role")
+
+    async def on_guild_role_delete(self, role):
+        guild = role.guild
+        guild_data = await self.bot.get_server_data(guild.id)
+        mute_role = guild_data["mute_role"]
+        if mute_role == role.id:
+            guild_data["mute_role"] = ""
+            await self.bot.update_server_data(guild.id, guild_data)
 
 
 def setup(bot):

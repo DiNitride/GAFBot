@@ -6,5 +6,6 @@
   "prefix": "$",
   "roles": {},
   "modules": {},
-  "tags": {}
+  "tags": {},
+  "mute_role": ""
 }

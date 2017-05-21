@@ -8,6 +8,11 @@ from discord.ext import commands
 from utils import checks
 from utils import reaction_menu
 
+header = "=====================================================\n" \
+         "List of all guilds I am in\n" \
+         "Click the arrows to move page\n" \
+         "====================================================="
+
 
 class Admin:
 
@@ -40,6 +45,58 @@ class Admin:
                     val = val()
                 await self.bot.change_presence(game=discord.Game(name=val))
                 await asyncio.sleep(180)
+
+    @commands.group(invoke_without_command=True)
+    @checks.is_owner()
+    async def guilds(self, ctx):
+        """Lists all of the guilds the bot is in"""
+        guilds = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
+        await reaction_menu.start_reaction_menu(self.bot, guilds, ctx.author, ctx.channel, count=0,
+                                                timeout=60, per_page=30, header=header)
+
+    @guilds.command()
+    @checks.is_owner()
+    async def leave(self, ctx, guild=None):
+        """Leaves a specified guild"""
+        guild_names = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
+        if guild is None:
+            guild = await reaction_menu.start_reaction_menu(self.bot, guild_names, ctx.author, ctx.channel, count=1,
+                                                timeout=60, per_page=10, header=header, return_from=self.bot.guilds, allow_none=True)
+            guild = guild[0]
+        else:
+            guild = discord.utils.find(lambda s: s.name == guild or str(s.id) == guild, self.bot.guilds)
+            if guild is None:
+                await ctx.send("Unable to locate guild")
+                return
+        try:
+            await guild.leave()
+            await ctx.send("`Successfully left the guild`")
+        except discord.HTTPException:
+            await ctx.send("`Leaving the guild failed!`")
+
+    @guilds.command()
+    @checks.is_owner()
+    async def invite(self, ctx, guild=None):
+        guild_names = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
+        if guild is None:
+            guild = await reaction_menu.start_reaction_menu(self.bot, guild_names, ctx.author, ctx.channel, count=1,
+                                                            timeout=60, per_page=10, header=header,
+                                                            return_from=self.bot.guilds, allow_none=True)
+            guild = guild[0]
+        else:
+            guild = discord.utils.find(lambda s: s.name == guild or str(s.id) == guild, self.bot.guilds)
+            if guild is None:
+                await ctx.send("Unable to locate guild")
+                return
+        try:
+            invite = await guild.create_invite()
+            await ctx.send("`Created an invite to guild, I will DM it to you`")
+            dm_channel = ctx.author.dm_channel
+            if dm_channel is None:
+                dm_channel = await ctx.author.create_dm()
+            await dm_channel.send(invite.url)
+        except discord.HTTPException:
+            await ctx.send("`Failed to create invite for guild!`")
 
 
 def setup(bot):

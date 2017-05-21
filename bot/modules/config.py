@@ -99,6 +99,15 @@ class Config:
             await ctx.send("Disabled module {} for this server".format(module_name))
             await self.bot.update_server_data(ctx.guild.id, server)
 
+    @commands.command()
+    @checks.perms_manage_guild()
+    async def clear(self, ctx):
+        """Clears the config for the server"""
+        guild_settings = await self.bot.get_server_data(ctx.guild.id)
+        guild_settings = self.bot.default_guild_config
+        await self.bot.update_server_data(ctx.guild.id, guild_settings)
+        await ctx.send(":warning: Config cleared")
+
     async def on_member_join(self, member):
         server = await self.bot.get_server_data(member.guild.id)
         if server["loggingOn"] is True:

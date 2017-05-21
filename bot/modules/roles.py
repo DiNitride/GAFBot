@@ -17,7 +17,6 @@ class Roles:
 
     def __init__(self, bot):
         self.bot = bot
-        self.roles.enabled = bot.modules["roles"]
 
     @commands.group(invoke_without_command=True)
     async def roles(self, ctx):
