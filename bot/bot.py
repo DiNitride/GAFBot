@@ -4,6 +4,8 @@ import time
 import sys
 import inspect
 import sqlite3
+import subprocess
+import asyncio
 
 import discord
 from discord.ext import commands
@@ -183,7 +185,11 @@ async def on_command(ctx):
 
 @bot.event
 async def on_command_error(ctx, error):
-    if not (isinstance(error, discord.ext.commands.errors.DisabledCommand) or isinstance(error, discord.ext.commands.errors.CommandNotFound)):
+    if isinstance(error, discord.ext.commands.errors.DisabledCommand):
+        await ctx.send(":no_entry_sign: The module this command is from is disabled on this server!")
+    elif isinstance(error, discord.ext.commands.errors.CommandNotFound):
+        return
+    else:
         bot.log.error("Error in command {}: {}".format(ctx.command, error))
 
 
@@ -232,6 +238,26 @@ async def ping(ctx):
     after = time.monotonic()
     _ping = (after - before) * 1000
     await ctx.send("Ping Pong :ping_pong: **{0:.0f}ms**".format(_ping))
+
+
+@bot.command()
+@checks.is_owner()
+async def update(ctx):
+    await ctx.send("Calling process to update! :up: :date: ")
+    try:
+        done = subprocess.run("git pull", stdout=subprocess.PIPE, timeout=30)
+        if done:
+            message = done.stdout.decode()
+            await ctx.send("`{}`".format(message))
+            if message == "Already up-to-date.\n":
+                await ctx.send("No update available :no_entry: :up: :date: ")
+            else:
+                await ctx.send("Succesfully updated! Rebooting now :repeat: ")
+                await bot.logout()
+    except subprocess.CalledProcessError:
+        await ctx.send("Error updating! :exclamation: ")
+    except subprocess.TimeoutExpired:
+        await ctx.send("Error updating - Process timed out! :exclamation: ")
 
 
 @bot.command(name="eval")
