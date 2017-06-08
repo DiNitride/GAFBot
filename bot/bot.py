@@ -153,8 +153,6 @@ async def on_ready():
     users = sum(1 for user in bot.get_all_members())
     channels = sum(1 for channel in bot.get_all_channels())
     bot.log.notice("I can see {} users in {} channels on {} guilds".format(users, channels, len(bot.guilds)))
-
-    # Load Modules
     bot.load_extension("modules.config")
     bot.log.notice("Loaded Config Module")
     bot.load_extension("modules.statistics")
@@ -167,6 +165,8 @@ async def on_ready():
     bot.log.notice("Loaded Moderation Module")
     bot.load_extension("modules.gaf")
     bot.log.notice("Loaded GAF Module")
+    bot.load_extension("modules.utils")
+    bot.log.notice("Loaded Utils Module")
 
 
 @bot.event
@@ -194,28 +194,29 @@ async def on_command_error(ctx, error):
 
 
 @bot.command()
-async def about(ctx):
+async def info(ctx):
     """Information about GAF Bot"""
     if ctx.channel.permissions_for(ctx.guild.me).embed_links:
-        embed = discord.Embed(title="Invite me to your server!", colour=discord.Colour.gold(),
-                              url="https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8",
-                              description="Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py."
-                                          "I was written by DiNitride, through many hours of hard work and swearing "
-                                          "at my PC. I'm kind of like a spork, I'm multifunctional, but still kind of "
-                                          "shit. Something you get for novelty rather than functionality.",
-                              timestamp=datetime.datetime.utcfromtimestamp(1493993514))
+        with ctx.channel.typing():
+            embed = discord.Embed(title="Invite me to your server!", colour=discord.Colour.gold(),
+                                  url="https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8",
+                                  description="Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py."
+                                              "I was written by DiNitride, through many hours of hard work and swearing "
+                                              "at my PC. I'm kind of like a spork, I'm multifunctional, but still kind of "
+                                              "shit. Something you get for novelty rather than functionality.",
+                                  timestamp=datetime.datetime.utcfromtimestamp(1493993514))
 
-        embed.set_thumbnail(url=ctx.author.avatar_url)
-        embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
+            embed.set_thumbnail(url=ctx.author.avatar_url)
+            embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
 
-        embed.add_field(name="Source Code", value="https://github.com/DiNitride/GAFBot")
-        embed.add_field(name="Author", value="GAF Bot is written and maintained by DiNitride#7899")
-        embed.add_field(name="Discord.py Version", value=discord.__version__)
-        embed.add_field(name="The Never Ending GAF", value="GAF Bot is the bot of the awful community known as "
-                                                           "The Never Ending GAF, which you can find out about at "
-                                                           "http://www.neverendinggaf.com")
+            embed.add_field(name="Source Code", value="https://github.com/DiNitride/GAFBot")
+            embed.add_field(name="Author", value="GAF Bot is written and maintained by DiNitride#7899")
+            embed.add_field(name="Discord.py Version", value=discord.__version__)
+            embed.add_field(name="The Never Ending GAF", value="GAF Bot is the bot of the awful community known as "
+                                                               "The Never Ending GAF, which you can find out about at "
+                                                               "http://www.neverendinggaf.com")
 
-        await ctx.send(embed=embed)
+            await ctx.send(embed=embed)
     else:
         await ctx.send("**Hi!** I'm GAF Bot, a Discord bot written in Python using Discord.py."
                        "I was written by DiNitride, through many hours of hard work and swearing at my PC. "
@@ -227,6 +228,11 @@ async def about(ctx):
                        "**Author:** DiNitride#7899\n"
                        "**Source Code:** <https://github.com/DiNitride/GAFBot>"
                        )
+
+
+@bot.command()
+async def invite(ctx):
+    await ctx.send("Invite me to your server! <https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>")
 
 
 @bot.command()
@@ -264,9 +270,7 @@ async def update(ctx):
 @checks.is_owner()
 async def _eval(ctx, *, code):
     """Evaluates a line of code provided"""
-    heck = "off"
     hel = "yea"
-    fuck = "off"
     code = code.strip("` ")
     try:
         result = eval(code)
@@ -300,7 +304,6 @@ async def _load(ctx, extension: str):
     if extension not in bot.modules.keys():
         bot.log.error("Tried to enable module {} but it is not a valid module".format(extension))
         await ctx.send("Invalid module")
-        bot.cmd_log(ctx, "Attempted to enable invalid module")
     else:
         bot.modules[extension] = True
         bot.log.debug("Unloading extension")

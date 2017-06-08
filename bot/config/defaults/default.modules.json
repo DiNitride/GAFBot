@@ -4,5 +4,6 @@
   "config": true,
   "admin": true,
   "moderation": true,
-  "gaf": true
+  "gaf": true,
+  "utils": true
 }
