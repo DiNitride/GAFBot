@@ -5,5 +5,6 @@
   "admin": true,
   "moderation": true,
   "gaf": true,
-  "utils": true
+  "utils": true,
+  "spotify": true
 }

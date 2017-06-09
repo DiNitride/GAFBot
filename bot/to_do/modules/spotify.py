@@ -91,9 +91,6 @@ class Spotify():
         if check is False:
             return
 
-        api_url = "https://api.spotify.com/v1/browse/featured-playlists"
-        api_auth_url = 'https://accounts.spotify.com/api/token'
-
         auth_decoded = "{0}:{1}".format(client_id, client_secret)
         b = bytes(auth_decoded, 'utf-8')
         auth_id = base64.b64encode(b)

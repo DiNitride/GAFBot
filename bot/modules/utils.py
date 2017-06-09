@@ -3,42 +3,9 @@ import datetime
 import discord
 from discord.ext import commands
 
-async def construct_serverinfo(obj):
-    embed = discord.Embed(title="ID: 58934178071780", colour=discord.Colour(0x610073),
-                          timestamp=datetime.datetime.utcfromtimestamp(1491012420))
-    embed.set_thumbnail(
-        url=obj.icon_url)
-    embed.set_author(name=obj.name)
-    embed.set_footer(text="Who Is")
-    embed.add_field(name="Members", value=str(len(obj.members)))
-    embed.add_field(name="Roles", value=str(len(obj.roles) - 1))
-    embed.add_field(name="Channels", value=str(len(obj.channels)))
-    embed.add_field(name="AFK Channel", value=obj.afk_channel)
-    embed.add_field(name="AFK Timeout", value=str(obj.afk_timeout / 60))
-    embed.add_field(name="Owner", value=obj.owner)
-    embed.add_field(name="Creation Date", value=obj.created_at)
-    embed.add_field(name="Region", value=obj.region)
-    embed.add_field(name="Verification Level", value=obj.verification_level)
-
-    content = "```\n" \
-              "Server Name: {}\nID: {}\n" \
-              "Members: {}\n" \
-              "Channels: {}\n" \
-              "Roles: {}\n" \
-              "AFK Channel: {}\n" \
-              "AFK Timeout: {}\n" \
-              "Owner: {}\n" \
-              "Creation Date: {}\n" \
-              "Region: {}\n" \
-              "Verification Level: {}\n" \
-              "```".format(obj.name, obj.id, len(obj.members), len(obj.channels) - 1,
-                           len(obj.roles), obj.afk_channel, str(obj.afk_timeout / 60), obj.owner,
-                           obj.created_at, obj.region, obj.verification_level)
-
-    return embed, content
-
 
 class Utils:
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -120,7 +87,37 @@ class Utils:
     @about.command()
     async def server(self, ctx):
         """Basic info on the server"""
-        embed, content = await construct_serverinfo(ctx.guild)
+        embed = discord.Embed(title="ID: 58934178071780", colour=discord.Colour.gold(),
+                              timestamp=datetime.datetime.utcfromtimestamp(1491012420))
+        embed.set_thumbnail(
+            url=ctx.guild.icon_url)
+        embed.set_author(name=ctx.guild.name)
+        embed.set_footer(text="Who Is")
+        embed.add_field(name="Members", value=str(len(ctx.guild.members)))
+        embed.add_field(name="Roles", value=str(len(ctx.guild.roles) - 1))
+        embed.add_field(name="Channels", value=str(len(ctx.guild.channels)))
+        embed.add_field(name="AFK Channel", value=ctx.guild.afk_channel)
+        embed.add_field(name="AFK Timeout", value=str(ctx.guild.afk_timeout / 60))
+        embed.add_field(name="Owner", value=ctx.guild.owner)
+        embed.add_field(name="Creation Date", value=ctx.guild.created_at)
+        embed.add_field(name="Region", value=ctx.guild.region)
+        embed.add_field(name="Verification Level", value=ctx.guild.verification_level)
+
+        content = "```\n" \
+                  "Server Name: {}\nID: {}\n" \
+                  "Members: {}\n" \
+                  "Channels: {}\n" \
+                  "Roles: {}\n" \
+                  "AFK Channel: {}\n" \
+                  "AFK Timeout: {}\n" \
+                  "Owner: {}\n" \
+                  "Creation Date: {}\n" \
+                  "Region: {}\n" \
+                  "Verification Level: {}\n" \
+                  "```".format(ctx.guild.name, ctx.guild.id, len(ctx.guild.members), len(ctx.guild.channels) - 1,
+                               len(ctx.guild.roles), ctx.guild.afk_channel, str(ctx.guild.afk_timeout / 60),
+                               ctx.guild.owner,
+                               ctx.guild.created_at, ctx.guild.region, ctx.guild.verification_level)
         if ctx.channel.permissions_for(ctx.author).embed_links:
             with ctx.channel.typing():
                 embed.set_footer(text="About Server")

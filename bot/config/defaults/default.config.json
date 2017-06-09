@@ -1,3 +1,7 @@
 {
-  "token": ""
+  "token": "",
+  "spotify": {
+    "id": "",
+    "secret": ""
+  }
 }

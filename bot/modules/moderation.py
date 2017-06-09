@@ -63,7 +63,7 @@ class Moderation:
             self.bot.log.notice("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
 
     @commands.group(invoke_without_command=True)
-    @checks.perms_manage_roles()
+    @checks.perms_manage_messages()
     async def mute(self, ctx, user: discord.Member):
         """Mutes a user"""
         guild_settings = await self.bot.get_server_data(ctx.guild.id)
@@ -96,7 +96,7 @@ class Moderation:
             await ctx.send("`{}` -> :speak_no_evil:".format(user))
 
     @mute.command()
-    @checks.perms_manage_roles()
+    @checks.perms_manage_messages()
     async def role(self, ctx, role: discord.Role = None):
         if role is None:
             return

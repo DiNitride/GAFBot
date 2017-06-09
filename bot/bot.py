@@ -20,6 +20,14 @@ log.notice("Loading Configuration File")
 try:
     with open("config/config.json") as f:
         _config = json.load(f)
+    with open("config/defaults/default.config.json") as df:
+        _df_config = json.load(df)
+    for x in list(_df_config):
+        if x not in list(_config):
+            _config[x] = _df_config[x]
+    data = json.dumps(_config)
+    with open("config/config.json", "w") as f:
+        f.write(data)
 except FileNotFoundError:
     log.error("Config file not found, loading defaults")
     df = open("config/defaults/default.config.json")
@@ -167,6 +175,8 @@ async def on_ready():
     bot.log.notice("Loaded GAF Module")
     bot.load_extension("modules.utils")
     bot.log.notice("Loaded Utils Module")
+    bot.load_extension("modules.spotify")
+    bot.log.notice("Loaded Spotify")
 
 
 @bot.event
@@ -232,7 +242,7 @@ async def info(ctx):
 
 @bot.command()
 async def invite(ctx):
-    await ctx.send("Invite me to your server! <https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>")
+    await ctx.send("`Invite me to your server! <https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>")
 
 
 @bot.command()
@@ -246,9 +256,10 @@ async def ping(ctx):
     await ctx.send("Ping Pong :ping_pong: **{0:.0f}ms**".format(_ping))
 
 
-@bot.command()
+@bot.command(hidden=True)
 @checks.is_owner()
 async def update(ctx):
+    """Updates the bot"""
     await ctx.send("Calling process to update! :up: :date: ")
     try:
         done = subprocess.run("git pull", stdout=subprocess.PIPE, timeout=30)

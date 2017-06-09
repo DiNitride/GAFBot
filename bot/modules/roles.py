@@ -8,12 +8,15 @@ from utils import checks
 
 header = "=====================================================\n" \
          "All Roles on this server which can be assigned.\n" \
-         "Click the reaction to select a role, which will be added or removed.\n" \
-         "Click the arrows to move page\n" \
+         ":one: to :keycap_ten: can be used to select roles\n" \
+         ":arrow_left: :arrow_right: to change pages\n" \
+         ":white_check_mark: to confirm selection, :x: to cancel\n" \
+         ":arrows_counterclockwise: can be used to undo the previoux selection\n" \
          "====================================================="
 
 
 class Roles:
+
 
     def __init__(self, bot):
         self.bot = bot
