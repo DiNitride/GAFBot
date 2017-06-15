@@ -5,7 +5,6 @@ import sys
 import inspect
 import sqlite3
 import subprocess
-import asyncio
 
 import discord
 from discord.ext import commands

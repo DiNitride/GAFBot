@@ -17,7 +17,6 @@ header = "=====================================================\n" \
 
 class Roles:
 
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -25,6 +24,19 @@ class Roles:
     async def roles(self, ctx):
         """Shows roles on the server that can be assigned"""
         server = await self.bot.get_server_data(ctx.guild.id)
+        if server["roleMeLevel"] is True:
+            base_role = None
+            for role in ctx.guild.roles:
+                if role.id == int(server["roleMeLevelID"]):
+                    base_role = role
+            if base_role is not None:
+                if ctx.author.top_role >= base_role:
+                    pass
+                else:
+                    await ctx.send("You do not have the required role to access custom roles")
+                    return
+            else:
+                return
         options = server["roles"]
         if len(options) == 0:
             await ctx.send("No roles available")
@@ -90,6 +102,30 @@ class Roles:
         guild_data["roles"] = {}
         await self.bot.update_server_data(ctx.guild.id, guild_data)
         await ctx.send("`All roles have been removed from the bots role menu")
+
+    @roles.group(invoke_without_command=True)
+    async def level(self, ctx):
+        guild_data = await self.bot.get_server_data(ctx.guild.id)
+        if guild_data["roleMeLevel"] is True:
+            await ctx.send("`Role command level is set to True`")
+        else:
+            await ctx.send("`Role command level is set to False`")
+
+    @level.command()
+    async def set(self, ctx, role: discord.Role):
+        guild_data = await self.bot.get_server_data(ctx.guild.id)
+        guild_data["roleMeLevel"] = True
+        guild_data["roleMeLevelID"] = role.id
+        await self.bot.update_server_data(ctx.guild.id, guild_data)
+        await ctx.send("`Custom Role level requirement has been set to{}`".format(role))
+
+    @level.command()
+    async def reset(self, ctx):
+        guild_data = await self.bot.get_server_data(ctx.guild.id)
+        guild_data["roleMeLevel"] = False
+        guild_data["roleMeLevelID"] = ""
+        await self.bot.update_server_data(ctx.guild.id, guild_data)
+        await ctx.send("`Custom Role level requirement has been reset`")
 
     async def on_guild_role_delete(self, role):
         guild = role.guild

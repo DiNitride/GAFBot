@@ -7,5 +7,7 @@
   "roles": {},
   "modules": {},
   "tags": {},
-  "mute_role": ""
+  "mute_role": "",
+  "roleMeLevel": false,
+  "roleMeLevelID": ""
 }
