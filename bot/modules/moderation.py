@@ -13,7 +13,6 @@ class Moderation:
     @checks.perms_ban()
     async def ban(self, ctx, user: discord.Member, delete_days=1):
         """Bans a user from the guild"""
-        self.bot.cmd_log(ctx, "ban")
         if delete_days > 7:
             delete_days = 7
         if user:
