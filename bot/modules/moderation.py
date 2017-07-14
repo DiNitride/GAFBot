@@ -69,6 +69,8 @@ class Moderation:
     @checks.perms_manage_messages()
     async def mute(self, ctx, user: discord.Member):
         """Mutes a user"""
+        if user is ctx.author:
+            return
         guild_settings = await self.bot.get_server_data(ctx.guild.id)
         if guild_settings["mute_role"] == "":
             await ctx.send("No mute role set! Please set one with $mute role <role>")
@@ -91,6 +93,8 @@ class Moderation:
             await user.edit(roles=roles)
             await ctx.send("`{}` -> :100:".format(user))
         else:
+            if user.top_role.position >= ctx.author.top_role.position:
+                return
             roles = user.roles
             roles.append(mute_role)
             await user.edit(roles=roles)
