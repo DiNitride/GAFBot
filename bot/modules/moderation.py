@@ -13,6 +13,8 @@ class Moderation:
     @checks.perms_ban()
     async def ban(self, ctx, user: discord.Member, delete_days=1):
         """Bans a user from the guild"""
+        if user is ctx.author:
+            return
         if delete_days > 7:
             delete_days = 7
         if user:
@@ -39,6 +41,8 @@ class Moderation:
     @checks.perms_kick()
     async def kick(self, ctx, user: discord.Member):
         """Kicks a user from the guild"""
+        if user is ctx.author:
+            return
         if user:
             await ctx.guild.kick(user)
             self.bot.log.notice("Kicked {} from {}".format(user, ctx.guild.name))
