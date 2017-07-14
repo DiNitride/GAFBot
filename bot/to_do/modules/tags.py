@@ -11,7 +11,6 @@ class Tags():
     def __init__(self, bot):
         self.bot = bot
 
-
     @commands.group(invoke_without_command=True)
     async def tag(self, *, tag: str = None):
         """$help tag for more.

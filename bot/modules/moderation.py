@@ -72,8 +72,6 @@ class Moderation:
         if user is None:
             await ctx.send("Not a valid user")
             return
-        if user.top_role.position >= ctx.author.top_role.position:
-            return
         mute_role = None
         for role in ctx.guild.roles:
             if role.id == int(guild_settings["mute_role"]):

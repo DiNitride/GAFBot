@@ -8,8 +8,6 @@ class Statistics:
 
     def __init__(self, bot):
         self.bot = bot
-        self.scout.enabled = bot.modules["statistics"]
-        self.uptime.enabled = bot.modules["statistics"]
 
     def users_and_channels(self):
         users = sum(1 for user in self.bot.get_all_members())
