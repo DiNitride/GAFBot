@@ -5,6 +5,7 @@ import sys
 import inspect
 import sqlite3
 import subprocess
+import logging
 
 import discord
 from discord.ext import commands
@@ -261,12 +262,12 @@ async def update(ctx):
     """Updates the bot"""
     await ctx.send("Calling process to update! :up: :date: ")
     try:
-        done = subprocess.run("git pull", stdout=subprocess.PIPE, timeout=30)
+        done = subprocess.run("git pull", shell=True, stdout=subprocess.PIPE, timeout=30)
         if done:
             message = done.stdout.decode()
             await ctx.send("`{}`".format(message))
             if message == "Already up-to-date.\n":
-                await ctx.send("No update available :no_entry: :up: :date: ")
+                await ctx.send("No update available :no_entry:")
             else:
                 await ctx.send("Succesfully updated! Rebooting now :repeat: ")
                 await bot.logout()
