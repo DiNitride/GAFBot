@@ -18,7 +18,7 @@ class Admin:
 
     def __init__(self, bot):
         self.bot = bot
-        self.statuses = ["Long Live GAF", self.users_and_guilds, self.uptime]
+        self.statuses = ["Long Live GAF", self.users_and_guilds, self.uptime, self.commands_run]
         self.bg_task = self.bot.loop.create_task(self.status_rotator())
 
     def users_and_guilds(self):
@@ -32,7 +32,7 @@ class Admin:
         hours = int(uptime.seconds / 3600)
         minutes = int((uptime.seconds % 3600) / 60)
         seconds = int((uptime.seconds % 3600) % 60)
-        return "{}d{}h{}m{}s".format(days, hours, minutes, seconds)
+        return "{}d, {}h, {}m, {}s".format(days, hours, minutes, seconds)
 
     def commands_run(self):
         return "{} commands ran".format(self.bot.command_count)
