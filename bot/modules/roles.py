@@ -93,7 +93,7 @@ class Roles:
 
     @roles.command()
     @checks.perms_manage_roles()
-    async def add(self, ctx, role: CustomRoleConverter):
+    async def add(self, ctx, *, role: CustomRoleConverter):
         """Adds a role to the list that can be assigned"""
         if role is not isinstance(role, discord.Role):
             await ctx.send("Could not find role! Creating blank role now :crayon: ")
