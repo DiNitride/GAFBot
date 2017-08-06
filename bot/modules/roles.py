@@ -1,4 +1,5 @@
 import asyncio
+import re
 
 import discord
 from discord.ext import commands
@@ -13,6 +14,29 @@ header = "=====================================================\n" \
          ":white_check_mark: to confirm selection, :x: to cancel\n" \
          ":arrows_counterclockwise: can be used to undo the previoux selection\n" \
          "====================================================="
+
+
+class CustomRoleConverter(commands.IDConverter):
+    """Converts to a :class:`Role`.
+    All lookups are via the local guild. If in a DM context, then the lookup
+    is done by the global cache.
+    The lookup strategy is as follows (in order):
+    1. Lookup by ID.
+    2. Lookup by mention.
+    3. Lookup by name
+    """
+    @asyncio.coroutine
+    def convert(self, ctx, argument):
+        guild = ctx.message.guild
+        if not guild:
+            raise commands.NoPrivateMessage()
+
+        match = self._get_id_match(argument) or re.match(r'<@&([0-9]+)>$', argument)
+        params = dict(id=int(match.group(1))) if match else dict(name=argument)
+        result = discord.utils.get(guild.roles, **params)
+        if result is None:
+            return argument
+        return result
 
 
 class Roles:
@@ -69,10 +93,11 @@ class Roles:
 
     @roles.command()
     @checks.perms_manage_roles()
-    async def add(self, ctx, role: discord.Role = None):
+    async def add(self, ctx, role: CustomRoleConverter):
         """Adds a role to the list that can be assigned"""
-        if role is None:
-            return
+        if role is not isinstance(role, discord.Role):
+            await ctx.send("Could not find role! Creating blank role now :crayon: ")
+            role = await ctx.guild.create_role(name=role)
         if role.position >= ctx.author.top_role.position:
             await ctx.send("Unable to add role due to Hierarchy")
         else:
