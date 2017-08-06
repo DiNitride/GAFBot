@@ -5,13 +5,18 @@ import sys
 import inspect
 import sqlite3
 import subprocess
-import logging
+import traceback
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import CommandError, CheckFailure, UserInputError, \
+    DisabledCommand, CommandOnCooldown, NotOwner, NoPrivateMessage, CommandInvokeError, \
+    CommandNotFound
 from logbook import Logger, StreamHandler
 
 from utils import checks
+from utils.errors import NoEmbedsError
+
 
 StreamHandler(sys.stdout).push_application()
 log = Logger("GAF Bot")
@@ -194,50 +199,63 @@ async def on_command(ctx):
 
 
 @bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, discord.ext.commands.errors.DisabledCommand):
-        await ctx.send(":no_entry_sign: The module this command is from is disabled on this server!")
-    elif isinstance(error, discord.ext.commands.errors.CommandNotFound):
-        return
+async def on_command_error(context, exception: CommandError):
+    # stolen from Union bc I cba to write the same thing
+    # thnx laura
+    # https://github.com/DBDU/union/blob/master/union/core/bot.py#L102
+    if isinstance(exception, CheckFailure) and not isinstance(exception, NoPrivateMessage):
+        message = f"\N{NO ENTRY SIGN} Checks failed: {args}"
+    elif isinstance(exception, NoPrivateMessage):
+        message = f"\N{CROSS MARK} This command does not work in private messages."
+    elif isinstance(exception, UserInputError):
+        message = f"\N{CROSS MARK} {args}"
+    elif isinstance(exception, DisabledCommand):
+        message = f"\N{CROSS MARK} The command {context.invoked_with} is disabled."
+    elif isinstance(exception, CommandOnCooldown):
+        message = f"\N{CROSS MARK} The command {context.invoked_with} is on cooldown. " \
+                f"Try again in {exception.retry_after:.2f} seconds."
+    elif isinstance(exception, NotOwner):
+        message = f
+        "\N{NO ENTRY SIGN} You are not the bot owner."
+    elif isinstance(exception, CommandInvokeError):
+        message = f"\N{SQUARED SOS} An internal error has occurred."
+        traceback.print_exception(type(exception.__cause__), exception.__cause__,
+                                  exception.__cause__.__traceback__)
+    elif isinstance(exception, NoEmbedsError):
+        message = f"Command {context.invoked_with} requires the bot to have embed permissions"
+    elif isinstance(exception, CommandNotFound):
+        message = f":mag: Command {context.invoked_with} does not exist"
     else:
-        bot.log.error("Error in command {}: {}".format(ctx.command, error))
+        message = f"\N{BLACK QUESTION MARK ORNAMENT} An unknown error has occurred."
+        traceback.print_exception(type(exception), exception, exception.__traceback__)
+
+    await context.send(message)
 
 
 @bot.command()
+@checks.has_embeds()
 async def info(ctx):
     """Information about GAF Bot"""
-    if ctx.channel.permissions_for(ctx.guild.me).embed_links:
-        with ctx.channel.typing():
-            embed = discord.Embed(title="Invite me to your server!", colour=discord.Colour.gold(),
-                                  url="https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8",
-                                  description="Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py."
-                                              "I was written by DiNitride, through many hours of hard work and swearing "
-                                              "at my PC. I'm kind of like a spork, I'm multifunctional, but still kind of "
-                                              "shit. Something you get for novelty rather than functionality.",
-                                  timestamp=datetime.datetime.utcfromtimestamp(1493993514))
+    with ctx.channel.typing():
+        embed = discord.Embed(title="Invite me to your server!", colour=discord.Colour.gold(),
+                                url="https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8",
+                              description="Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py."
+                                          "I was written by DiNitride, through many hours of hard work and swearing "
+                                          "at my PC. I'm kind of like a spork, I'm multifunctional, but still kind of "
+                                          "shit. Something you get for novelty rather than functionality.",
+                              timestamp=datetime.datetime.utcfromtimestamp(1493993514))
 
-            embed.set_thumbnail(url=ctx.author.avatar_url)
-            embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
+        embed.set_thumbnail(url=ctx.author.avatar_url)
+        embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
 
-            embed.add_field(name="Source Code", value="https://github.com/DiNitride/GAFBot")
-            embed.add_field(name="Author", value="GAF Bot is written and maintained by DiNitride#7899")
-            embed.add_field(name="Discord.py Version", value=discord.__version__)
-            embed.add_field(name="The Never Ending GAF", value="GAF Bot is the bot of the awful community known as "
-                                                               "The Never Ending GAF, which you can find out about at "
-                                                               "http://www.neverendinggaf.com")
+        embed.add_field(name="Source Code", value="https://github.com/DiNitride/GAFBot")
+        embed.add_field(name="Author", value="GAF Bot is written and maintained by DiNitride#7899")
+        embed.add_field(name="Discord.py Version", value=discord.__version__)
+        embed.add_field(name="The Never Ending GAF", value="GAF Bot is the bot of the awful community known as "
+                                                           "The Never Ending GAF, which you can find out about at "
+                                                           "http://www.neverendinggaf.com")
 
-            await ctx.send(embed=embed)
-    else:
-        await ctx.send("**Hi!** I'm GAF Bot, a Discord bot written in Python using Discord.py."
-                       "I was written by DiNitride, through many hours of hard work and swearing at my PC. "
-                       "*I'm kind of like a spork, I'm multifunctional, but still kind of shit.*"
-                       "Something you get for novelty rather than functionality.\n"
-                        "GAF Bot is the bot of the awful community known as **The Never Ending GAF**, "
-                       "which you can find out about at <http://www.neverendinggaf.com>\n"
-                       "**Invite link:** <https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>\n"
-                       "**Author:** DiNitride#7899\n"
-                       "**Source Code:** <https://github.com/DiNitride/GAFBot>"
-                       )
+        await ctx.send(embed=embed)
 
 
 @bot.command()

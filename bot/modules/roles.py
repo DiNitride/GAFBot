@@ -12,7 +12,7 @@ header = "=====================================================\n" \
          ":one: to :keycap_ten: can be used to select roles\n" \
          ":arrow_left: :arrow_right: to change pages\n" \
          ":white_check_mark: to confirm selection, :x: to cancel\n" \
-         ":arrows_counterclockwise: can be used to undo the previoux selection\n" \
+         ":arrows_counterclockwise: can be used to undo the previous selection\n" \
          "====================================================="
 
 
@@ -27,6 +27,7 @@ class CustomRoleConverter(commands.IDConverter):
     """
     @asyncio.coroutine
     def convert(self, ctx, argument):
+        print(argument)
         guild = ctx.message.guild
         if not guild:
             raise commands.NoPrivateMessage()
@@ -87,15 +88,41 @@ class Roles:
         else:
             r_remove = "None"
         await ctx.author.edit(roles=roles)
-        msg = await ctx.send("```\nRoles Added: {}\nRoles Removed: {}\n```".format(r_add, r_remove))
-        await asyncio.sleep(20)
-        await msg.delete()
+        await ctx.send("```\nRoles Added: {}\nRoles Removed: {}\n```".format(r_add, r_remove))
+
+    @roles.command()
+    async def give(self, ctx, role: discord.Role):
+        """The lord give'th"""
+        server = await self.bot.get_server_data(ctx.guild.id)
+        user_roles = ctx.author.roles
+        options = server["roles"]
+        if str(role.id) in options.keys():
+            try:
+                user_roles.append(role)
+                await ctx.author.edit(roles=user_roles)
+                await ctx.send("Added role {}".format(role))
+            except discord.HTTPException:
+                await ctx.send("Cannot add role!")
+
+    @roles.command()
+    async def take(self, ctx, role: discord.Role):
+        """And the lord take'th"""
+        server = await self.bot.get_server_data(ctx.guild.id)
+        user_roles = ctx.author.roles
+        options = server["roles"]
+        if str(role.id) in options.keys():
+            try:
+                user_roles.remove(role)
+                await ctx.author.edit(roles=user_roles)
+                await ctx.send("Removed role {}".format(role))
+            except ValueError:
+                await ctx.send("Cannot remove role!")
 
     @roles.command()
     @checks.perms_manage_roles()
     async def add(self, ctx, *, role: CustomRoleConverter):
         """Adds a role to the list that can be assigned"""
-        if role is not isinstance(role, discord.Role):
+        if not isinstance(role, discord.Role):
             await ctx.send("Could not find role! Creating blank role now :crayon: ")
             role = await ctx.guild.create_role(name=role)
         if role.position >= ctx.author.top_role.position:
@@ -142,7 +169,7 @@ class Roles:
         guild_data["roleMeLevel"] = True
         guild_data["roleMeLevelID"] = role.id
         await self.bot.update_server_data(ctx.guild.id, guild_data)
-        await ctx.send("`Custom Role level requirement has been set to{}`".format(role))
+        await ctx.send("`Custom Role level requirement has been set to {}`".format(role))
 
     @level.command()
     async def reset(self, ctx):

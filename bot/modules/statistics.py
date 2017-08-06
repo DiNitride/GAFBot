@@ -3,6 +3,8 @@ import datetime
 import discord
 from discord.ext import commands
 
+from utils import checks
+
 
 class Statistics:
 
@@ -24,35 +26,27 @@ class Statistics:
         return days, hours, minutes, seconds
 
     @commands.command(aliases=["stats"])
+    @checks.has_embeds()
     async def statistics(self, ctx):
         """Shows the bot's session stats"""
         days, hours, minutes, seconds = self.calculate_uptime()
         users, channels = self.users_and_channels()
-        if ctx.channel.permissions_for(ctx.guild.me).embed_links:
-            with ctx.channel.typing():
-                embed = discord.Embed(title="Bot Statistics since last startup", colour=discord.Colour.gold(),
-                                      url="",
-                                      description="",
-                                      timestamp=datetime.datetime.utcfromtimestamp(1493993514))
+        with ctx.channel.typing():
+            embed = discord.Embed(title="Bot Statistics since last startup", colour=discord.Colour.gold(),
+                                  url="",
+                                  description="",
+                                  timestamp=datetime.datetime.utcfromtimestamp(1493993514))
 
-                embed.set_thumbnail(url=ctx.author.avatar_url)
-                embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
+            embed.set_thumbnail(url=ctx.author.avatar_url)
+            embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
 
-                embed.add_field(name="Uptime", value="{} Days, {} Hours, {} Minutes and {} Seconds".format(days, hours, minutes, seconds), inline=False)
-                embed.add_field(name="Commands ran", value=self.bot.command_count, inline=False)
-                embed.add_field(name="Total users (Non unique)", value=users, inline=False)
-                embed.add_field(name="Channels", value=channels, inline=False)
-                embed.add_field(name="Total Guilds", value=str(len(self.bot.guilds)), inline=False)
+            embed.add_field(name="Uptime", value="{} Days, {} Hours, {} Minutes and {} Seconds".format(days, hours, minutes, seconds), inline=False)
+            embed.add_field(name="Commands ran", value=self.bot.command_count, inline=False)
+            embed.add_field(name="Total users (Non unique)", value=users, inline=False)
+            embed.add_field(name="Channels", value=channels, inline=False)
+            embed.add_field(name="Total Guilds", value=str(len(self.bot.guilds)), inline=False)
 
-                await ctx.send(embed=embed)
-        else:
-            await ctx.send("__***GAF Bot Statistics***__\n"
-                           "**Uptime:** {}d{}h{}m{}s\n"
-                           "**Commands ran:** {}\n"
-                           "**Users** *(Non-Unique)*: {}\n"
-                           "**Channels:** {}\n"
-                           "**Guilds:** {}".format(days, hours, minutes, seconds,
-                                                    self.bot.command_count, users, channels, len(self.bot.guilds)))
+            await ctx.send(embed=embed)
 
     @commands.command()
     async def scout(self, ctx):
