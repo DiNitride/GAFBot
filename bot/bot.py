@@ -15,7 +15,7 @@ from discord.ext.commands import CommandError, CheckFailure, UserInputError, \
 from logbook import Logger, StreamHandler
 
 from utils import checks
-from utils.errors import NoEmbedsError
+from utils.errors import NoEmbedsError, CogDisabledError
 
 
 StreamHandler(sys.stdout).push_application()
@@ -154,7 +154,11 @@ async def check_command(ctx):
     if module is None:
         return True
     module = module.lower()
-    return server["modules"][module]
+    if server["modules"][module]:
+        return server["modules"][module]
+    else:
+        raise CogDisabledError
+        return server["modules"][module]
 
 bot.add_check(check_command)
 
@@ -203,6 +207,9 @@ async def on_command_error(context, exception: CommandError):
     # stolen from Union bc I cba to write the same thing
     # thnx laura
     # https://github.com/DBDU/union/blob/master/union/core/bot.py#L102
+
+    args = ' '.join(exception.args)
+
     if isinstance(exception, CheckFailure) and not isinstance(exception, NoPrivateMessage):
         message = f"\N{NO ENTRY SIGN} Checks failed: {args}"
     elif isinstance(exception, NoPrivateMessage):
@@ -215,16 +222,18 @@ async def on_command_error(context, exception: CommandError):
         message = f"\N{CROSS MARK} The command {context.invoked_with} is on cooldown. " \
                 f"Try again in {exception.retry_after:.2f} seconds."
     elif isinstance(exception, NotOwner):
-        message = f
-        "\N{NO ENTRY SIGN} You are not the bot owner."
+        message = f"\N{NO ENTRY SIGN} You are not the bot owner."
+    elif isinstance(exception, NoEmbedsError):
+        message = f"\N{CROSS MARK} Command {context.invoked_with} requires the bot to have embed permissions"
+    elif isinstance(exception, CommandNotFound):
+        message = f"\N{LEFT-POINTING MAGNIFYING GLASS} Command {context.invoked_with} does not exist"
+    elif isinstance(exception, CogDisabledError):
+        message = f"\N{CROSS MARK} The cog command `{context.invoked_with}` is from is disabled"
+    # Danger Zone
     elif isinstance(exception, CommandInvokeError):
         message = f"\N{SQUARED SOS} An internal error has occurred."
         traceback.print_exception(type(exception.__cause__), exception.__cause__,
                                   exception.__cause__.__traceback__)
-    elif isinstance(exception, NoEmbedsError):
-        message = f"Command {context.invoked_with} requires the bot to have embed permissions"
-    elif isinstance(exception, CommandNotFound):
-        message = f":mag: Command {context.invoked_with} does not exist"
     else:
         message = f"\N{BLACK QUESTION MARK ORNAMENT} An unknown error has occurred."
         traceback.print_exception(type(exception), exception, exception.__traceback__)

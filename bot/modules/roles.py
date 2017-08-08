@@ -24,6 +24,8 @@ class CustomRoleConverter(commands.IDConverter):
     1. Lookup by ID.
     2. Lookup by mention.
     3. Lookup by name
+
+    Edited to return the input as string if no role is found
     """
     @asyncio.coroutine
     def convert(self, ctx, argument):
@@ -47,7 +49,9 @@ class Roles:
 
     @commands.group(invoke_without_command=True)
     async def roles(self, ctx):
-        """Shows roles on the server that can be assigned"""
+        """
+        Shows roles on the server that can be assigned
+        """
         server = await self.bot.get_server_data(ctx.guild.id)
         if server["roleMeLevel"] is True:
             base_role = None
@@ -91,8 +95,10 @@ class Roles:
         await ctx.send("```\nRoles Added: {}\nRoles Removed: {}\n```".format(r_add, r_remove))
 
     @roles.command()
-    async def give(self, ctx, role: discord.Role):
-        """The lord give'th"""
+    async def give(self, ctx, *, role: discord.Role):
+        """
+        The lord give'th
+        """
         server = await self.bot.get_server_data(ctx.guild.id)
         user_roles = ctx.author.roles
         options = server["roles"]
@@ -105,8 +111,10 @@ class Roles:
                 await ctx.send("Cannot add role!")
 
     @roles.command()
-    async def take(self, ctx, role: discord.Role):
-        """And the lord take'th"""
+    async def take(self, ctx, *, role: discord.Role):
+        """
+        And the lord take'th
+        """
         server = await self.bot.get_server_data(ctx.guild.id)
         user_roles = ctx.author.roles
         options = server["roles"]
@@ -121,7 +129,9 @@ class Roles:
     @roles.command()
     @checks.perms_manage_roles()
     async def add(self, ctx, *, role: CustomRoleConverter):
-        """Adds a role to the list that can be assigned"""
+        """
+        Adds a role to the list that can be assigned
+        """
         if not isinstance(role, discord.Role):
             await ctx.send("Could not find role! Creating blank role now :crayon: ")
             role = await ctx.guild.create_role(name=role)
@@ -136,7 +146,9 @@ class Roles:
     @roles.command()
     @checks.perms_manage_roles()
     async def remove(self, ctx, role: discord.Role = None):
-        """Removes a role from the list that can be assigned"""
+        """
+        Removes a role from the list that can be assigned
+        """
         if role is None:
             return
         if role.position >= ctx.author.top_role.position:
@@ -149,7 +161,9 @@ class Roles:
 
     @roles.command()
     async def reset(self, ctx):
-        """Warning, completely ereases config for your server!"""
+        """
+        Warning, completely ereases config for your server!
+        """
         guild_data = await self.bot.get_server_data(ctx.guild.id)
         guild_data["roles"] = {}
         await self.bot.update_server_data(ctx.guild.id, guild_data)
@@ -157,6 +171,9 @@ class Roles:
 
     @roles.group(invoke_without_command=True)
     async def level(self, ctx):
+        """
+        Toggles the role level required for people to use the roles command
+        """
         guild_data = await self.bot.get_server_data(ctx.guild.id)
         if guild_data["roleMeLevel"] is True:
             await ctx.send("`Role command level is set to True`")
@@ -165,6 +182,9 @@ class Roles:
 
     @level.command()
     async def set(self, ctx, role: discord.Role):
+        """
+        Sets the role level required to use the role command
+        """
         guild_data = await self.bot.get_server_data(ctx.guild.id)
         guild_data["roleMeLevel"] = True
         guild_data["roleMeLevelID"] = role.id
@@ -173,11 +193,54 @@ class Roles:
 
     @level.command()
     async def reset(self, ctx):
+        """
+        Resets the role level requirement
+        """
         guild_data = await self.bot.get_server_data(ctx.guild.id)
         guild_data["roleMeLevel"] = False
         guild_data["roleMeLevelID"] = ""
         await self.bot.update_server_data(ctx.guild.id, guild_data)
         await ctx.send("`Custom Role level requirement has been reset`")
+
+    @commands.group(invoke_without_command=True)
+    async def joinrole(self, ctx):
+        """
+        Shows whether the server has join role assigned
+        """
+        server = await self.bot.get_server_data(ctx.guild.id)
+        if server["roleOnJoin"]:
+            role = discord.utils.get(ctx.guild.roles, id=int(server["roleOnJoinRole"]))
+            if role is None:
+                await ctx.send("There was an error finding the join role, please set a new one")
+                server["roleOnJoin"] = False
+                server["roleOnJoinRole"] = ""
+                await self.bot.update_server_data(ctx.guild.id, server)
+            else:
+                await ctx.send("The join role for this guild is `{}`".format(role))
+        else:
+            await ctx.send("This guild does not have a join role set")
+
+    @joinrole.command()
+    async def set(self, ctx, role: discord.Role):
+        """
+        Sets and enables the join role for the server
+        """
+        server = await self.bot.get_server_data(ctx.guild.id)
+        server["roleOnJoin"] = True
+        server["roleOnJoinRole"] = role.id
+        await self.bot.update_server_data(ctx.guild.id, server)
+        await ctx.send("Okay, I will now give new users to the server the role: `{}`".format(role))
+
+    @joinrole.command()
+    async def disable(self, ctx):
+        """
+        Disables the join role feature
+        """
+        server = await self.bot.get_server_data(ctx.guild.id)
+        server["roleOnJoin"] = False
+        server["roleOnJoinRole"] = ""
+        await self.bot.update_server_data(ctx.guild.id, server)
+        await ctx.send("I will stop giving new users roles")
 
     async def on_guild_role_delete(self, role):
         guild = role.guild
@@ -186,7 +249,26 @@ class Roles:
         r_id = str(role.id)
         if r_id in roles:
             del guild_data["roles"][r_id]
+        if role.id == guild_data["roleOnJoinRole"]:
+            guild_data["roleOnJoin"] = False
+            guild_data["roleOnJoinRole"] = ""
         await self.bot.update_server_data(guild.id, guild_data)
+
+    async def on_member_join(self, member):
+        server = await self.bot.get_server_data(member.guild.id)
+        if server["roleOnJoin"]:
+            role = discord.utils.get(member.guild.roles, id=int(server["roleOnJoinRole"]))
+            if role is not None:
+                try:
+                    roles = member.roles
+                    roles.append(role)
+                    await member.edit(roles=roles)
+                except discord.HTTPException:
+                    pass
+            else:
+                server["roleOnJoin"] = False
+                server["roleOnJoinRole"] = ""
+                await self.bot.update_server_data(member.guild.id, server)
 
 
 def setup(bot):
