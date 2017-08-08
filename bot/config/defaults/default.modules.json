@@ -6,5 +6,6 @@
   "moderation": true,
   "gaf": true,
   "utils": true,
-  "spotify": true
+  "spotify": true,
+  "rng": true
 }

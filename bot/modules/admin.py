@@ -49,7 +49,9 @@ class Admin:
     @commands.group(invoke_without_command=True)
     @checks.is_owner()
     async def guilds(self, ctx):
-        """Lists all of the guilds the bot is in"""
+        """
+        Lists all of the guilds the bot is in
+        """
         guilds = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
         await reaction_menu.start_reaction_menu(self.bot, guilds, ctx.author, ctx.channel, count=0,
                                                 timeout=60, per_page=30, header=header)
@@ -57,7 +59,9 @@ class Admin:
     @guilds.command()
     @checks.is_owner()
     async def leave(self, ctx, guild=None):
-        """Leaves a specified guild"""
+        """
+        Leaves a specified guild
+        """
         guild_names = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
         if guild is None:
             guild = await reaction_menu.start_reaction_menu(self.bot, guild_names, ctx.author, ctx.channel, count=1,
@@ -77,6 +81,9 @@ class Admin:
     @guilds.command()
     @checks.is_owner()
     async def invite(self, ctx, guild=None):
+        """
+        Creates an invite to a specified server
+        """
         guild_names = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
         if guild is None:
             guild = await reaction_menu.start_reaction_menu(self.bot, guild_names, ctx.author, ctx.channel, count=1,

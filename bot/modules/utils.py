@@ -14,7 +14,9 @@ class Utils:
     @commands.command()
     @checks.has_embeds()
     async def whois(self, ctx, id: int):
-        """Searches for a user via ID"""
+        """
+        Searches for a user via ID
+        """
         try:
             with ctx.channel.typing():
                 user = await self.bot.get_user_info(id)
@@ -36,6 +38,9 @@ class Utils:
     @commands.group(invoke_without_command=True)
     @checks.has_embeds()
     async def about(self, ctx, user: discord.Member = None):
+        """
+        Shows information about a user, or server
+        """
         if user is None:
             user = ctx.author
         with ctx.channel.typing():
@@ -58,7 +63,9 @@ class Utils:
     @about.command()
     @checks.has_embeds()
     async def server(self, ctx):
-        """Basic info on the server"""
+        """
+        Basic info on the server
+        """
         with ctx.channel.typing():
             embed = discord.Embed(title="ID: 58934178071780", colour=discord.Colour.gold(),
                                   timestamp=datetime.datetime.utcfromtimestamp(1491012420))
@@ -82,7 +89,9 @@ class Utils:
     @commands.command()
     @checks.has_embeds()
     async def avatar(self, ctx, user: discord.Member = None):
-        """Returns the avatar of a user"""
+        """
+        Returns the avatar of a user
+        """
         with ctx.channel.typing():
             if user is None:
                 user = ctx.author

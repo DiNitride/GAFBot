@@ -125,12 +125,13 @@ async def get_prefix_via_id(guild_id):
 description = "Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py. " \
               "I was written by DiNitride, through many hours of hard work and swearing at my PC. \n" \
               "I'm kind of like a spork, I'm multifunctional, but still kind of shit. Something you get for novelty " \
-              "rather than functionality. \n\n" \
-              "Many of the commands are subcommands, so do $help <command> for more detail on them. \n" \
-              "For more help, reporting bugs, or speaking to the developer, join GAF Bot's Discord @ " \
-              "http://discord.bot.neverendinggaf.com."
+              "rather than functionality. You can join my Discord server for more help, reporting bugs, " \
+              "or speaking to the developer here by doing $server\n\n" \
 
-bot = commands.Bot(command_prefix=get_prefix, description=description, pm_help=True)
+
+help_ext = "Many of the commands are subcommands, so do $help <command> for more detail on them\n"
+
+bot = commands.Bot(command_prefix=get_prefix, description=description + help_ext, pm_help=True)
 
 log.info("Transferring configuration data to bot")
 bot.log = log
@@ -186,6 +187,8 @@ async def on_ready():
     bot.log.notice("Loaded Utils Module")
     bot.load_extension("modules.spotify")
     bot.log.notice("Loaded Spotify")
+    bot.load_extension("modules.rng")
+    bot.log.notice("Loaded RNG")
 
 
 @bot.event
@@ -248,10 +251,7 @@ async def info(ctx):
     with ctx.channel.typing():
         embed = discord.Embed(title="Invite me to your server!", colour=discord.Colour.gold(),
                                 url="https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8",
-                              description="Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py."
-                                          "I was written by DiNitride, through many hours of hard work and swearing "
-                                          "at my PC. I'm kind of like a spork, I'm multifunctional, but still kind of "
-                                          "shit. Something you get for novelty rather than functionality.",
+                              description=description,
                               timestamp=datetime.datetime.utcfromtimestamp(1493993514))
 
         embed.set_thumbnail(url=ctx.author.avatar_url)
@@ -266,6 +266,13 @@ async def info(ctx):
 
         await ctx.send(embed=embed)
 
+@bot.command()
+async def source(ctx):
+    await ctx.send("https://github.com/DiNitride/GAFBot")
+
+@bot.command()
+async def server(ctx):
+    await ctx.send("<http://discord.bot.neverendinggaf.com> - https://discord.gg/ddbFt7S")
 
 @bot.command()
 async def invite(ctx):
@@ -275,7 +282,9 @@ async def invite(ctx):
 @bot.command()
 @checks.is_owner()
 async def ping(ctx):
-    """Pong"""
+    """
+    Pong
+    """
     before = time.monotonic()
     await (await bot.ws.ping())
     after = time.monotonic()
@@ -286,7 +295,9 @@ async def ping(ctx):
 @bot.command(hidden=True)
 @checks.is_owner()
 async def update(ctx):
-    """Updates the bot"""
+    """
+    Updates the bot
+    """
     await ctx.send("Calling process to update! :up: :date: ")
     try:
         done = subprocess.run("git pull", shell=True, stdout=subprocess.PIPE, timeout=30)
@@ -307,7 +318,9 @@ async def update(ctx):
 @bot.command(name="eval")
 @checks.is_owner()
 async def _eval(ctx, *, code):
-    """Evaluates a line of code provided"""
+    """
+    Evaluates a line of code provided
+    """
     hel = "yea"
     code = code.strip("` ")
     try:
@@ -323,7 +336,9 @@ async def _eval(ctx, *, code):
 
 @bot.command()
 async def f(ctx):
-    """Pays resepect"""
+    """
+    Pays resepect
+    """
     await ctx.send("*Respects*")
 
 
@@ -337,7 +352,9 @@ async def save_module_loading():
 @bot.command(name="load")
 @checks.is_owner()
 async def _load(ctx, extension: str):
-    """Enables a module"""
+    """
+    Enables a module
+    """
     extension = extension.lower()
     if extension not in bot.modules.keys():
         bot.log.error("Tried to enable module {} but it is not a valid module".format(extension))
@@ -356,7 +373,9 @@ async def _load(ctx, extension: str):
 @bot.command(name="unload")
 @checks.is_owner()
 async def _unload(ctx, extension: str):
-    """Disables a module"""
+    """
+    Disables a module
+    """
     extension = extension.lower()
     if extension not in bot.modules.keys():
         bot.log.error("Tried to disable module {} but it is not a valid module".format(extension))

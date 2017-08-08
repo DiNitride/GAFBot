@@ -12,7 +12,9 @@ class Moderation:
     @commands.command()
     @checks.perms_ban()
     async def ban(self, ctx, user: discord.Member, delete_days=1):
-        """Bans a user from the guild"""
+        """
+        Bans a user from the guild
+        """
         if user is ctx.author:
             return
         if delete_days > 7:
@@ -24,7 +26,9 @@ class Moderation:
     @commands.command()
     @checks.perms_ban()
     async def xban(self, ctx, user_id: int):
-        """Allows the banning of a user not int he guild via ID"""
+        """
+        Allows the banning of a user not int he guild via ID
+        """
         # Stolen from Joku
         # k thnx Laura
         # https://github.com/SunDwarf/Jokusoramame/blob/master/joku/cogs/mod.py#L135
@@ -40,7 +44,9 @@ class Moderation:
     @commands.command()
     @checks.perms_kick()
     async def kick(self, ctx, user: discord.Member):
-        """Kicks a user from the guild"""
+        """
+        Kicks a user from the guild
+        """
         if user is ctx.author:
             return
         if user:
@@ -50,7 +56,9 @@ class Moderation:
     @commands.command()
     @checks.perms_manage_messages()
     async def purge(self, ctx, limit: int, user: discord.Member = None):
-        """Purges messages from a channel"""
+        """
+        Purges messages from a channel
+        """
         def predicate(m):
             return m.author == user
         if ctx.message.author.id != 95953002774413312:
@@ -68,7 +76,9 @@ class Moderation:
     @commands.group(invoke_without_command=True)
     @checks.perms_manage_messages()
     async def mute(self, ctx, user: discord.Member):
-        """Mutes a user"""
+        """
+        Mutes a user
+        """
         if user is ctx.author:
             return
         guild_settings = await self.bot.get_server_data(ctx.guild.id)

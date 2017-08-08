@@ -19,7 +19,9 @@ class Spotify:
     @commands.command()
     @checks.has_embeds()
     async def search(self, ctx, *, search: str):
-        """Searches Spotify"""
+        """
+        Searches Spotify
+        """
         with ctx.channel.typing():
             song = search.strip()
             song = song.replace(" ", "+")
@@ -66,7 +68,9 @@ class Spotify:
     @commands.command()
     @checks.has_embeds()
     async def playlists(self, ctx):
-        """Get's todays daily playlists"""
+        """
+        Get's todays daily playlists
+        """
         with ctx.channel.typing():
             api_url = "https://api.spotify.com/v1/browse/featured-playlists?limit=5"
             api_auth_url = 'https://accounts.spotify.com/api/token'
@@ -102,7 +106,9 @@ class Spotify:
     @commands.command()
     @checks.has_embeds()
     async def playlist(self, ctx):
-        """Picks a random playlist from 20 of the daily playlists"""
+        """
+        Picks a random playlist from 20 of the daily playlists
+        """
         with ctx.channel.typing():
             api_url = "https://api.spotify.com/v1/browse/featured-playlists"
             api_auth_url = 'https://accounts.spotify.com/api/token'

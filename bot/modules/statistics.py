@@ -28,7 +28,9 @@ class Statistics:
     @commands.command(aliases=["stats"])
     @checks.has_embeds()
     async def statistics(self, ctx):
-        """Shows the bot's session stats"""
+        """
+        Shows the bot's session stats
+        """
         days, hours, minutes, seconds = self.calculate_uptime()
         users, channels = self.users_and_channels()
         with ctx.channel.typing():
@@ -50,19 +52,25 @@ class Statistics:
 
     @commands.command()
     async def scout(self, ctx):
-        """GAF Bot, what do your elf eyes see?"""
+        """
+        GAF Bot, what do your elf eyes see?
+        """
         users, channels = self.users_and_channels()
         await ctx.send("`I can see {} users in {} channels on {} guilds`".format(users, channels, len(self.bot.guilds)))
 
     @commands.command()
     async def uptime(self, ctx):
-        """How long until I crash again?"""
+        """
+        How long until I crash again?
+        """
         days, hours, minutes, seconds = self.calculate_uptime()
         await ctx.send("`{} Days, {} Hours, {} Minutes and {} Seconds`".format(days, hours, minutes, seconds))
 
     @commands.command()
     async def count(self, ctx):
-        """Commands ran since boot"""
+        """
+        Commands ran since boot
+        """
         await ctx.send("`{} commands ran since last boot`".format(self.bot.command_count))
 
 
