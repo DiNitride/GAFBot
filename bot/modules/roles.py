@@ -29,7 +29,6 @@ class CustomRoleConverter(commands.IDConverter):
     """
     @asyncio.coroutine
     def convert(self, ctx, argument):
-        print(argument)
         guild = ctx.message.guild
         if not guild:
             raise commands.NoPrivateMessage()

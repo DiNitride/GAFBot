@@ -189,6 +189,8 @@ async def on_ready():
     bot.log.notice("Loaded Spotify")
     bot.load_extension("modules.rng")
     bot.log.notice("Loaded RNG")
+    bot.load_extension("modules.csgo")
+    bot.log.notice("Loaded CS:GO")
 
 
 @bot.event
@@ -266,16 +268,28 @@ async def info(ctx):
 
         await ctx.send(embed=embed)
 
+
 @bot.command()
 async def source(ctx):
+    """
+    Source code
+    """
     await ctx.send("https://github.com/DiNitride/GAFBot")
+
 
 @bot.command()
 async def server(ctx):
+    """
+    Invite to the bot's guild
+    """
     await ctx.send("<http://discord.bot.neverendinggaf.com> - https://discord.gg/ddbFt7S")
+
 
 @bot.command()
 async def invite(ctx):
+    """
+    Invite link to add the bot to your guild
+    """
     await ctx.send("`Invite me to your server! <https://discordapp.com/oauth2/authorize?&client_id=173708503796416512&scope=bot&permissions=8>")
 
 

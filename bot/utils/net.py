@@ -12,7 +12,10 @@ async def get_url(url, headers: dict = None):
             if status != 200:
                 json = None
                 return response, json, status
-            json = await response.json()
+            try:
+                json = await response.json()
+            except Exception:
+                json = None
             return response, json, status
 
 async def post_url(url, data: dict = None, headers: dict = None):
@@ -23,6 +26,9 @@ async def post_url(url, data: dict = None, headers: dict = None):
             if status != 200:
                 json = None
                 return response, json, status
-            json = await response.json()
+            try:
+                json = await response.json()
+            except Exception:
+                json = None
             return response, json, status
 
