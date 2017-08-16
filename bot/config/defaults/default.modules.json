@@ -7,5 +7,6 @@
   "gaf": true,
   "utils": true,
   "spotify": true,
-  "rng": true
+  "rng": true,
+  "csgo": true
 }

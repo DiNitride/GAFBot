@@ -17,7 +17,8 @@ from logbook import Logger, StreamHandler
 from utils import checks
 from utils.errors import NoEmbedsError, CogDisabledError
 
-
+# TODO: Logging to file
+# TODO: Backing up config
 StreamHandler(sys.stdout).push_application()
 log = Logger("GAF Bot")
 
@@ -39,7 +40,7 @@ except FileNotFoundError:
     _config = json.load(df)
     with open("config/config.json", "w") as f:
         log.info("Saved new config to file")
-        f.write(json.dumps(_config))
+        f.write(json.dumps(_config, indent=4, separators=(',', ':')))
 
 try:
     with open("config/modules.json") as f:
@@ -149,6 +150,17 @@ bot.default_guild_config = default_server_settings
 
 bot.command_count = 0
 
+async def update_config(key, value):
+    """
+    Updates a value in the bots config.
+    """
+    bot.config[key] = value
+    with open("config/config.json", 'w') as f:
+        f.write(json.dumps(bot.config, indent=4, separators=(',', ':')))
+
+bot.update_config = update_config
+
+
 async def check_command(ctx):
     server = await bot.get_server_data(ctx.guild.id)
     module = ctx.command.cog_name
@@ -159,7 +171,6 @@ async def check_command(ctx):
         return server["modules"][module]
     else:
         raise CogDisabledError
-        return server["modules"][module]
 
 bot.add_check(check_command)
 
@@ -233,7 +244,7 @@ async def on_command_error(context, exception: CommandError):
     elif isinstance(exception, CommandNotFound):
         message = f"\N{LEFT-POINTING MAGNIFYING GLASS} Command {context.invoked_with} does not exist"
     elif isinstance(exception, CogDisabledError):
-        message = f"\N{CROSS MARK} The cog command `{context.invoked_with}` is from is disabled"
+        message = f"\N{CROSS MARK} `{context.invoked_with}` is from a bot module that is disabled"
     # Danger Zone
     elif isinstance(exception, CommandInvokeError):
         message = f"\N{SQUARED SOS} An internal error has occurred."
@@ -371,7 +382,7 @@ async def _load(ctx, extension: str):
     """
     extension = extension.lower()
     if extension not in bot.modules.keys():
-        bot.log.error("Tried to enable module {} but it is not a valid module".format(extension))
+        bot.log.error   ("Tried to enable module {} but it is not a valid module".format(extension))
         await ctx.send("Invalid module")
     else:
         bot.modules[extension] = True

@@ -11,5 +11,7 @@
   "roleMeLevel": false,
   "roleMeLevelID": "",
   "roleOnJoin": false,
-  "roleOnJoinRole": ""
+  "roleOnJoinRole": "",
+  "csgo_updates": false,
+  "csgo_updates_channel": ""
 }

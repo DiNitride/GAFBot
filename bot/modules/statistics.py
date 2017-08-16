@@ -43,7 +43,7 @@ class Statistics:
             embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
 
             embed.add_field(name="Uptime", value="{} Days, {} Hours, {} Minutes and {} Seconds".format(days, hours, minutes, seconds), inline=False)
-            embed.add_field(name="Commands ran", value=self.bot.command_count, inline=False)
+            embed.add_field(name="Commands ran", value=self.bot.command_count + 1, inline=False)
             embed.add_field(name="Total users (Non unique)", value=users, inline=False)
             embed.add_field(name="Channels", value=channels, inline=False)
             embed.add_field(name="Total Guilds", value=str(len(self.bot.guilds)), inline=False)
@@ -71,7 +71,7 @@ class Statistics:
         """
         Commands ran since boot
         """
-        await ctx.send("`{} commands ran since last boot`".format(self.bot.command_count))
+        await ctx.send("`{} commands ran since last boot`".format(self.bot.command_count + 1))
 
 
 def setup(bot):
