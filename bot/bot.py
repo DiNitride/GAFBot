@@ -248,8 +248,8 @@ async def on_command_error(context, exception: CommandError):
     # Danger Zone
     elif isinstance(exception, CommandInvokeError):
         message = f"\N{SQUARED SOS} An internal error has occurred."
-        traceback.print_exception(type(exception.__cause__), exception.__cause__,
-                                  exception.__cause__.__traceback__)
+        await context.send(traceback.print_exception(type(exception.__cause__), exception.__cause__,
+                                  exception.__cause__.__traceback__))
     else:
         message = f"\N{BLACK QUESTION MARK ORNAMENT} An unknown error has occurred."
         traceback.print_exception(type(exception), exception, exception.__traceback__)
