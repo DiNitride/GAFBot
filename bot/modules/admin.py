@@ -19,7 +19,14 @@ class Admin:
 
     def __init__(self, bot):
         self.bot = bot
-        self.statuses = ["Long Live GAF", self.users_and_guilds, self.uptime, self.commands_run]
+        self.statuses = ["Long Live GAF",
+                         self.users_and_guilds,
+                         self.uptime,
+                         self.commands_run,
+                         "CS:GO and PUBG Update Tracker!",
+                         "Try the GameStats bot to share your statistics",
+                         "http://www.neverendinggaf.com",
+                         "Need to pick a new mouse? http://www.rocketjumpninja.com/"]
         self.bg_task = self.bot.loop.create_task(self.status_rotator())
 
     def users_and_guilds(self):
