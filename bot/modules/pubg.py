@@ -16,6 +16,7 @@ class PUBG:
         self.bg_task = self.bot.loop.create_task(self.pubg_update_loop())
 
     @commands.group()
+    @checks.perms_manage_messages()
     async def pubgupdates(self, ctx):
         """
         Manages tracking PUBG updates for your guild.

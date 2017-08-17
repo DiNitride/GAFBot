@@ -6,7 +6,7 @@ import dateparser
 from lxml import etree
 import html2text
 
-from utils import net
+from utils import net, checks
 
 
 class CSGO:
@@ -16,6 +16,7 @@ class CSGO:
         self.bg_task = self.bot.loop.create_task(self.csgo_update_loop())
 
     @commands.group()
+    @checks.perms_manage_messages()
     async def csupdates(self, ctx):
         """
         Manages tracking CS:GO updates for your guild.
@@ -75,7 +76,7 @@ class CSGO:
                     if server["csgo_updates"] is True:
                         channel = discord.utils.get(guild.channels, id=server["csgo_updates_channel"])
                         with channel.typing():
-                            if len(html2text.html2text(element.find("description").text)) > 1900:
+                            if len(html2text.html2text(element.find("content:encoded", namespaces={"content": "http://purl.org/rss/1.0/modules/content/"}).text)) > 1900:
                                 content = html2text.html2text(element.find("content:encoded", namespaces={"content": "http://purl.org/rss/1.0/modules/content/"}).text[:1900]) + ". . ."
                             else:
                                 content = html2text.html2text(element.find("content:encoded", namespaces={"content": "http://purl.org/rss/1.0/modules/content/"}).text)

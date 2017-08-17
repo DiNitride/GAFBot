@@ -113,6 +113,9 @@ class Moderation:
     @mute.command()
     @checks.perms_manage_messages()
     async def role(self, ctx, role: discord.Role = None):
+        """
+        Sets the mute role for the server
+        """
         if role is None:
             return
         if role.position >= ctx.author.top_role.position:

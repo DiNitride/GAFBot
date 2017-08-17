@@ -16,6 +16,7 @@ from logbook import Logger, StreamHandler
 
 from utils import checks
 from utils.errors import NoEmbedsError, CogDisabledError
+from utils.helpFormatter import MyHelpFormatter
 
 # TODO: Logging to file
 # TODO: Backing up config
@@ -132,7 +133,7 @@ description = "Hi! I'm GAF Bot, a Discord bot written in Python using Discord.py
 
 help_ext = "Many of the commands are subcommands, so do $help <command> for more detail on them\n"
 
-bot = commands.Bot(command_prefix=get_prefix, description=description + help_ext, pm_help=True)
+bot = commands.Bot(command_prefix=get_prefix, description=description + help_ext, pm_help=True, formatter=MyHelpFormatter())
 
 log.info("Transferring configuration data to bot")
 bot.log = log
