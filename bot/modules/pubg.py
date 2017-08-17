@@ -54,18 +54,6 @@ class PUBG:
         await self.bot.update_server_data(ctx.guild.id, server)
         await ctx.send("`Okay, tracking channel set to #{}`".format(ctx.channel))
 
-    @checks.is_owner()
-    @commands.command()
-    async def pubg_reset(self, ctx):
-        await self.bot.update_config("pubg_last_pub", "Tue, 25 Jul 2017 16:00:15 +0000")
-        await ctx.send("k")
-
-    @commands.command()
-    async def pubg_test(self, ctx):
-        server = await self.bot.get_server_data(ctx.guild.id)
-        await ctx.send(server["pubg_updates"])
-        await ctx.send(server["pubg_updates_channel"])
-
     async def pubg_update_loop(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
