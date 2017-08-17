@@ -8,5 +8,6 @@
   "utils": true,
   "spotify": true,
   "rng": true,
-  "csgo": true
+  "csgo": true,
+  "pubg": true
 }

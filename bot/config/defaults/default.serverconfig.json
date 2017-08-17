@@ -13,5 +13,7 @@
   "roleOnJoin": false,
   "roleOnJoinRole": "",
   "csgo_updates": false,
-  "csgo_updates_channel": ""
+  "csgo_updates_channel": "",
+  "pubg_updates": false,
+  "pubg_updates_channel": ""
 }

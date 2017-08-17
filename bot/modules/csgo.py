@@ -75,12 +75,16 @@ class CSGO:
                     if server["csgo_updates"] is True:
                         channel = discord.utils.get(guild.channels, id=server["csgo_updates_channel"])
                         with channel.typing():
+                            if len(html2text.html2text(element.find("description").text)) > 1900:
+                                content = html2text.html2text(element.find("content:encoded", namespaces={"content": "http://purl.org/rss/1.0/modules/content/"}).text[:1900]) + ". . ."
+                            else:
+                                content = html2text.html2text(element.find("content:encoded", namespaces={"content": "http://purl.org/rss/1.0/modules/content/"}).text)
                             embed = discord.Embed(
                                 title="{}".format(element.find("title").text),
                                 colour=discord.Colour.gold(),
                                 url="{}".format(element.find("link").text),
                                 timestamp=dateparser.parse(element[2].text),
-                                description="{}".format(html2text.html2text(element.find("content:encoded", namespaces={"content": "http://purl.org/rss/1.0/modules/content/"}).text))
+                                description=content
                             )
                             await channel.send(embed=embed)
                             self.bot.log.debug("Sent update informaton to guild {} in channel #{}".format(guild, channel))

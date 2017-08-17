@@ -202,6 +202,8 @@ async def on_ready():
     bot.log.notice("Loaded RNG")
     bot.load_extension("modules.csgo")
     bot.log.notice("Loaded CS:GO")
+    bot.load_extension("modules.pubg")
+    bot.log.notice("Loaded PUBG")
 
 
 @bot.event
@@ -291,7 +293,7 @@ async def source(ctx):
 @bot.command()
 async def server(ctx):
     """
-    Invite to the bot's guild
+    Invite to the bot's guild[2].text)
     """
     await ctx.send("<http://discord.bot.neverendinggaf.com> - https://discord.gg/ddbFt7S")
 
