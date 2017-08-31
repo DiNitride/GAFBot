@@ -101,17 +101,21 @@ class Admin:
         else:
             guild = discord.utils.find(lambda s: s.name == guild or str(s.id) == guild, self.bot.guilds)
             if guild is None:
-                await ctx.send("Unable to locate guild")
+                await ctx.send("`Unable to locate guild`")
                 return
-        try:
-            invite = await guild.create_invite()
-            await ctx.send("`Created an invite to guild, I will DM it to you`")
-            dm_channel = ctx.author.dm_channel
-            if dm_channel is None:
-                dm_channel = await ctx.author.create_dm()
-            await dm_channel.send(invite.url)
-        except discord.HTTPException:
-            await ctx.send("`Failed to create invite for guild!`")
+
+        for channel in guild.channels:
+            if isinstance(channel, discord.TextChannel):
+                try:
+                    invite = await channel.create_invite()
+                    await ctx.send("`Created an invite to guild, I will DM it to you`")
+                    dm_channel = ctx.author.dm_channel
+                    if dm_channel is None:
+                        dm_channel = await ctx.author.create_dm()
+                    await dm_channel.send(invite.url)
+                    break
+                except discord.HTTPException:
+                    await ctx.send("`Failed to create invite for guild!`")
 
 
 def setup(bot):
