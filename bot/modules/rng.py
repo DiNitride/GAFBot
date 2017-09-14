@@ -19,8 +19,11 @@ class RNG:
             await ctx.send('Format has to be in NdN!')
             return
 
-        result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
-        await ctx.send(result)
+        if (rolls or limit) > 100:
+            await ctx.send("Go away Profound. (Size too big")
+        else:
+            result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+            await ctx.send(result)
 
     @commands.command()
     async def choose(self, ctx, *choices: str):

@@ -19,7 +19,7 @@ class CSGO:
     @checks.perms_manage_messages()
     async def csupdates(self, ctx):
         """
-        Manages tracking CS:GO updates for your guild.
+        Manages tracking CS:GO updates for your guild. BROKEN
         """
         pass
 

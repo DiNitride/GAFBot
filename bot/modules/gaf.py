@@ -3,7 +3,6 @@ import discord
 
 import dateparser
 import html2text
-import asyncio
 from lxml import etree
 
 from utils import checks, net
@@ -49,13 +48,19 @@ class GAF:
         await ctx.send(content="<@&172426880543227904> <@&262334316611239937>, chill? - {}".format(ctx.author), file=discord.File("resources/chill.jpg"))
         await ctx.message.delete()
 
-    @gaf.group()
+    @gaf.group(invoke_without_subcommand=True)
     @checks.perms_manage_messages()
     async def rss(self, ctx):
         """
         Allows you to manage RSS feed for GAF Steam Annoucements
         """
-        pass
+        server = await self.bot.get_server_data(ctx.guild.id)
+        if server["gaf_steam_rss"] is True:
+            channel = discord.utils.get(ctx.guild.channels, id=server["gaf_steam_rss_channel"])
+            await ctx.send("GAF RSS Tracking is enabled in channel #{}".format(channel))
+        else:
+            await ctx.send("GAF RSS Tracking is not enabled")
+
 
     @rss.command()
     async def track(self, ctx):

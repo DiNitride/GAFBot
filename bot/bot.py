@@ -245,7 +245,7 @@ async def on_command_error(context, exception: CommandError):
     elif isinstance(exception, NoEmbedsError):
         message = f"\N{CROSS MARK} Command {context.invoked_with} requires the bot to have embed permissions"
     elif isinstance(exception, CommandNotFound):
-        message = f"\N{LEFT-POINTING MAGNIFYING GLASS} Command {context.invoked_with} does not exist"
+        return
     elif isinstance(exception, CogDisabledError):
         message = f"\N{CROSS MARK} `{context.invoked_with}` is from a bot module that is disabled"
     # Danger Zone
