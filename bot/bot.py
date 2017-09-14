@@ -104,14 +104,17 @@ _prefixes = {}
 
 async def get_prefix(_bot, ctx):
     r = [_bot.user.mention + " ", "<@!{}s> ".format(_bot.user.id)]
-    if ctx.guild.id in _prefixes:
-        r.append(_prefixes[ctx.guild.id])
-        return r
-    else:
-        settings = await get_server_data(ctx.guild.id)
-        _prefixes[ctx.guild.id] = settings["prefix"]
-        r.append(_prefixes[ctx.guild.id])
-        return r
+    try:
+        if ctx.guild.id in _prefixes:
+            r.append(_prefixes[ctx.guild.id])
+            return r
+        else:
+            settings = await get_server_data(ctx.guild.id)
+            _prefixes[ctx.guild.id] = settings["prefix"]
+            r.append(_prefixes[ctx.guild.id])
+            return r
+    except AttributeError:
+        return r.append("$")
 
 async def update_prefix_cache(guild_id: int, prefix: str):
     _prefixes[guild_id] = prefix
