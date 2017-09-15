@@ -70,7 +70,7 @@ class CSGO:
                     break
                 elif post_pub > last_pub:
                     new_posts.append(element)
-            for i, element in reversed(list(enumerate(new_posts))):
+            for i, element in enumerate(list(reversed(new_posts))):
                 for guild in self.bot.guilds:
                     server = await self.bot.get_server_data(guild.id)
                     if server["csgo_updates"] is True:
