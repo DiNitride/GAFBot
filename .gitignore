@@ -8,3 +8,4 @@ desktop.ini
 bot/config/modules.json
 bot/config/serverSettings.db
 .idea
+bot/logs/last-run.log
