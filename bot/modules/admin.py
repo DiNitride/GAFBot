@@ -51,7 +51,7 @@ class Admin:
             for val in self.statuses:
                 if callable(val):
                     val = val()
-                await self.bot.change_presence(game=discord.Game(name=val, url="https://www.twitch.tv/dinitride", type=1))
+                await self.bot.change_presence(game=discord.Game(name=val, type=0))
                 await asyncio.sleep(180)
 
     @commands.group(invoke_without_command=True)
