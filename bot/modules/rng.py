@@ -1,6 +1,8 @@
+import re
+import random
+
 import discord
 from discord.ext import commands
-import random
 
 
 class RNG:
@@ -30,7 +32,7 @@ class RNG:
         """
         Chooses between multiple choices, surround choices with spaces in quotes.
         """
-        await ctx.send(random.choice(choices))
+        await ctx.send(f"I choose: {re.sub('@here', '', re.sub('@everyone', '', random.choice(choices)))}  ")
 
 
 def setup(bot):
