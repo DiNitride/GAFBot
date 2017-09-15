@@ -12,16 +12,16 @@ from discord.ext import commands
 from discord.ext.commands import CommandError, CheckFailure, UserInputError, \
     DisabledCommand, CommandOnCooldown, NotOwner, NoPrivateMessage, CommandInvokeError, \
     CommandNotFound
-from logbook import Logger, StreamHandler
+from logbook import Logger, StreamHandler, FileHandler
+import logbook
 
 from utils import checks
 from utils.errors import NoEmbedsError, CogDisabledError
 from utils.helpFormatter import MyHelpFormatter
 
-# TODO: Logging to file
-# TODO: Backing up config
-StreamHandler(sys.stdout).push_application()
 log = Logger("GAF Bot")
+log.handlers.append(StreamHandler(sys.stdout, bubble=True))
+log.handlers.append(FileHandler("last-run.log", bubble=True, mode="w"))
 
 log.notice("Loading Configuration File")
 try:
