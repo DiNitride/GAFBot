@@ -13,7 +13,6 @@ from discord.ext.commands import CommandError, CheckFailure, UserInputError, \
     DisabledCommand, CommandOnCooldown, NotOwner, NoPrivateMessage, CommandInvokeError, \
     CommandNotFound
 from logbook import Logger, StreamHandler, FileHandler
-import logbook
 
 from utils import checks
 from utils.errors import NoEmbedsError, CogDisabledError
@@ -21,7 +20,7 @@ from utils.helpFormatter import MyHelpFormatter
 
 log = Logger("GAF Bot")
 log.handlers.append(StreamHandler(sys.stdout, bubble=True))
-log.handlers.append(FileHandler("last-run.log", bubble=True, mode="w"))
+log.handlers.append(FileHandler("logs/last-run.log", bubble=True, mode="w"))
 
 log.notice("Loading Configuration File")
 try:
@@ -230,6 +229,9 @@ async def on_command_error(context, exception: CommandError):
     # thnx laura
     # https://github.com/DBDU/union/blob/master/union/core/bot.py#L102
 
+    if isinstance(exception, CommandNotFound):
+        return
+
     args = ' '.join(exception.args)
 
     if isinstance(exception, CheckFailure) and not isinstance(exception, NoPrivateMessage):
@@ -247,8 +249,6 @@ async def on_command_error(context, exception: CommandError):
         message = f"\N{NO ENTRY SIGN} You are not the bot owner."
     elif isinstance(exception, NoEmbedsError):
         message = f"\N{CROSS MARK} Command {context.invoked_with} requires the bot to have embed permissions"
-    elif isinstance(exception, CommandNotFound):
-        return
     elif isinstance(exception, CogDisabledError):
         message = f"\N{CROSS MARK} `{context.invoked_with}` is from a bot module that is disabled"
     # Danger Zone
