@@ -153,6 +153,14 @@ bot.default_guild_config = default_server_settings
 
 bot.command_count = 0
 
+MODULES = ["modules.config", "modules.statistics", "modules.roles", "modules.admin", "modules.moderation", "modules.gaf", "modules.utils",
+           "modules.spotify", "modules.rng", "modules.csgo", "modules.pubg"]
+
+for bot_module in MODULES:
+    bot.load_extension(bot_module)
+    bot.log.notice(f"Loaded {bot_module}")
+
+
 async def update_config(key, value):
     """
     Updates a value in the bots config.
@@ -185,28 +193,6 @@ async def on_ready():
     users = sum(1 for user in bot.get_all_members())
     channels = sum(1 for channel in bot.get_all_channels())
     bot.log.notice("I can see {} users in {} channels on {} guilds".format(users, channels, len(bot.guilds)))
-    bot.load_extension("modules.config")
-    bot.log.notice("Loaded Config Module")
-    bot.load_extension("modules.statistics")
-    bot.log.notice("Loaded Statistics Module")
-    bot.load_extension("modules.roles")
-    bot.log.notice("Loaded Roles Module")
-    bot.load_extension("modules.admin")
-    bot.log.notice("Loaded Admin Module")
-    bot.load_extension("modules.moderation")
-    bot.log.notice("Loaded Moderation Module")
-    bot.load_extension("modules.gaf")
-    bot.log.notice("Loaded GAF Module")
-    bot.load_extension("modules.utils")
-    bot.log.notice("Loaded Utils Module")
-    bot.load_extension("modules.spotify")
-    bot.log.notice("Loaded Spotify")
-    bot.load_extension("modules.rng")
-    bot.log.notice("Loaded RNG")
-    bot.load_extension("modules.csgo")
-    bot.log.notice("Loaded CS:GO")
-    bot.load_extension("modules.pubg")
-    bot.log.notice("Loaded PUBG")
 
 
 @bot.event
