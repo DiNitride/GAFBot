@@ -12,7 +12,7 @@ class GAF:
 
     def __init__(self, bot):
         self.bot = bot
-        self.bg_task = self.bot.loop.create_task(self.gaf_update_loop())
+        # self.bg_task = self.bot.loop.create_task(self.gaf_update_loop())
 
     @commands.group(invoke_without_command=True)
     async def gaf(self, ctx):

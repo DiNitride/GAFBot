@@ -13,7 +13,7 @@ class PUBG:
 
     def __init__(self, bot):
         self.bot = bot
-        self.bg_task = self.bot.loop.create_task(self.pubg_update_loop())
+        # self.bg_task = self.bot.loop.create_task(self.pubg_update_loop())
 
     @commands.group()
     @checks.perms_manage_messages()
