@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 
-class MyHelpFormatter(commands.HelpFormatter):
+class HelpFormatter(commands.HelpFormatter):
 
     async def format_help_for(self, context, command_or_bot):
         """Formats the help page and handles the actual heavy lifting of how

@@ -4,6 +4,19 @@
     "id": "",
     "secret": ""
   },
+  "modules": {
+    "statistics": true,
+    "roles": true,
+    "config": true,
+    "admin": true,
+    "moderation": true,
+    "gaf": true,
+    "utils": true,
+    "spotify": true,
+    "rng": true,
+    "csgo": true,
+    "pubg": true
+  },
   "csgo_last_pub": "",
   "pubg_last_pub": "",
   "gaf_last_pub": ""
