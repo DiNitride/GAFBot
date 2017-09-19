@@ -39,7 +39,7 @@ class Bot(commands.AutoShardedBot):
         self.db_cursor = None
         self.command_count = 0
         self.default_guild_config = None
-        self._prefix_cache = {}
+        self.prefix_cache = {}
         self.startup = None
         self.add_check(self.cog_enabled_check)
 

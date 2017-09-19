@@ -1,21 +1,15 @@
-import json
 import asyncio
 from datetime import datetime
 
 import discord
 from discord.ext import commands
-from lxml import etree
-import dateparser
 
-from bot.utils import checks, reaction_menu, net
+from bot.utils import checks, reaction_menu
 
 header = "=====================================================\n" \
          "List of all guilds I am in\n" \
          "Click the arrows to move page\n" \
          "====================================================="
-
-
-
 
 
 class Admin:
@@ -121,7 +115,10 @@ class Admin:
 
     @commands.command()
     @checks.is_owner()
-    async def clean_bot_guilds(self, ctx):
+    async def purge_bot_guilds(self, ctx):
+        """
+        Purges guilds with a bot:user ratio higher than 2:1
+        """
         passed = 0
         failed = 0
         success = 0
