@@ -8,8 +8,16 @@ class NoEmbedsError(commands.CommandError):
     """
     pass
 
-class CogDisabledError(commands.CommandError):
+
+class GuildCogDisabledError(commands.CommandError):
     """
     An exception raised when a cog is disabled.
+    """
+    pass
+
+
+class BotCogDisabledError(commands.CommandError):
+    """
+    An exception raised when a cog is disabled for the bot.
     """
     pass

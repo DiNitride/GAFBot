@@ -14,7 +14,7 @@ from logbook import Logger, StreamHandler, FileHandler
 import tqdm
 
 from bot.utils.help_formatter import HelpFormatter
-from bot.utils.errors import NoEmbedsError, CogDisabledError
+from bot.utils.errors import NoEmbedsError, BotCogDisabledError, GuildCogDisabledError
 from bot.utils.tools import merge_dicts
 
 
@@ -78,8 +78,7 @@ class Bot(commands.AutoShardedBot):
         self.db_conn.commit()
         self.logger.debug(f"Updated guild {guild_id} config")
 
-    async def update_config(self, new_config):
-        self.config = new_config
+    async def update_config(self):
         with open("bot/config/config.json", 'w') as f:
             f.write(json.dumps(self.config, indent=4, separators=(',', ':')))
         self.logger.debug("Updated bot config file")
@@ -125,10 +124,12 @@ class Bot(commands.AutoShardedBot):
             message = f"\N{NO ENTRY SIGN} You are not the bot owner."
         elif isinstance(exception, NoEmbedsError):
             message = f"\N{CROSS MARK} Command {context.invoked_with} requires the bot to have embed permissions"
-        elif isinstance(exception, CogDisabledError):
-            message = f"\N{CROSS MARK} `{context.invoked_with}` is from a bot module that is disabled"
+        elif isinstance(exception, BotCogDisabledError):
+            message = f"\N{CROSS MARK} `{context.invoked_with}` is currently disabled on the bot"
+        elif isinstance(exception, GuildCogDisabledError):
+            message = f"\N{CROSS MARK} `{context.invoked_with}` is disabled for this guild"
         elif isinstance(exception, CommandInvokeError):
-            message = f"\N{SQUARED SOS} An internal error has occurred."
+            message = f"\N{SQUARED SOS} `An internal error has occurred.`"
             print(traceback.print_exception(type(exception.__cause__), exception.__cause__,
                                             exception.__cause__.__traceback__))
         else:
@@ -138,16 +139,26 @@ class Bot(commands.AutoShardedBot):
         await context.send(message)
 
     async def cog_enabled_check(self, ctx):
-        guild_config = await self.get_guild_config(ctx.guild.id)
         cog = ctx.command.cog_name
-        if cog is None:
-            return True
+        guild_config = await self.get_guild_config(ctx.guild.id)
+
         if cog.lower() == "core":
             return True
-        if guild_config["modules"][cog.lower()]:
-            return guild_config["modules"][cog.lower()]
+
+        if self.config["modules"][cog.lower()]:
+            if guild_config["modules"][cog.lower()]:
+                return guild_config["modules"][cog.lower()]
+            else:
+                raise GuildCogDisabledError
         else:
-            raise CogDisabledError
+            raise BotCogDisabledError
+
+    async def on_message(self, message):
+        if message.author.bot is True:
+            return
+        if message.author.id in self.config["user_blacklist"]:
+            return
+        await self.process_commands(message)
 
     def run(self):
 
