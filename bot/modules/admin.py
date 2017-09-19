@@ -122,19 +122,28 @@ class Admin:
     @commands.command()
     @checks.is_owner()
     async def clean_bot_guilds(self, ctx):
+        passed = 0
+        failed = 0
+        success = 0
         for g in self.bot.guilds:
             s = await self.compare_bots_users(g)
             if s == 0:
-                await ctx.send(f"Successfully left guild {g} [{g.id}] for having a bot:user ratio too high!")
+                success += 1
             elif s == 1:
-                await ctx.send(f"Failed leaving guild {g} [{g.id}] for having a bot:user ratio too high!")
+                failed += 1
+            else:
+                passed += 1
+        await ctx.send(
+            f"**Finished cleaning guilds with a `bot:user` ratio higher than `2:1`**\n"
+            f"Left `{success}` guilds\n"
+            f"Failed Leaving: `{failed}` guilds\n"
+            f"Ignored `{passed}` guilds\n"
+        )
 
     async def on_guild_join(self, guild):
         await self.compare_bots_users(guild)
 
     async def compare_bots_users(self, guild):
-        if guild or guild.id is None:
-            return
         b = 0
         u = 0
         for m in guild.members:

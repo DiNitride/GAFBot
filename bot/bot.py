@@ -84,7 +84,7 @@ class Bot(commands.AutoShardedBot):
             f.write(json.dumps(self.config, indent=4, separators=(',', ':')))
         self.logger.debug("Updated bot config file")
 
-    def on_ready(self):
+    async def on_ready(self):
         self.startup = datetime.datetime.now()
         self.logger.notice(f"Logged in as {self.user.name} with ID {self.user.id}")
         users = sum(1 for user in self.get_all_members())
