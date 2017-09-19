@@ -16,7 +16,7 @@ try:
     with open("bot/config/defaults/default.config.json") as df:
         df_config = json.load(df)
     config = merge_dicts(df_config, config)
-    data = json.dumps(config)
+    data = json.dumps(config, indent=4, separators=(',', ':'))
     with open("bot/config/config.json", "w") as f:
         f.write(data)
 except FileNotFoundError:
