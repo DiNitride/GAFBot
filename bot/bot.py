@@ -26,14 +26,6 @@ class Bot(commands.AutoShardedBot):
                  ):
 
         self.config = config
-        self.config = config
-        self.logger = None
-        self.db_conn = None
-        self.db_cursor = None
-        self.command_count = 0
-        self.default_guild_config = None
-        self._prefix_cache = {}
-        self.startup = None
 
         super().__init__(
             command_prefix=self.prefix,
@@ -41,6 +33,15 @@ class Bot(commands.AutoShardedBot):
             pm_help=True,
             formatter=HelpFormatter()
         )
+
+        self.logger = None
+        self.db_conn = None
+        self.db_cursor = None
+        self.command_count = 0
+        self.default_guild_config = None
+        self._prefix_cache = {}
+        self.startup = None
+        self.add_check(self.cog_enabled_check)
 
     async def prefix(self, bot, ctx):
         r = [f"{bot.user.mention} ", f"<@!{bot.user.id} "]
@@ -89,7 +90,6 @@ class Bot(commands.AutoShardedBot):
         users = sum(1 for user in self.get_all_members())
         channels = sum(1 for channel in self.get_all_channels())
         self.logger.notice("I can see {} users in {} channels on {} guilds".format(users, channels, len(self.guilds)))
-        super().add_check(self.cog_enabled_check)
 
     async def on_command(self, ctx):
         if isinstance(ctx.channel, discord.DMChannel):
