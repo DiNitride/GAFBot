@@ -3,6 +3,7 @@ import sys
 import datetime
 import traceback
 import sqlite3
+import time
 
 import discord
 from discord.ext import commands
@@ -10,6 +11,7 @@ from discord.ext.commands import CommandError, CheckFailure, UserInputError, \
     DisabledCommand, CommandOnCooldown, NotOwner, NoPrivateMessage, CommandInvokeError, \
     CommandNotFound
 from logbook import Logger, StreamHandler, FileHandler
+import tqdm
 
 from bot.utils.help_formatter import HelpFormatter
 from bot.utils.errors import NoEmbedsError, CogDisabledError
@@ -34,7 +36,7 @@ class Bot(commands.AutoShardedBot):
         self.startup = None
 
         super().__init__(
-            command_prefix='~~',
+            command_prefix=self.prefix,
             description=description,
             pm_help=True,
             formatter=HelpFormatter()
@@ -44,34 +46,43 @@ class Bot(commands.AutoShardedBot):
         r = [f"{bot.user.mention} ", f"<@!{bot.user.id} "]
         try:
             if ctx.guild.id in self._prefix_cache:
-                return r.append(self._prefix_cache[ctx.guild.id])
+                r.append(self._prefix_cache[ctx.guild.id])
+                return r
             else:
-                self._prefix_cache[ctx.guild.id] = await self.get_guild_settings(ctx.guild.id)["prefix"]
-                return r.append(self._prefix_cache[ctx.ctx.guild.id])
+                guild_config = await self.get_guild_config(ctx.guild.id)
+                self._prefix_cache[ctx.guild.id] = guild_config["prefix"]
+                r.append(self._prefix_cache[ctx.ctx.guild.id])
+                return r
         except AttributeError:
-            return r.append("$")
+            r.append("$")
+            return r
 
     async def get_guild_config(self, guild_id: int):
-        self.db_cursor.execute("SELECT * FROM guild_config WHERE id=?", (guild_id,))
+        self.logger.debug(f"Getting guild {guild_id} config")
+        self.db_cursor.execute("SELECT * FROM guild_configs WHERE id=?", (guild_id,))
         config = self.db_cursor.fetchone()
         if config is None:
-            self.db_cursor.execute("INSERT INTO serverSettings VALUES (?, ?)",
+            self.logger.debug(f"Guild {guild_id} config did not exist! Creating an entry with default values")
+            self.db_cursor.execute("INSERT INTO guild_configs VALUES (?, ?)",
                                    (guild_id, json.dumps(self.default_guild_config)))
             self.db_conn.commit()
             return self.default_guild_config
-        config = merge_dicts(self.default_guild_config, config[1])
-        self.db_cursor.execute("UPDATE serverSettings SET settings=? WHERE id=?", (json.dumps(config), guild_id))
+        config = json.loads(config[1])
+        config = merge_dicts(self.default_guild_config, config)
+        self.db_cursor.execute("UPDATE guild_configs SET settings=? WHERE id=?", (json.dumps(config), guild_id))
         self.db_conn.commit()
         return config
 
     async def set_guild_config(self, guild_id: int, config):
-        self.db_cursor.execute("UPDATE serverSettings SET settings=? WHERE id=?", (json.dumps(config), guild_id))
+        self.db_cursor.execute("UPDATE guild_configs SET settings=? WHERE id=?", (json.dumps(config), guild_id))
         self.db_conn.commit()
+        self.logger.debug(f"Updated guild {guild_id} config")
 
     async def update_config(self, new_config):
         self.config = new_config
-        with open("config/config.json", 'w') as f:
+        with open("bot/config/config.json", 'w') as f:
             f.write(json.dumps(self.config, indent=4, separators=(',', ':')))
+        self.logger.debug("Updated bot config file")
 
     def on_ready(self):
         self.startup = datetime.datetime.now()
@@ -87,9 +98,9 @@ class Bot(commands.AutoShardedBot):
                               f"User: '{ctx.author}'/{ctx.author.id} (In DM's)")
         else:
             self.logger.debug(f"Command: {ctx.command} "
-                              "Channel '#{cxt.channel.name}'/{ctx.channel.id} "
-                              "Guild '{ctx.guild}'/{ctx.guild.id} "
-                              "User: '{ctx.author}'/{ctx.author.id}")
+                              f"Channel: '#{ctx.channel.name}'/{ctx.channel.id} "
+                              f"Guild: '{ctx.guild}'/{ctx.guild.id} "
+                              f"User: '{ctx.author}'/{ctx.author.id}")
         self.command_count += 1
 
     async def on_command_error(self, context, exception: CommandError):
@@ -131,6 +142,8 @@ class Bot(commands.AutoShardedBot):
         cog = ctx.command.cog_name
         if cog is None:
             return True
+        if cog.lower() == "core":
+            return True
         if guild_config["modules"][cog.lower()]:
             return guild_config["modules"][cog.lower()]
         else:
@@ -142,17 +155,43 @@ class Bot(commands.AutoShardedBot):
         log.handlers.append(StreamHandler(sys.stdout, bubble=True))
         log.handlers.append(FileHandler("bot/logs/last-run.log", bubble=True, mode="w"))
         self.logger = log
+        self.logger.notice("Logging started")
+        self.logger.notice("Bot process started")
 
         with open("bot/config/defaults/default.guildconfig.json") as f:
             self.default_guild_config = json.load(f)
+            self.logger.debug("Loaded default guild config")
 
-        self.db_conn = sqlite3.connect("bot/config/serverSettings.db")
+        self.logger.debug("Connecting to DB")
+        self.db_conn = sqlite3.connect("bot/config/guild_configs.db")
+        self.logger.notice("DB Connection Established")
         self.db_cursor = self.db_conn.cursor()
-        self.db_cursor.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='serverSettings'")
+        self.db_cursor.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='guild_configs'")
         exists = self.db_cursor.fetchone()
         if not exists[0]:
-            self.db_cursor.execute('''CREATE TABLE serverSettings (id bigint, settings long)''')
+            self.logger.error("No table found in DB! Creating new one now")
+            self.db_cursor.execute('''CREATE TABLE guild_configs (id bigint, settings long)''')
+            self.logger.debug("Table created")
 
+        self.load_extension("bot.modules.core")
+        self.logger.notice("Loaded core module")
+
+        self.logger.notice("Loading other modules")
+        # This bar and the time.sleep() stuff is entirely useless
+        # Like completely
+        # Don't do this
+        # It just looks cool and that makes me happy but really this is terrible
+        # and a complete waste of time
+        time.sleep(0.5)
+        for cog in tqdm.tqdm(self.config["modules"].keys(),
+                             desc="Loading modules"
+                             ):
+            self.load_extension(f"bot.modules.{cog.lower()}")
+            time.sleep(0.2)
+        time.sleep(0.5)
+        self.logger.debug("Completed loading modules")
+
+        self.logger.notice("Logging into Discord")
         super().run(self.config["token"], reconnect=True)
 
 

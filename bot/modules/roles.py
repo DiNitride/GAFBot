@@ -4,8 +4,8 @@ import re
 import discord
 from discord.ext import commands
 
-from utils import reaction_menu
-from utils import checks
+from bot.utils import reaction_menu
+from bot.utils import checks
 
 header = "=====================================================\n" \
          "All Roles on this server which can be assigned.\n" \

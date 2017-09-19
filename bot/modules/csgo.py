@@ -6,7 +6,7 @@ import dateparser
 from lxml import etree
 import html2text
 
-from utils import net, checks
+from bot.utils import net, checks
 
 
 class CSGO:

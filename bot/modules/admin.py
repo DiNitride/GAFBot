@@ -7,7 +7,7 @@ from discord.ext import commands
 from lxml import etree
 import dateparser
 
-from utils import checks, reaction_menu, net
+from bot.utils import checks, reaction_menu, net
 
 header = "=====================================================\n" \
          "List of all guilds I am in\n" \

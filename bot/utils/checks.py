@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from utils import errors
+from bot.utils import errors
 
 
 def is_owner_check(ctx):

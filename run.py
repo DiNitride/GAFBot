@@ -1,4 +1,5 @@
 import json
+import sqlite3
 
 from bot.bot import Bot
 from bot.utils.tools import merge_dicts

@@ -5,7 +5,7 @@ import dateparser
 import html2text
 from lxml import etree
 
-from utils import checks, net
+from bot.utils import checks, net
 
 
 class GAF:

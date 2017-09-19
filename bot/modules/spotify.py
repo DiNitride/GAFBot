@@ -5,8 +5,8 @@ import random
 import discord
 from discord.ext import commands
 
-from utils import net
-from utils import checks
+from bot.utils import net
+from bot.utils import checks
 
 
 class Spotify:

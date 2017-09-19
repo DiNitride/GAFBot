@@ -9,3 +9,4 @@ bot/config/modules.json
 bot/config/serverSettings.db
 .idea
 bot/logs/last-run.log
+bot/config/guild_configs.db
