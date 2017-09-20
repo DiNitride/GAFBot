@@ -21,6 +21,7 @@ class Moderation:
             delete_days = 7
         if user:
             await ctx.guild.ban(user, delete_message_days=delete_days)
+            await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user.mention}")
             self.bot.log.notice("Kicked {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
@@ -29,9 +30,6 @@ class Moderation:
         """
         Allows the banning of a user not int he guild via ID
         """
-        # Stolen from Joku
-        # k thnx Laura
-        # https://github.com/SunDwarf/Jokusoramame/blob/master/joku/cogs/mod.py#L135
         try:
             await ctx.bot.http.ban(user_id, ctx.message.guild.id, 0)
         except discord.Forbidden:
@@ -39,7 +37,7 @@ class Moderation:
         except discord.NotFound:
             await ctx.channel.send(":x: User not found.")
         else:
-            await ctx.channel.send(":negative_squared_cross_mark:  Banned user {}.".format(user_id))
+            await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user_id} - <@{user_id}>.")
 
     @commands.command()
     @checks.perms_kick()
@@ -51,6 +49,7 @@ class Moderation:
             return
         if user:
             await ctx.guild.kick(user)
+            await ctx.channel.send(f":negative_squared_cross_mark:  Kicked user {user.mention}")
             self.bot.log.notice("Kicked {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
@@ -81,7 +80,7 @@ class Moderation:
         """
         if user is ctx.author:
             return
-        guild_settings = await self.bot.get_server_data(ctx.guild.id)
+        guild_settings = await self.bot.get_guild_config(ctx.guild.id)
         if guild_settings["mute_role"] == "":
             await ctx.send("No mute role set! Please set one with $mute role <role>")
             return
@@ -121,18 +120,17 @@ class Moderation:
         if role.position >= ctx.author.top_role.position:
             await ctx.send("Unable to add role due to Hierarchy")
         else:
-            guild_settings = await self.bot.get_server_data(ctx.guild.id)
-            guild_settings["mute_role"] = role.id
-            await self.bot.update_server_data(ctx.guild.id, guild_settings)
+            guild_config = await self.bot.get_guild_config(ctx.guild.id)
+            guild_config["mute_role"] = role.id
+            await self.bot.set_guild_config(ctx.guild.id, guild_config)
             await ctx.send("Set the guilds mute role")
 
     async def on_guild_role_delete(self, role):
-        guild = role.guild
-        guild_data = await self.bot.get_server_data(guild.id)
-        mute_role = guild_data["mute_role"]
+        guild_config = await self.bot.get_guild_config(role.guild.id)
+        mute_role = guild_config["mute_role"]
         if mute_role == role.id:
-            guild_data["mute_role"] = ""
-            await self.bot.update_server_data(guild.id, guild_data)
+            guild_config["mute_role"] = ""
+            await self.bot.set_guild_config(role.guild.id, guild_config)
 
 
 def setup(bot):

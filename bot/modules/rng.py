@@ -22,7 +22,7 @@ class RNG:
             return
 
         if (rolls or limit) > 100:
-            await ctx.send("Go away Profound. (Size too big")
+            await ctx.send("Go away Profound. `(Size too big)`")
         else:
             result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
             await ctx.send(result)
@@ -32,7 +32,7 @@ class RNG:
         """
         Chooses between multiple choices, surround choices with spaces in quotes.
         """
-        await ctx.send(f"I choose: {re.sub('@here', '', re.sub('@everyone', '', random.choice(choices)))}  ")
+        await ctx.send(f"I choose: {re.sub('@here', '', re.sub('@everyone', '', random.choice(choices)))}")
 
 
 def setup(bot):

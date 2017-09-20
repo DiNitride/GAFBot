@@ -18,7 +18,7 @@ class Statistics:
 
     def calculate_uptime(self):
         currentTime = datetime.datetime.now()
-        uptime = currentTime - self.bot.start_time
+        uptime = currentTime - self.bot.startup
         days = int(uptime.days)
         hours = int(uptime.seconds / 3600)
         minutes = int((uptime.seconds % 3600) / 60)
@@ -42,10 +42,12 @@ class Statistics:
             embed.set_thumbnail(url=ctx.author.avatar_url)
             embed.set_author(name="GAF Bot", url="https://github.com/DiNitride/GAFBot")
 
-            embed.add_field(name="Uptime", value="{} Days, {} Hours, {} Minutes and {} Seconds".format(days, hours, minutes, seconds), inline=False)
-            embed.add_field(name="Commands ran", value=self.bot.command_count + 1, inline=False)
-            embed.add_field(name="Total users (Non unique)", value=users, inline=False)
-            embed.add_field(name="Channels", value=channels, inline=False)
+            embed.add_field(name="Uptime", value=f"{days} Days, {hours} Hours, "
+                                                 f"{minutes} Minutes and {seconds} Seconds",
+                            inline=False)
+            embed.add_field(name="Commands ran", value=str(self.bot.command_count + 1), inline=False)
+            embed.add_field(name="Total users (Non unique)", value=str(users), inline=False)
+            embed.add_field(name="Channels", value=str(channels), inline=False)
             embed.add_field(name="Total Guilds", value=str(len(self.bot.guilds)), inline=False)
 
             await ctx.send(embed=embed)
