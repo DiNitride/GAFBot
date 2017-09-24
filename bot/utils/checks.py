@@ -68,6 +68,17 @@ def perms_manage_channels():
     return commands.check(predicate)
 
 
+def perms_manage_nicks():
+    def predicate(ctx):
+        if is_owner_check(ctx):
+            return True
+        message = ctx.message
+        channel = message.channel
+        perms = channel.permissions_for(message.author)
+        return perms.manage_nicknames
+    return commands.check(predicate)
+
+
 def perms_ban():
     def predicate(ctx):
         if is_owner_check(ctx):

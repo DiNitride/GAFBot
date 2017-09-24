@@ -15,7 +15,8 @@
     "spotify": true,
     "rng": true,
     "csgo": true,
-    "pubg": true
+    "pubg": true,
+    "misc": true
   },
   "user_blacklist": [],
   "csgo_last_pub": "",
