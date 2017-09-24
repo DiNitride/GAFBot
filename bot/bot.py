@@ -60,22 +60,22 @@ class Bot(commands.AutoShardedBot):
 
     async def get_guild_config(self, guild_id: int):
         self.logger.debug(f"Getting guild {guild_id} config")
-        self.db_cursor.execute("SELECT * FROM guild_configs WHERE id=?", (guild_id,))
+        self.db_cursor.execute("SELECT * FROM serverSettings WHERE id=?", (guild_id,))
         config = self.db_cursor.fetchone()
         if config is None:
             self.logger.debug(f"Guild {guild_id} config did not exist! Creating an entry with default values")
-            self.db_cursor.execute("INSERT INTO guild_configs VALUES (?, ?)",
+            self.db_cursor.execute("INSERT INTO serverSettings VALUES (?, ?)",
                                    (guild_id, json.dumps(self.default_guild_config)))
             self.db_conn.commit()
             return self.default_guild_config
         config = json.loads(config[1])
         config = merge_dicts(self.default_guild_config, config)
-        self.db_cursor.execute("UPDATE guild_configs SET settings=? WHERE id=?", (json.dumps(config), guild_id))
+        self.db_cursor.execute("UPDATE serverSettings SET settings=? WHERE id=?", (json.dumps(config), guild_id))
         self.db_conn.commit()
         return config
 
     async def set_guild_config(self, guild_id: int, config):
-        self.db_cursor.execute("UPDATE guild_configs SET settings=? WHERE id=?", (json.dumps(config), guild_id))
+        self.db_cursor.execute("UPDATE serverSettings SET settings=? WHERE id=?", (json.dumps(config), guild_id))
         self.db_conn.commit()
         self.logger.debug(f"Updated guild {guild_id} config")
 
@@ -177,11 +177,11 @@ class Bot(commands.AutoShardedBot):
         self.db_conn = sqlite3.connect("bot/config/guild_configs.db")
         self.logger.notice("DB Connection Established")
         self.db_cursor = self.db_conn.cursor()
-        self.db_cursor.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='guild_configs'")
+        self.db_cursor.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='serverSettings'")
         exists = self.db_cursor.fetchone()
         if not exists[0]:
             self.logger.error("No table found in DB! Creating new one now")
-            self.db_cursor.execute('''CREATE TABLE guild_configs (id bigint, settings long)''')
+            self.db_cursor.execute('''CREATE TABLE serverSettings (id bigint, settings long)''')
             self.logger.debug("Table created")
 
         self.load_extension("bot.modules.core")
