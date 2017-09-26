@@ -57,7 +57,7 @@ class Admin:
         """
         guilds = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
         await reaction_menu.start_reaction_menu(self.bot, guilds, ctx.author, ctx.channel, count=0,
-                                                timeout=60, per_page=60, header=header)
+                                                timeout=60, per_page=50, header=header)
 
     @guilds.command()
     @checks.is_owner()

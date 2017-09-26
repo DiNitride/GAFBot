@@ -96,11 +96,12 @@ class Utils:
             if user is None:
                 user = ctx.author
             embed = discord.Embed(
-                url="https://cdn.discordapp.com/avatars/95953002774413312/43731ce5807eb8503cd3559a3c13e780.webp?size=1024",
+                url=
+                "https://cdn.discordapp.com/avatars/95953002774413312/43731ce5807eb8503cd3559a3c13e780.webp?size=1024",
                 timestamp=datetime.datetime.now())
             embed.set_image(
                 url="{}".format(user.avatar_url))
-            embed.set_author(name="Click for {}'s Avatar".format(user),
+            embed.set_author(name=f"{user}'s Avatar",
                              url=user.avatar_url)
 
             await ctx.send(embed=embed)
