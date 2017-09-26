@@ -21,13 +21,13 @@ class Utils:
             with ctx.channel.typing():
                 user = await self.bot.get_user_info(id)
                 embed = discord.Embed(colour=discord.Colour(0x30f9c7), description="ID: {}".format(user.id),
-                                      timestamp=datetime.datetime.utcfromtimestamp(1490992111))
+                                      timestamp=datetime.datetime.now())
                 embed.set_thumbnail(
                     url=user.avatar_url)
                 embed.set_author(name=user)
                 embed.set_footer(text="Who Is")
                 embed.add_field(name="Bot?", value=user.bot, inline=False)
-                embed.add_field(name="Account Creation Date", value="", inline=False)
+                embed.add_field(name="Account Creation Date", value=user.created_at, inline=False)
                 await ctx.send(embed=embed)
         except discord.NotFound:
             await ctx.send("`No user found under this ID`")
@@ -45,19 +45,19 @@ class Utils:
             user = ctx.author
         with ctx.channel.typing():
             embed = discord.Embed(colour=discord.Colour(0x30f9c7), description="ID: {}".format(user.id),
-                                  timestamp=datetime.datetime.utcfromtimestamp(1490992111))
+                                  timestamp=datetime.datetime.now())
             embed.set_thumbnail(
                 url=user.avatar_url)
             embed.set_author(name=user)
             embed.set_footer(text="All about {}".format(user))
-            embed.add_field(name="Bot?", value=user.bot, inline=False)
-            embed.add_field(name="Account Creation Date", value=user.created_at, inline=False)
-            embed.add_field(name="Date Joined Guild", value=user.joined_at, inline=False)
-            embed.add_field(name="Roles", value="{}".format(len(user.roles) - 1), inline=False)
-            embed.add_field(name="Game", value=user.game, inline=False)
-            embed.add_field(name="Status", value=user.status, inline=False)
-            embed.add_field(name="Voice State", value=user.voice, inline=False)
-            embed.add_field(name="Display Name", value=user.display_name, inline=False)
+            embed.add_field(name="Bot?", value=user.bot)
+            embed.add_field(name="Roles", value="{}".format(len(user.roles) - 1))
+            embed.add_field(name="Account Creation Date", value=user.created_at)
+            embed.add_field(name="Date Joined Guild", value=user.joined_at)
+            embed.add_field(name="Game", value=user.game)
+            embed.add_field(name="Status", value=user.status)
+            embed.add_field(name="Voice State", value=user.voice)
+            embed.add_field(name="Display Name", value=user.display_name)
             await ctx.send(embed=embed)
 
     @about.command()
@@ -68,7 +68,7 @@ class Utils:
         """
         with ctx.channel.typing():
             embed = discord.Embed(title="ID: 58934178071780", colour=discord.Colour.gold(),
-                                  timestamp=datetime.datetime.utcfromtimestamp(1491012420))
+                                  timestamp=datetime.datetime.now())
             embed.set_thumbnail(
                 url=ctx.guild.icon_url)
             embed.set_author(name=ctx.guild.name)
@@ -97,7 +97,7 @@ class Utils:
                 user = ctx.author
             embed = discord.Embed(
                 url="https://cdn.discordapp.com/avatars/95953002774413312/43731ce5807eb8503cd3559a3c13e780.webp?size=1024",
-                timestamp=datetime.datetime.utcfromtimestamp(1502045902))
+                timestamp=datetime.datetime.now())
             embed.set_image(
                 url="{}".format(user.avatar_url))
             embed.set_author(name="Click for {}'s Avatar".format(user),

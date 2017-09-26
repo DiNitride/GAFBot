@@ -10,7 +10,7 @@ class Misc:
         self.bot = bot
 
     @commands.command()
-    @checks.perms_manage_nicks()
+    @checks.is_owner()
     async def massnick(self, ctx, prefix, overwrite, suffix):
         """
         Mass nicknames everyone on the server, please do $help massnick
@@ -42,6 +42,12 @@ class Misc:
                        f"Missing permissions for `{forbidden}`\n"
                        f"Other exception for `{error}`")
 
+    @commands.command()
+    async def f(self, ctx):
+        """
+        Pays respects
+        """
+        await ctx.send("*Pays respects*")
 
 def setup(bot):
     bot.add_cog(Misc(bot))

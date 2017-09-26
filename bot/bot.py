@@ -46,13 +46,13 @@ class Bot(commands.AutoShardedBot):
     async def prefix(self, bot, ctx):
         r = [f"{bot.user.mention} ", f"<@!{bot.user.id} "]
         try:
-            if ctx.guild.id in self._prefix_cache:
-                r.append(self._prefix_cache[ctx.guild.id])
+            if ctx.guild.id in self.prefix_cache:
+                r.append(self.prefix_cache[ctx.guild.id])
                 return r
             else:
                 guild_config = await self.get_guild_config(ctx.guild.id)
-                self._prefix_cache[ctx.guild.id] = guild_config["prefix"]
-                r.append(self._prefix_cache[ctx.ctx.guild.id])
+                self.prefix_cache[ctx.guild.id] = guild_config["prefix"]
+                r.append(self.prefix_cache[ctx.ctx.guild.id])
                 return r
         except AttributeError:
             r.append("$")
@@ -141,6 +141,9 @@ class Bot(commands.AutoShardedBot):
     async def cog_enabled_check(self, ctx):
         cog = ctx.command.cog_name
         guild_config = await self.get_guild_config(ctx.guild.id)
+
+        if cog is None:
+            return True
 
         if cog.lower() == "core":
             return True

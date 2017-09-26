@@ -42,7 +42,7 @@ class Core:
         """
         Source Code
         """
-        await ctx.send("`My source code is open source and available at <https://github.com/DiNitride/GAFBot>")
+        await ctx.send("`My source code is open source and available at` <https://github.com/DiNitride/GAFBot>")
 
     @commands.command()
     async def invite(self, ctx):
@@ -95,24 +95,6 @@ class Core:
             await ctx.send("Error updating! :exclamation: ")
         except subprocess.TimeoutExpired:
             await ctx.send("Error updating - Process timed out! :exclamation: ")
-
-    @commands.command()
-    @checks.is_owner()
-    async def blacklist(self, user: discord.User):
-        """
-        Blacklists or unblacklist a user
-        """
-        if user.id in int(self.bot.config["user_blacklist"]):
-            self.bot.config["user_blacklist"].remove(user.id)
-        else:
-            self.bot.config["user_blacklist"].add(user.id)
-            await self.bot.update_config()
-
-    @commands.command()
-    async def f(self, ctx):
-        """
-        Pays respects
-        """
 
     @commands.command()
     @checks.is_owner()

@@ -46,7 +46,7 @@ class GAF:
         """
         Channel 1 and chill?
         """
-        await ctx.send(content="<@&172426880543227904> <@&262334316611239937>, chill? - {}".format(ctx.author), file=discord.File("resources/chill.jpg"))
+        await ctx.send(content="<@&172426880543227904> <@&262334316611239937>, chill? - {}".format(ctx.author), file=discord.File("bot/resources/chill.jpg"))
         await ctx.message.delete()
 
     @gaf.group(invoke_without_subcommand=True)
@@ -55,12 +55,7 @@ class GAF:
         """
         Allows you to manage RSS feed for GAF Steam Annoucements. BROKEN
         """
-        guild_config = await self.bot.get_guild_config(ctx.guild.id)
-        if guild_config["gaf_steam_rss"] is True:
-            channel = discord.utils.get(ctx.guild.channels, id=guild_config["gaf_steam_rss_channel"])
-            await ctx.send("GAF RSS Tracking is enabled in channel #{}".format(channel))
-        else:
-            await ctx.send("GAF RSS Tracking is not enabled")
+        pass
 
     @rss.command()
     async def track(self, ctx):

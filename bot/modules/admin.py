@@ -115,6 +115,20 @@ class Admin:
 
     @commands.command()
     @checks.is_owner()
+    async def blacklist(self, ctx, user: discord.User):
+        """
+        Blacklists or unblacklist a user
+        """
+        if user.id in self.bot.config["user_blacklist"]:
+            self.bot.config["user_blacklist"].remove(user.id)
+            await ctx.send(f"Unblacklisted user {user} from the bot")
+        else:
+            self.bot.config["user_blacklist"].append(user.id)
+            await ctx.send(f"Blacklisted user {user} from the bot")
+        await self.bot.update_config()
+
+    @commands.command()
+    @checks.is_owner()
     async def purge_bot_guilds(self, ctx):
         """
         Purges guilds with a bot:user ratio higher than 2:1

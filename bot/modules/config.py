@@ -122,7 +122,6 @@ class Config:
     @checks.perms_manage_guild()
     async def clear(self, ctx):
         """WARNING: Clears the config for the guild"""
-        guild_config = await self.bot.get_guild_config(ctx.guild.id)
         guild_config = self.bot.default_guild_config
         await self.bot.set_guild_config(ctx.guild.id, guild_config)
         await ctx.send("`:warning: Config cleared`")
