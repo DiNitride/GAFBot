@@ -98,7 +98,7 @@ class Core:
 
     @commands.command()
     @checks.is_owner()
-    async def debug(self, ctx, *, code):
+    async def eval(self, ctx, *, code):
         """
         Evaluates a line of code provided
         """
