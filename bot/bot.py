@@ -52,7 +52,7 @@ class Bot(commands.AutoShardedBot):
             else:
                 guild_config = await self.get_guild_config(ctx.guild.id)
                 self.prefix_cache[ctx.guild.id] = guild_config["prefix"]
-                r.append(self.prefix_cache[ctx.ctx.guild.id])
+                r.append(self.prefix_cache[ctx.guild.id])
                 return r
         except AttributeError:
             r.append("$")
@@ -162,6 +162,26 @@ class Bot(commands.AutoShardedBot):
         if message.author.id in self.config["user_blacklist"]:
             return
         await self.process_commands(message)
+
+    def sum_users_and_channels(self):
+        """
+        Calculates total sum of users and channels that the bot can "see"
+        """
+        users = sum(1 for user in self.get_all_members())
+        channels = sum(1 for channel in self.get_all_channels())
+        return (users, channels)
+
+    def calculate_uptime(self):
+        """
+        Calculates uptime of bot
+        """
+        current_time = datetime.datetime.now()
+        uptime = current_time - self.startup
+        days = int(uptime.days)
+        hours = int(uptime.seconds / 3600)
+        minutes = int((uptime.seconds % 3600) / 60)
+        seconds = int((uptime.seconds % 3600) % 60)
+        return (uptime, days, hours, minutes, seconds)
 
     def run(self):
 
