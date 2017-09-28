@@ -32,7 +32,10 @@ class RNG:
         """
         Chooses between multiple choices, surround choices with spaces in quotes.
         """
-        await ctx.send(f"I choose: {re.sub('@here', '', re.sub('@everyone', '', random.choice(choices)))}")
+        if not len(choices) > 1:
+            await ctx.send("I need more than 1 choice!")
+        else:
+            await ctx.send(f"I choose: {re.sub('@here', '', re.sub('@everyone', '', random.choice(choices)))}")
 
 
 def setup(bot):
