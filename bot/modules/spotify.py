@@ -52,7 +52,7 @@ class Spotify:
             search_endpoint = f"https://api.spotify.com/v1/search?q=track:{search.strip().replace(' ', '+')}&type=track"
             auth_id = self.get_auth_id()
             _, auth, status = await get_auth_token(auth_id)
-            _, json, status = await get_spotify_endpoint(search_endpoint, auth_id["access_token"])
+            _, json, status = await get_spotify_endpoint(search_endpoint, auth["access_token"])
 
             embed = discord.Embed(title="Showing top 5 results",
                                   colour=discord.Colour.green(),
