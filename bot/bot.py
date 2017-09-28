@@ -44,7 +44,7 @@ class Bot(commands.AutoShardedBot):
         self.add_check(self.cog_enabled_check)
 
     async def prefix(self, bot, ctx):
-        r = [f"{bot.user.mention} ", f"<@!{bot.user.id} "]
+        r = [f"{bot.user.mention} ", f"<@!{bot.user.id}> "]
         try:
             if ctx.guild.id in self.prefix_cache:
                 r.append(self.prefix_cache[ctx.guild.id])
