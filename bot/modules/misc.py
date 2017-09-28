@@ -49,5 +49,6 @@ class Misc:
         """
         await ctx.send("*Pays respects*")
 
+
 def setup(bot):
     bot.add_cog(Misc(bot))

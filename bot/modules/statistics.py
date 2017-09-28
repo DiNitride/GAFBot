@@ -11,19 +11,6 @@ class Statistics:
     def __init__(self, bot):
         self.bot = bot
 
-    def users_and_channels(self):
-        users = sum(1 for user in self.bot.get_all_members())
-        channels = sum(1 for channel in self.bot.get_all_channels())
-        return users, channels
-
-    def calculate_uptime(self):
-        currentTime = datetime.datetime.now()
-        uptime = currentTime - self.bot.startup
-        days = int(uptime.days)
-        hours = int(uptime.seconds / 3600)
-        minutes = int((uptime.seconds % 3600) / 60)
-        seconds = int((uptime.seconds % 3600) % 60)
-        return days, hours, minutes, seconds
 
     @commands.command(aliases=["stats"])
     @checks.has_embeds()
@@ -31,8 +18,8 @@ class Statistics:
         """
         Shows the bot's session stats
         """
-        days, hours, minutes, seconds = self.calculate_uptime()
-        users, channels = self.users_and_channels()
+        _, days, hours, minutes, seconds = self.bot.calculate_uptime()
+        users, channels = self.bot.sum_users_and_channels()
         with ctx.channel.typing():
             embed = discord.Embed(title="Bot Statistics since last startup", colour=discord.Colour.gold(),
                                   url="",
@@ -57,16 +44,16 @@ class Statistics:
         """
         GAF Bot, what do your elf eyes see?
         """
-        users, channels = self.users_and_channels()
-        await ctx.send("`I can see {} users in {} channels on {} guilds`".format(users, channels, len(self.bot.guilds)))
+        users, channels = self.bot.sum_users_and_channels()
+        await ctx.send(f"`I can see {users} users in {channels} channels on {len(self.bot.guilds)} guilds`")
 
     @commands.command()
     async def uptime(self, ctx):
         """
         How long until I crash again?
         """
-        days, hours, minutes, seconds = self.calculate_uptime()
-        await ctx.send("`{} Days, {} Hours, {} Minutes and {} Seconds`".format(days, hours, minutes, seconds))
+        _, days, hours, minutes, seconds = self.bot.calculate_uptime()
+        await ctx.send(f"`{days} Days, {hours} Hours, {minutes} Minutes and {seconds} Seconds`")
 
     @commands.command()
     async def count(self, ctx):
