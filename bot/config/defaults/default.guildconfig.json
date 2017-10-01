@@ -30,5 +30,7 @@
   "pubg_updates": false,
   "pubg_updates_channel": "",
   "gaf_steam_rss": false,
-  "gaf_steam_rss_channel": ""
+  "gaf_steam_rss_channel": "",
+  "roleState": false,
+  "roleStates": {}
 }

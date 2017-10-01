@@ -22,7 +22,7 @@ class Moderation:
         if user:
             await ctx.guild.ban(user, delete_message_days=delete_days)
             await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user.mention}")
-            self.bot.log.notice("Kicked {} from {}".format(user, ctx.guild.name))
+            self.bot.logger.notice("Kicked {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
     @checks.perms_ban()
@@ -50,7 +50,7 @@ class Moderation:
         if user:
             await ctx.guild.kick(user)
             await ctx.channel.send(f":negative_squared_cross_mark:  Kicked user {user.mention}")
-            self.bot.log.notice("Kicked {} from {}".format(user, ctx.guild.name))
+            self.bot.logger.notice("Kicked {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
     @checks.perms_manage_messages()
@@ -66,11 +66,11 @@ class Moderation:
         if user is None:
             messages = await ctx.channel.purge(limit=limit, check=None)
             await ctx.send("Purged {} messages in #{}".format(len(messages), ctx.channel))
-            self.bot.log.notice("Purged {} messages in #{}".format(len(messages), ctx.channel))
+            self.bot.logger.notice("Purged {} messages in #{}".format(len(messages), ctx.channel))
         else:
             messages = await ctx.channel.purge(limit=limit, check=predicate)
             await ctx.send("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
-            self.bot.log.notice("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
+            self.bot.logger.notice("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
 
     @commands.group(invoke_without_command=True)
     @checks.perms_manage_messages()

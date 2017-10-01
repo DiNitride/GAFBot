@@ -7,13 +7,15 @@ from discord.ext import commands
 from bot.utils import reaction_menu
 from bot.utils import checks
 
-header = "=====================================================\n" \
-         "All Roles on this guild_config which can be assigned.\n" \
-         ":one: to :keycap_ten: can be used to select roles\n" \
-         ":arrow_left: :arrow_right: to change pages\n" \
-         ":white_check_mark: to confirm selection, :x: to cancel\n" \
-         ":arrows_counterclockwise: can be used to undo the previous selection\n" \
-         "====================================================="
+header = "`All Roles on this guild_config which can be assigned.`\n" \
+         ":one: `to` :keycap_ten: `can be used to select roles`\n" \
+         ":arrow_left: :arrow_right: `to change pages`\n" \
+         ":white_check_mark: `to confirm selection,` :x: `to cancel`\n" \
+         ":arrows_counterclockwise: `can be used to undo the previous selection`\n" \
+         "`You can alternatively use $roles give [role]and $roles take [role]\n" \
+         "to add or remove specific roles, however you must type the full role name\n" \
+         "which is caps sensitive, the role's ID or mention the role (Although\n" \
+         "this might, just might, irritate everyone with this role and get you banned.`"
 
 
 class CustomRoleConverter(commands.IDConverter):
