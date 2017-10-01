@@ -15,7 +15,7 @@ class Moderation:
         """
         Bans a user from the guild
         """
-        if user is ctx.author:
+        if user.top_role >= ctx.author.top_role:
             return
         if delete_days > 7:
             delete_days = 7
@@ -45,12 +45,11 @@ class Moderation:
         """
         Kicks a user from the guild
         """
-        if user is ctx.author:
+        if user.top_role >= ctx.author.top_role:
             return
-        if user:
-            await ctx.guild.kick(user)
-            await ctx.channel.send(f":negative_squared_cross_mark:  Kicked user {user.mention}")
-            self.bot.logger.notice("Kicked {} from {}".format(user, ctx.guild.name))
+        await ctx.guild.kick(user)
+        await ctx.channel.send(f":negative_squared_cross_mark:  Kicked user {user.mention}")
+        self.bot.logger.notice("Kicked {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
     @checks.perms_manage_messages()
@@ -78,14 +77,11 @@ class Moderation:
         """
         Mutes a user
         """
-        if user is ctx.author:
+        if user.top_role >= ctx.author.top_role:
             return
         guild_settings = await self.bot.get_guild_config(ctx.guild.id)
         if guild_settings["mute_role"] == "":
             await ctx.send("No mute role set! Please set one with $mute role <role>")
-            return
-        if user is None:
-            await ctx.send("Not a valid user")
             return
         mute_role = None
         for role in ctx.guild.roles:
@@ -111,13 +107,11 @@ class Moderation:
 
     @mute.command()
     @checks.perms_manage_messages()
-    async def role(self, ctx, role: discord.Role = None):
+    async def role(self, ctx, role: discord.Role):
         """
         Sets the mute role for the server
         """
-        if role is None:
-            return
-        if role.position >= ctx.author.top_role.position:
+        if role >= ctx.author.top_role:
             await ctx.send("Unable to add role due to Hierarchy")
         else:
             guild_config = await self.bot.get_guild_config(ctx.guild.id)
