@@ -244,6 +244,34 @@ class Roles:
         await self.bot.set_guild_config(ctx.guild.id, guild_config)
         await ctx.send("I will stop giving new users roles")
 
+    @commands.group()
+    @checks.perms_manage_roles()
+    async def rolestate(self, ctx):
+        """
+        Saves users roles when they leave and grants them again when they join
+        """
+        pass
+
+    @rolestate.command()
+    async def enable(self, ctx):
+        """
+        Enables rolestate
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["roleState"] = True
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("Enabled rolestate!")
+
+    @rolestate.command()
+    async def disable(self, ctx):
+        """
+        Disables rolestate
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["roleState"] = False
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("Disabled rolestate!")
+
     async def on_guild_role_delete(self, role):
         guild = role.guild
         guild_config = await self.bot.get_guild_config(guild.id)
@@ -271,6 +299,31 @@ class Roles:
                 guild_config["roleOnJoin"] = False
                 guild_config["roleOnJoinRole"] = ""
                 await self.bot.set_guild_config(member.guild.id, guild_config)
+        if guild_config["roleState"]:
+            roles = []
+            try:
+                for r in guild_config["roleStates"][str(member.id)]["roles"]:
+                    role = discord.utils.get(member.guild.roles, id=r)
+                    if role is None:
+                        pass
+                    else:
+                        roles.append(r)
+                await member.edit(roles=roles, nick=guild_config["roleStates"][str(member.id)]["nick"])
+            except AttributeError or discord.HTTPException:
+                pass
+
+    async def on_member_remove(self, member):
+        member_id = str(member.id)
+        guild_config = await self.bot.get_guild_config(member.guild.id)
+        if guild_config["roleState"] is True:
+            guild_config["roleStates"][member_id] = {"roles": [], "nick": None }
+            r = [r.id for r in member.roles]
+            guild_config["roleStates"][member_id]["roles"] = r
+            if member.nick:
+                guild_config["roleStates"][member_id]["nick"] = member.nick
+            else:
+                guild_config["roleStates"][member_id]["nick"] = None
+            await self.bot.set_guild_config(member.guild.id, guild_config)
 
 
 def setup(bot):
