@@ -59,7 +59,7 @@ class Bot(commands.AutoShardedBot):
             return r
 
     async def get_guild_config(self, guild_id: int):
-        self.logger.debug(f"Getting guild {guild_id} config")
+        # self.logger.debug(f"Getting guild {guild_id} config")
         self.db_cursor.execute("SELECT * FROM serverSettings WHERE id=?", (guild_id,))
         config = self.db_cursor.fetchone()
         if config is None:

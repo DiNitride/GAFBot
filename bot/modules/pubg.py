@@ -57,11 +57,10 @@ class PUBG:
 
     async def pubg_update_loop(self):
         await self.bot.wait_until_ready()
+        self.bot.logger.debug("Started PUBG Update Check Loop")
         while not self.bot.is_closed():
-            self.bot.log.debug("Run PUBG Update Check")
             response, _, code = await net.get_url("https://steamcommunity.com/games/578080/rss/")
-            xml = await response.read()
-            root = etree.fromstring(xml)
+            root = etree.fromstring(await response.read())
             last_pub = dateparser.parse(self.bot.config["pubg_last_pub"])
             new_posts = []
             for element in root.xpath("//item"):
@@ -88,9 +87,10 @@ class PUBG:
                                 description=content
                             )
                             await channel.send(embed=embed)
-                            self.bot.log.debug("Sent PUBG update informaton to guild {} in channel #{}".format(guild, channel))
+                            self.bot.logger.debug("Sent PUBG update informaton to guild {} in channel #{}".format(guild, channel))
                 if i == 0:
-                    await self.bot.update_config("pubg_last_pub", element[3].text)
+                    self.bot.config["pubg_last_pub"] = element[3].text
+                    await self.bot.update_config()
             await asyncio.sleep(60 * 5)
 
 
