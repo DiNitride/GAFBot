@@ -91,8 +91,8 @@ class GAF:
 
     async def gaf_update_loop(self):
         await self.bot.wait_until_ready()
+        self.bot.logger.debug("Started GAF RSS Update Check")
         while not self.bot.is_closed():
-            self.bot.log.debug("Run GAF RSS Update Check")
             response, _, code = await net.get_url("http://steamcommunity.com/groups/TheNeverEndingGAF/rss/")
             xml = await response.read()
             root = etree.fromstring(xml)
@@ -122,9 +122,10 @@ class GAF:
                                 description=content
                             )
                             await channel.send(embed=embed)
-                            self.bot.log.debug("Sent GAF update informaton to guild {} in channel #{}".format(guild, channel))
+                            self.bot.logger.debug("Sent GAF update informaton to guild {} in channel #{}".format(guild, channel))
                 if i == 0:
-                    await self.bot.update_config("gaf_last_pub", element[3].text)
+                    self.bot.config["gaf_last_pub"] = element[3].text
+                    await self.bot.update_config()
             await asyncio.sleep(60 * 5)
 
 

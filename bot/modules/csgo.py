@@ -57,8 +57,8 @@ class CSGO:
 
     async def csgo_update_loop(self):
         await self.bot.wait_until_ready()
+        self.bot.logger.debug("Run CS:GO Update Check")
         while not self.bot.is_closed():
-            self.bot.log.debug("Run CS:GO Update Check")
             response, _, code = await net.get_url("http://blog.counter-strike.net/index.php/category/updates/feed/")
             xml = await response.read()
             root = etree.fromstring(xml)
@@ -70,7 +70,7 @@ class CSGO:
                     break
                 elif post_pub > last_pub:
                     new_posts.append(element)
-            for i, element in enumerate(list(new_posts)):
+            for i, element in reversed(list(enumerate(new_posts))):
                 for guild in self.bot.guilds:
                     guild_config = await self.bot.get_guild_config(guild.id)
                     if guild_config["csgo_updates"] is True:
@@ -88,9 +88,10 @@ class CSGO:
                                 description=content
                             )
                             await channel.send(embed=embed)
-                            self.bot.log.debug("Sent update informaton to guild {} in channel #{}".format(guild, channel))
+                            self.bot.logger.debug("Sent update informaton to guild {} in channel #{}".format(guild, channel))
                 if i == 0:
-                    await self.bot.update_config("csgo_last_pub", element[2].text)
+                    self.bot.config["csgo_last_pub"] = element[2].text
+                    await self.bot.update_config()
             await asyncio.sleep(60 * 5)
 
 

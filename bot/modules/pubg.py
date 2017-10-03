@@ -19,7 +19,7 @@ class PUBG:
     @checks.perms_manage_messages()
     async def pubgupdates(self, ctx):
         """
-        Manages tracking PUBG updates for your guild. BROKEN
+        Manages tracking PUBG updates for your guild.
         """
         pass
 
