@@ -32,5 +32,6 @@
   "gaf_steam_rss": false,
   "gaf_steam_rss_channel": "",
   "roleState": false,
-  "roleStates": {}
+  "roleStates": {},
+  "teamspeakBanSound": false
 }

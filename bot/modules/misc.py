@@ -49,6 +49,32 @@ class Misc:
         """
         await ctx.send("*Pays respects*")
 
+    @commands.command()
+    async def teamspeakbansound(self, ctx):
+        """
+        Toggles playing the teamspeak "User was banned from your channel" sound when a user is banned.
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        if guild_config["teamspeakBanSound"]:
+            guild_config["teamspeakBanSound"] = False
+            await ctx.send("`Disabled Teamspeak ban sound`")
+        else:
+            guild_config["teamspeakBanSound"] = True
+            await ctx.send("`Enabled Teamspeak ban sound`")
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+
+    async def on_member_ban(self, guild, member):
+        if member.voice.channel is None:
+            return
+        guild_config = await self.bot.get_guild_config(guild.id)
+        if guild_config["teamspeakBanSound"]:
+            vc = await member.voice.channel.connect()
+            src = discord.FFmpegPCMAudio("bot/resources/user_banned.mp3")
+            vc.play(src)
+            while True:
+                if not vc.is_playing():
+                    await vc.disconnect()
+
 
 def setup(bot):
     bot.add_cog(Misc(bot))
