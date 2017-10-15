@@ -75,6 +75,7 @@ class PUBG:
                     if guild_config["pubg_updates"] is True:
                         channel = discord.utils.get(guild.channels, id=guild_config["pubg_updates_channel"])
                         with channel.typing():
+
                             if len(html2text.html2text(element.find("description").text)) > 1900:
                                 content = html2text.html2text(element.find("description").text[:1900]) + ". . ."
                             else:
