@@ -13,7 +13,7 @@ class GAF:
 
     def __init__(self, bot):
         self.bot = bot
-        self.bg_task = self.bot.loop.create_task(self.gaf_update_loop())
+        # self.bg_task = self.bot.loop.create_task(self.gaf_update_loop())
 
     @commands.group(invoke_without_command=True)
     async def gaf(self, ctx):
@@ -89,44 +89,6 @@ class GAF:
         await self.bot.set_guild_config(ctx.guild.id, guild_config)
         await ctx.send("`Okay, tracking channel set to #{}`".format(ctx.channel))
 
-    async def gaf_update_loop(self):
-        await self.bot.wait_until_ready()
-        self.bot.logger.debug("Started GAF RSS Update Check")
-        while not self.bot.is_closed():
-            response, _, code = await net.get_url("http://steamcommunity.com/groups/TheNeverEndingGAF/rss/")
-            xml = await response.read()
-            root = etree.fromstring(xml)
-            last_pub = dateparser.parse(self.bot.config["gaf_last_pub"])
-            new_posts = []
-            for element in root.xpath("//item"):
-                post_pub = dateparser.parse(element[3].text)
-                if post_pub <= last_pub:
-                    break
-                elif post_pub > last_pub:
-                    new_posts.append(element)
-            for i, element in reversed(list(enumerate(new_posts))):
-                for guild in self.bot.guilds:
-                    guild_config = await self.bot.get_guild_config(guild.id)
-                    if guild_config["gaf_steam_rss"] is True:
-                        channel = discord.utils.get(guild.channels, id=guild_config["gaf_steam_rss_channel"])
-                        with channel.typing():
-                            if len(html2text.html2text(element.find("description").text)) > 1900:
-                                content = html2text.html2text(element.find("description").text[:1900]) + ". . ."
-                            else:
-                                content = html2text.html2text(element.find("description").text)
-                            embed = discord.Embed(
-                                title="{}".format(element.find("title").text),
-                                colour=discord.Colour.gold(),
-                                url="{}".format(element.find("link").text),
-                                timestamp=dateparser.parse(element[3].text),
-                                description=content
-                            )
-                            await channel.send(embed=embed)
-                            self.bot.logger.debug("Sent GAF update informaton to guild {} in channel #{}".format(guild, channel))
-                if i == 0:
-                    self.bot.config["gaf_last_pub"] = element[3].text
-                    await self.bot.update_config()
-            await asyncio.sleep(60 * 5)
 
 
 def setup(bot):

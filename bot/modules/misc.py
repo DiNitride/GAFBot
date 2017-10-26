@@ -1,3 +1,5 @@
+import asyncio
+
 from discord.ext import commands
 import discord
 
@@ -71,9 +73,8 @@ class Misc:
             vc = await member.voice.channel.connect()
             src = discord.FFmpegPCMAudio("bot/resources/user_banned.mp3")
             vc.play(src)
-            while True:
-                if not vc.is_playing():
-                    await vc.disconnect()
+            await asyncio.sleep(5)
+            await vc.disconnect()
 
 
 def setup(bot):
