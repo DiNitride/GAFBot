@@ -18,7 +18,7 @@
     "misc": true
   },
   "user_blacklist": [],
-  "csgo_last_pub": "",
-  "pubg_last_pub": "",
-  "gaf_last_pub": ""
+  "pub_dates": {
+    "gaf": ""
+  }
 }

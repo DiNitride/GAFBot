@@ -24,13 +24,13 @@
   "roleMeLevelID": "",
   "roleOnJoin": false,
   "roleOnJoinRole": "",
-  "csgo_updates": false,
-  "csgo_updates_channel": "",
-  "pubg_updates": false,
-  "pubg_updates_channel": "",
-  "gaf_steam_rss": false,
-  "gaf_steam_rss_channel": "",
   "roleState": false,
   "roleStates": {},
-  "teamspeakBanSound": false
+  "teamspeakBanSound": false,
+  "feeds": {
+    "gaf": {
+      "enabled": false,
+      "channel": ""
+    }
+  }
 }
