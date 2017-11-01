@@ -2,6 +2,7 @@ import asyncio
 import re
 
 import discord
+from discord import Colour
 from discord.ext import commands
 
 from bot.utils import reaction_menu
@@ -135,7 +136,10 @@ class Roles:
         """
         if not isinstance(role, discord.Role):
             await ctx.send("Could not find role! Creating blank role now :crayon: ")
-            role = await ctx.guild.create_role(name=role)
+            role = await ctx.guild.create_role(name=role,
+                                               colour=Colour.orange(),
+                                               mentionable=True,
+                                               reason="Role automagically created by GAF Bot for the role list")
         if role.position >= ctx.author.top_role.position:
             await ctx.send("Unable to add role due to Hierarchy")
         else:
