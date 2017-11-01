@@ -10,8 +10,21 @@ class Moderation:
         self.bot = bot
 
     @commands.command()
+    @checks.perms_kick()
+    async def kick(self, ctx, user: discord.Member, *, reason: str = None):
+        """
+        Kicks a user from the guild
+        """
+        if user.top_role >= ctx.author.top_role:
+            return
+        await ctx.guild.kick(user,
+                             reason=f"Kicked by {ctx.author} for reason \"{reason}\"")
+        await ctx.channel.send(f":negative_squared_cross_mark:  Kicked user {user}")
+        self.bot.logger.notice("Kicked {} from {}".format(user, ctx.guild.name))
+
+    @commands.command()
     @checks.perms_ban()
-    async def ban(self, ctx, user: discord.Member, delete_days=1):
+    async def ban(self, ctx, user: discord.Member, delete_days=1, *, reason: str = None):
         """
         Bans a user from the guild
         """
@@ -20,7 +33,9 @@ class Moderation:
         if delete_days > 7:
             delete_days = 7
         if user:
-            await ctx.guild.ban(user, delete_message_days=delete_days)
+            await ctx.guild.ban(user,
+                                delete_message_days=delete_days,
+                                reason=f"Banned by {ctx.author} for reason \"{reason}\"")
             await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user}")
             self.bot.logger.notice("Banned {} from {}".format(user, ctx.guild.name))
 
@@ -38,18 +53,6 @@ class Moderation:
             await ctx.channel.send(":x: User not found.")
         else:
             await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user_id} - <@{user_id}>.")
-
-    @commands.command()
-    @checks.perms_kick()
-    async def kick(self, ctx, user: discord.Member):
-        """
-        Kicks a user from the guild
-        """
-        if user.top_role >= ctx.author.top_role:
-            return
-        await ctx.guild.kick(user)
-        await ctx.channel.send(f":negative_squared_cross_mark:  Kicked user {user}")
-        self.bot.logger.notice("Kicked {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
     @checks.perms_manage_messages()
