@@ -71,7 +71,7 @@ class Misc:
         guild_config = await self.bot.get_guild_config(guild.id)
         if guild_config["teamspeakBanSound"]:
             vc = await member.voice.channel.connect()
-            src = discord.FFmpegPCMAudio("bot/resources/user_banned.mp3")
+            src = discord.FFmpegPCMAudio("resources/user_banned.mp3")
             vc.play(src)
             await asyncio.sleep(5)
             await vc.disconnect()

@@ -77,8 +77,6 @@ class Moderation:
         """
         Mutes a user
         """
-        if user.top_role >= ctx.author.top_role:
-            return
         guild_settings = await self.bot.get_guild_config(ctx.guild.id)
         if guild_settings["mute_role"] == "":
             await ctx.send("No mute role set! Please set one with $mute role <role>")
