@@ -1,7 +1,7 @@
 # GAF Bot
 
 ###### About
-hi im awful and am being rewritten
+A bot focused around role management for the Never Ending GAF Server
 
 # dont try and self host this, if you do i won't help you
 
