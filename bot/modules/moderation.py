@@ -21,8 +21,8 @@ class Moderation:
             delete_days = 7
         if user:
             await ctx.guild.ban(user, delete_message_days=delete_days)
-            await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user.mention}")
-            self.bot.logger.notice("Kicked {} from {}".format(user, ctx.guild.name))
+            await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user}")
+            self.bot.logger.notice("Banned {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
     @checks.perms_ban()
@@ -48,7 +48,7 @@ class Moderation:
         if user.top_role >= ctx.author.top_role:
             return
         await ctx.guild.kick(user)
-        await ctx.channel.send(f":negative_squared_cross_mark:  Kicked user {user.mention}")
+        await ctx.channel.send(f":negative_squared_cross_mark:  Kicked user {user}")
         self.bot.logger.notice("Kicked {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
