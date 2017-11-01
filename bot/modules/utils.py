@@ -1,6 +1,7 @@
 import datetime
 
 import discord
+from discord import Colour
 from discord.ext import commands
 
 from bot.utils import checks
@@ -138,6 +139,15 @@ class Utils:
                              url=user.avatar_url)
 
             await ctx.send(embed=embed)
+
+    @commands.command()
+    @checks.perms_manage_roles()
+    async def create_blank_role(self, ctx, role):
+        await ctx.guild.create_role(name=role,
+                                    colour=Colour.orange(),
+                                    mentionable=True,
+                                    reason=f"Blank role created by GAF Bot, invoked by {ctx.author}")
+        await ctx.send("Created blank role :pencil:")
 
 
 def setup(bot):
