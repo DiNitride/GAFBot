@@ -46,7 +46,7 @@ class GAF:
         """
         Channel 1 and chill?
         """
-        await ctx.send(content="<@&172426880543227904> <@&262334316611239937>, chill? - {}".format(ctx.author), file=discord.File("bot/resources/chill.jpg"))
+        await ctx.send(content="<@&172426880543227904> <@&262334316611239937> <@&172427010310799361>, chill? - {}".format(ctx.author), file=discord.File("bot/resources/chill.jpg"))
         await ctx.message.delete()
 
     @gaf.group(invoke_without_subcommand=True)
