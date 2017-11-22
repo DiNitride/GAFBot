@@ -65,6 +65,15 @@ class Misc:
             await ctx.send("`Enabled Teamspeak ban sound`")
         await self.bot.set_guild_config(ctx.guild.id, guild_config)
 
+    @commands.command()
+    async def gg(self, ctx):
+        """
+        GG EZ
+        """
+        await ctx.send(
+            file=discord.File("bot/resources/ggez.jpg"))
+        await ctx.message.delete()
+
     async def on_member_ban(self, guild, member):
         if member.voice.channel is None:
             return
