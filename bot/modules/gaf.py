@@ -132,7 +132,12 @@ class GAF:
                             )
                             embed.set_thumbnail(url="http://www.neverendinggaf.com/graphics/logos/gaf-logo.jpg")
                             embed.set_footer(text="Author - {}".format(p.find("author").text))
-                            await channel.send(embed=embed)
+                            if "@everyone" in content:
+                                message_content = "**New Announcement** - Content Below @everyone"
+                            else:
+                                message_content = "**New Announcement** - Content Below"
+                            message_content += "\n*Author* : {}".format(p.find("author").text)
+                            await channel.send(content=message_content, embed=embed)
                             self.bot.logger.debug(f"Sent new GAF Steam Announcement to guild {guild} channel {channel}")
 
             await asyncio.sleep(60)
