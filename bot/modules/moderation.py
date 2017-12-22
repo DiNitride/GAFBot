@@ -120,6 +120,26 @@ class Moderation:
             await self.bot.set_guild_config(ctx.guild.id, guild_config)
             await ctx.send("Set the guilds mute role")
 
+    @commands.command()
+    @checks.is_owner()
+    @checks.is_gaf_server()
+    async def m(self, ctx):
+        vs = ctx.author.voice
+        c = vs.channel
+        r = discord.utils.get(ctx.guild.roles, id=172426922947641344)
+        for u in c.members:
+            if r not in u.roles:
+                await u.edit(mute=True)
+
+    @commands.command()
+    @checks.is_owner()
+    @checks.is_gaf_server()
+    async def um(self, ctx):
+        vs = ctx.author.voice
+        c = vs.channel
+        for u in c.members:
+            await u.edit(mute=False)
+
     async def on_guild_role_delete(self, role):
         guild_config = await self.bot.get_guild_config(role.guild.id)
         mute_role = guild_config["mute_role"]
