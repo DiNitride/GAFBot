@@ -74,7 +74,7 @@ class Core:
         """
         await ctx.send(f"Pong! :ping_pong: **{self.bot.latency * 1000:.0f}ms**")
 
-    @commands.command()
+    @commands.group(invoke_without_command=True)
     @checks.is_owner()
     async def update(self, ctx):
         """
@@ -91,6 +91,31 @@ class Core:
                 else:
                     await ctx.send("Succesfully updated! Rebooting now :repeat: ")
                     await self.bot.logout()
+        except subprocess.CalledProcessError:
+            await ctx.send("Error updating! :exclamation: ")
+        except subprocess.TimeoutExpired:
+            await ctx.send("Error updating - Process timed out! :exclamation: ")
+
+    @update.command()
+    @checks.is_owner()
+    async def website(self, ctx):
+        """
+        Updates the GAF Website
+        """
+        await ctx.send("Calling process to update! :up: :date: ")
+        try:
+            done = subprocess.run("git pull",
+                                  cwd="/var/www/neverendinggaf.com/web/",
+                                  shell=True,
+                                  stdout=subprocess.PIPE,
+                                  timeout=30)
+            if done:
+                message = done.stdout.decode()
+                await ctx.send("`{}`".format(message))
+                if message == "Already up-to-date.\n":
+                    await ctx.send("No update available :no_entry:")
+                else:
+                    await ctx.send("Succesfully updated! Refresh website :repeat: ")
         except subprocess.CalledProcessError:
             await ctx.send("Error updating! :exclamation: ")
         except subprocess.TimeoutExpired:
