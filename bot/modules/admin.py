@@ -150,7 +150,7 @@ class Admin:
     @checks.is_owner()
     async def update_avatar(self, ctx):
         with open("bot/resources/logo.jpg", "rb") as f:
-            self.bot.user.edit(avatar=f.read())
+            await self.bot.user.edit(avatar=f.read())
         await ctx.send("Updated avatar, am I pretty yet?")
 
     async def on_guild_join(self, guild):
