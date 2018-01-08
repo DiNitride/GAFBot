@@ -149,7 +149,7 @@ class Admin:
     @commands.command()
     @checks.is_owner()
     async def update_avatar(self, ctx):
-        with open("resources/logo.jpg", "rb") as f:
+        with open("bot/resources/logo.jpg", "rb") as f:
             self.bot.user.edit(avatar=f.read())
         await ctx.send("Updated avatar, am I pretty yet?")
 
