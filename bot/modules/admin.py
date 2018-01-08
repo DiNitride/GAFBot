@@ -149,9 +149,12 @@ class Admin:
     @commands.command()
     @checks.is_owner()
     async def update_avatar(self, ctx):
-        with open("bot/resources/logo.jpg", "rb") as f:
-            await self.bot.user.edit(avatar=f.read())
-        await ctx.send("Updated avatar, am I pretty yet?")
+        try:
+            with open("bot/resources/logo.jpg", "rb") as f:
+                await self.bot.user.edit(avatar=f.read())
+            await ctx.send("Updated avatar, am I pretty yet?")
+        except FileNotFoundError:
+            await ctx.send("Couldn't find logo.jpg")
 
     async def on_guild_join(self, guild):
         await self.compare_bots_users(guild)
