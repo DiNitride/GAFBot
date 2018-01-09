@@ -148,9 +148,10 @@ class Admin:
 
     @commands.command()
     @checks.is_owner()
-    async def update_avatar(self, ctx):
+    async def update_avatar(self, ctx, file = None):
+        file = file or "logo.jpg"
         try:
-            with open("bot/resources/logo.jpg", "rb") as f:
+            with open(f"bot/resources/{file}", "rb") as f:
                 await self.bot.user.edit(avatar=f.read())
             await ctx.send("Updated avatar, am I pretty yet?")
         except FileNotFoundError:
