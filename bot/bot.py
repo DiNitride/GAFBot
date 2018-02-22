@@ -161,6 +161,8 @@ class Bot(commands.AutoShardedBot):
             return
         if message.author.id in self.config["user_blacklist"]:
             return
+        if message.content == "dab" and message.guild.id == 172425299559055381:
+            await message.channel.send("<o/")
         await self.process_commands(message)
 
     def sum_users_and_channels(self):
