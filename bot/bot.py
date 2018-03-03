@@ -157,6 +157,11 @@ class Bot(commands.AutoShardedBot):
             raise BotCogDisabledError
 
     async def on_message(self, message):
+        guild_config = await self.get_guild_config(message.guild.id)
+        if guild_config["inviteCop"] is True and message.channel.id not in guild_config["inviteCopPassChannels"]:
+            if "discord.gg" in message.content:
+                await message.delete()
+                return
         if message.author.bot is True:
             return
         if message.author.id in self.config["user_blacklist"]:

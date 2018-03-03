@@ -153,6 +153,75 @@ class Moderation:
         for u in c.members:
             await u.edit(mute=False)
 
+    @commands.group(invoke_without_command=True)
+    @checks.perms_manage_guild()
+    async def invitecop(self, ctx):
+        """
+        Automatically delete guild invites
+        """
+        guild = await self.bot.get_guild_config(ctx.guild.id)
+        if guild["inviteCop"]:
+            await ctx.send("`Invite Cop is enabled`")
+        else:
+            await ctx.send("`Invite Cop is disabled`")
+
+    @invitecop.command()
+    @checks.perms_manage_guild()
+    async def enable(self, ctx):
+        """
+        Enables invite cop for a guild
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["inviteCop"] = True
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("`Invite Cop has been enabled`")
+
+    @invitecop.command()
+    @checks.perms_manage_guild()
+    async def disable(self, ctx):
+        """
+        Disables invite cop for a guild
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["inviteCop"] = False
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("`Invite Cop has been disable`")
+
+    @invitecop.group(invoke_without_command=True)
+    @checks.perms_manage_guild()
+    async def bypasses(self, ctx):
+        """
+        Shows the channels that have invite cop bypassed in
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        resp = "Channels:\n"
+        for c in guild_config["inviteCopPassChannels"]:
+            channel = self.bot.get_channel(c)
+            resp += f"#{channel}\n"
+        await ctx.send(resp)
+
+    @bypasses.command()
+    @checks.perms_manage_guild()
+    async def add(self, ctx):
+        """
+        Adds a channel to the Invite Cop bypass list
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["inviteCopPassChannels"].append(ctx.channel.id)
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("`Invite Cop will now bypass this channel`")
+
+    @bypasses.command()
+    @checks.perms_manage_guild()
+    async def remove(self, ctx):
+        """
+        Removes a channel from the Invite Cop bypass list
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["inviteCopPassChannels"].remove(ctx.channel.id)
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("`Invite Cop will now monitor this channel`")
+
     async def on_guild_role_delete(self, role):
         guild_config = await self.bot.get_guild_config(role.guild.id)
         mute_role = guild_config["mute_role"]
