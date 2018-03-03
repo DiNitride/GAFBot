@@ -103,7 +103,7 @@ class Bot(commands.AutoShardedBot):
         self.command_count += 1
 
     async def on_command_error(self, context, exception: CommandError):
-
+        # TODO: Make this not shit
         if isinstance(exception, CommandNotFound):
             return
 

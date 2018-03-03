@@ -91,6 +91,20 @@ class GAF:
         await self.bot.set_guild_config(ctx.guild.id, guild_config)
         await ctx.send("`Okay, tracking channel set to #{}`".format(ctx.channel))
 
+    @commands.command()
+    async def neogaf(self, ctx):
+        """
+        IS THIS NEOGAF????
+        """
+        resp = "`Is this NeoGAF?`\n" \
+               "~~NO WHY THE FUCK DO YOU ALL KEEP JOINING AND ASKING IF THIS IS NEOGAF?~~\n" \
+               "No, we're not NeoGAF, we're The Never Ending GAF, a British/European gaming community. " \
+               "We play games and insult each other a lot, so while we aren't what you're looking for, feel free to " \
+               "stick around and join us playing games and shit. You can read more about what we do on our website at " \
+               "<http://www.neverendinggaf.com> or in #welcome-to-gaf\n"
+        await ctx.send(resp)
+
+
     async def update_check(self):
         await self.bot.wait_until_ready()
         self.bot.logger.debug("Started GAF Steam Announcement RSS Update Check Loop")
