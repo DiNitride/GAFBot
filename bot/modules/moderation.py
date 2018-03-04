@@ -193,12 +193,7 @@ class Moderation:
         """
         Shows the channels that have invite cop bypassed in
         """
-        guild_config = await self.bot.get_guild_config(ctx.guild.id)
-        resp = "Channels:\n"
-        for c in guild_config["inviteCopPassChannels"]:
-            channel = self.bot.get_channel(c)
-            resp += f"#{channel}\n"
-        await ctx.send(resp)
+        await ctx.send(self.bot.get_formatted_list_of_invite_cop_bypass_channels(ctx.guild.id))
 
     @bypasses.command()
     @checks.perms_manage_guild()

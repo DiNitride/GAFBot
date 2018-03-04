@@ -161,6 +161,9 @@ class Bot(commands.AutoShardedBot):
         if guild_config["inviteCop"] is True and message.channel.id not in guild_config["inviteCopPassChannels"]:
             if "discord.gg" in message.content or "discordapp.com/invite/" in message.content:
                 await message.delete()
+                channels = await self.get_formatted_list_of_invite_cop_bypass_channels(message.guild.id)
+                await message.channel.send(f"Invites are not allowed in this channel\n"
+                                           f"```\n{channels}\n```")
                 return
         if message.author.bot is True:
             return
@@ -170,13 +173,24 @@ class Bot(commands.AutoShardedBot):
             await message.channel.send("<o/")
         await self.process_commands(message)
 
+    async def get_formatted_list_of_invite_cop_bypass_channels(self, guild_id):
+        guild_config = await self.get_guild_config(guild_id)
+        resp = "Invite Permitted Channels:\n"
+        if len(guild_config["inviteCopPassChannels"]) != 0:
+            for c in guild_config["inviteCopPassChannels"]:
+                channel = self.get_channel(c)
+                resp += f"#{channel}\n"
+        else:
+            resp += "None"
+        return resp
+
     def sum_users_and_channels(self):
         """
         Calculates total sum of users and channels that the bot can "see"
         """
         users = sum(1 for user in self.get_all_members())
         channels = sum(1 for channel in self.get_all_channels())
-        return (users, channels)
+        return users, channels
 
     def calculate_uptime(self):
         """
