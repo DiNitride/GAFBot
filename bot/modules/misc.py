@@ -52,6 +52,7 @@ class Misc:
         await ctx.send("*Pays respects*")
 
     @commands.command()
+    @checks.is_admin()
     async def teamspeakbansound(self, ctx):
         """
         Toggles playing the teamspeak "User was banned from your channel" sound when a user is banned.

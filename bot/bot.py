@@ -202,7 +202,7 @@ class Bot(commands.AutoShardedBot):
         hours = int(uptime.seconds / 3600)
         minutes = int((uptime.seconds % 3600) / 60)
         seconds = int((uptime.seconds % 3600) % 60)
-        return (uptime, days, hours, minutes, seconds)
+        return uptime, days, hours, minutes, seconds
 
     def run(self):
 
