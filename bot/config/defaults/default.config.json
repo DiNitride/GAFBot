@@ -20,5 +20,8 @@
   "user_blacklist": [],
   "pub_dates": {
     "gaf": ""
-  }
+  },
+  "log_channels":{
+        "guild": 123
+    }
 }

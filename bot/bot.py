@@ -42,6 +42,9 @@ class Bot(commands.AutoShardedBot):
         self.prefix_cache = {}
         self.startup = None
         self.add_check(self.cog_enabled_check)
+        self.log_channels = {
+            "guild": None
+        }
 
     async def prefix(self, bot, ctx):
         r = [f"{bot.user.mention} ", f"<@!{bot.user.id}> "]
@@ -87,6 +90,8 @@ class Bot(commands.AutoShardedBot):
     async def on_ready(self):
         self.startup = datetime.datetime.now()
         self.logger.notice(f"Logged in as {self.user.name} with ID {self.user.id}")
+        self.log_channels["guild"] = self.get_channel(self.config["log_channels"]["guild"])
+        self.logger.info(f"Set Guild Log channel to #{self.log_channels['guild']}")
         users = sum(1 for user in self.get_all_members())
         channels = sum(1 for channel in self.get_all_channels())
         self.logger.notice("I can see {} users in {} channels on {} guilds".format(users, channels, len(self.guilds)))
@@ -203,6 +208,19 @@ class Bot(commands.AutoShardedBot):
         minutes = int((uptime.seconds % 3600) / 60)
         seconds = int((uptime.seconds % 3600) % 60)
         return uptime, days, hours, minutes, seconds
+
+    async def log_to_channel(self, channel: str, message):
+        if self.log_channels[channel] is not None:
+            await self.log_channels[channel].send(message)
+
+    async def on_guild_join(self, guild):
+        msg = f"Joined \"{guild.name}\" owned by {guild.owner}"
+        self.logger.info(msg)
+        await self.log_to_channel("guild", msg)
+
+    async def on_guild_remove(self, guild):
+        msg = f"Left \"{guild.name}\" owned by {guild.owner}"
+        await self.log_to_channel("guild", msg)
 
     def run(self):
 
