@@ -50,7 +50,7 @@ class Admin:
         """
         Lists all of the guilds the bot is in
         """
-        guilds = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
+        guilds = list("{} [{}] Owner: {} [{}]".format(g.name, g.id, g.owner, g.owner.id) for g in self.bot.guilds)
         await reaction_menu.start_reaction_menu(self.bot, guilds, ctx.author, ctx.channel, count=0,
                                                 timeout=60, per_page=30, header=header)
 
