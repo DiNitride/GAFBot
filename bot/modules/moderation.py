@@ -79,11 +79,11 @@ class Moderation:
             if limit > 100:
                 limit = 100
         if user is None:
-            messages = await ctx.channel.purge(limit=limit, check=None)
+            messages = await ctx.channel.purge(limit=limit+1, check=None)
             await ctx.send("Purged {} messages in #{}".format(len(messages), ctx.channel))
             self.bot.logger.notice("Purged {} messages in #{}".format(len(messages), ctx.channel))
         else:
-            messages = await ctx.channel.purge(limit=limit, check=predicate)
+            messages = await ctx.channel.purge(limit=limit+1, check=predicate)
             await ctx.send("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
             self.bot.logger.notice("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
 
