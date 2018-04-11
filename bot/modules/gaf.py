@@ -47,7 +47,7 @@ class GAF:
         Channel 1 and chill?
         """
         await ctx.send(
-            content=f"<@&172426880543227904> <@&262334316611239937> <@&172427010310799361>, chill? - {ctx.author}",
+            content=f"https://www.fanfiction.net/s/6447578/1/The-Garfield-Network\n<@&172426880543227904> <@&262334316611239937> <@&172427010310799361>, chill? - {ctx.author}\nhttps://www.fanfiction.net/s/6447578/1/The-Garfield-Networkhttps://www.fanfiction.net/s/6447578/1/The-Garfield-Network",
             file=discord.File("bot/resources/chill.jpg"))
         await ctx.message.delete()
 
