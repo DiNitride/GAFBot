@@ -41,7 +41,7 @@ class Admin:
             for val in self.statuses:
                 if callable(val):
                     val = val()
-                await self.bot.change_presence(game=discord.Game(name=val, type=0))
+                await self.bot.change_presence(activity=discord.Game(name=val))
                 await asyncio.sleep(180)
 
     @commands.group(invoke_without_command=True)
@@ -50,9 +50,9 @@ class Admin:
         """
         Lists all of the guilds the bot is in
         """
-        guilds = list("{} - ID: {}".format(g.name, g.id) for g in self.bot.guilds)
+        guilds = list("**{}** `{}` - **{}** `{}`".format(g.name, g.id, g.owner, g.owner.id) for g in self.bot.guilds)
         await reaction_menu.start_reaction_menu(self.bot, guilds, ctx.author, ctx.channel, count=0,
-                                                timeout=60, per_page=30, header=header)
+                                                timeout=60, per_page=20, header=header)
 
     @guilds.command()
     @checks.is_owner()

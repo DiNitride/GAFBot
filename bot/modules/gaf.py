@@ -47,7 +47,7 @@ class GAF:
         Channel 1 and chill?
         """
         await ctx.send(
-            content=f"<@&172426880543227904> <@&262334316611239937> <@&172427010310799361>, chill? - {ctx.author}",
+            content=f"https://www.fanfiction.net/s/6447578/1/The-Garfield-Network\n<@&172426880543227904> <@&262334316611239937> <@&172427010310799361>, chill? - {ctx.author}\nhttps://www.fanfiction.net/s/6447578/1/The-Garfield-Networkhttps://www.fanfiction.net/s/6447578/1/The-Garfield-Network",
             file=discord.File("bot/resources/chill.jpg"))
         await ctx.message.delete()
 
@@ -90,6 +90,20 @@ class GAF:
         guild_config["feeds"]["gaf"]["enabled"] = ctx.channel.id
         await self.bot.set_guild_config(ctx.guild.id, guild_config)
         await ctx.send("`Okay, tracking channel set to #{}`".format(ctx.channel))
+
+    @commands.command()
+    async def neogaf(self, ctx):
+        """
+        IS THIS NEOGAF????
+        """
+        resp = "`Is this NeoGAF?`\n" \
+               "~~NO WHY THE FUCK DO YOU ALL KEEP JOINING AND ASKING IF THIS IS NEOGAF?~~\n" \
+               "No, we're not NeoGAF, we're The Never Ending GAF, a British/European gaming community. " \
+               "We play games and insult each other a lot, so while we aren't what you're looking for, feel free to " \
+               "stick around and join us playing games and shit. You can read more about what we do on our website at " \
+               "<http://www.neverendinggaf.com> or in #welcome-to-gaf\n"
+        await ctx.send(resp)
+
 
     async def update_check(self):
         await self.bot.wait_until_ready()

