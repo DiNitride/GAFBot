@@ -88,7 +88,7 @@ class Utils:
             embed.add_field(name="Roles", value="{}".format(len(user.roles) - 1))
             embed.add_field(name="Account Creation Date", value=user.created_at)
             embed.add_field(name="Date Joined Guild", value=user.joined_at)
-            embed.add_field(name="Activity", value=user.activity.name")
+            embed.add_field(name="Activity", value=user.activity.name)
             embed.add_field(name="Status", value=user.status)
             embed.add_field(name="Voice State", value=user.voice if user.voice is None else user.voice.channel.name)
             embed.add_field(name="Display Name", value=user.display_name)
