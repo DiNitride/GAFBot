@@ -3,6 +3,37 @@
 ##### About
 A Discord bot written in Python using Discord.py. Originally created for some fun custom commands for the gaming community The Never Ending GAF, but since has been developed with multi-server support for all of it's functional (and useless) abilities.
 
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+IT'S TERRIBLE
+
+
 ### Noteable Features:
 ###### Custom automated role management interface
 Got a channel locked behind a role? Fed up of being pestered 24/7 to give people the role so they can access the ultra secret Minecraft tips and tricks channel? Well me too (not really), so I made this. It features a custom menu interface for users, plus an easy way for admins to manage the roles.
@@ -16,7 +47,6 @@ What it says on the tin, search Spotify straight from Discord. Also get the top 
 ###### Some nice utility commands
 Get someones avatar, basic information about them (Date they joined the server etc)
 
-## Please don't try and self host this. I do not provide support if you're trying to host it.
 I run the bot with very little downtime, and you're free to invite it. If you really do want to host it yourself, it's an open source project, but I wrote it for myself and my friends, so it's poorly documented for anyone trying to set it up, because it's always me doing it.
 
 # Invite Link
