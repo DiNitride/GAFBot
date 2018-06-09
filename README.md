@@ -3,37 +3,6 @@
 ##### About
 A Discord bot written in Python using Discord.py. Originally created for some fun custom commands for the gaming community The Never Ending GAF, but since has been developed with multi-server support for all of it's functional (and useless) abilities.
 
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBLE
-IT'S TERRIBL
-
-
 ### Noteable Features:
 ###### Custom automated role management interface
 Got a channel locked behind a role? Fed up of being pestered 24/7 to give people the role so they can access the ultra secret Minecraft tips and tricks channel? Well me too (not really), so I made this. It features a custom menu interface for users, plus an easy way for admins to manage the roles.
