@@ -47,7 +47,7 @@ class GAF:
         Channel 1 and chill?
         """
         await ctx.send(
-            content=f"https://www.fanfiction.net/s/6447578/1/The-Garfield-Network\n<@&172426880543227904> <@&262334316611239937> <@&172427010310799361>, chill? - {ctx.author}\nhttps://www.fanfiction.net/s/6447578/1/The-Garfield-Networkhttps://www.fanfiction.net/s/6447578/1/The-Garfield-Network",
+            content=f"<@&172426880543227904> <@&262334316611239937> <@&172427010310799361>, chill? - {ctx.author}",
             file=discord.File("bot/resources/chill.jpg"))
         await ctx.message.delete()
 
@@ -98,7 +98,7 @@ class GAF:
         """
         resp = "`Is this NeoGAF?`\n" \
                "~~NO WHY THE FUCK DO YOU ALL KEEP JOINING AND ASKING IF THIS IS NEOGAF?~~\n" \
-               "No, we're not NeoGAF, we're The Never Ending GAF, a British/European gaming community. " \
+               "No, we're not NeoGAF, we're The Never Ending GAF, a European gaming community. " \
                "We play games and insult each other a lot, so while we aren't what you're looking for, feel free to " \
                "stick around and join us playing games and shit. You can read more about what we do on our website at " \
                "<http://www.neverendinggaf.com> or in #welcome-to-gaf\n"
