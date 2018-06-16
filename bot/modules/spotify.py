@@ -13,6 +13,7 @@ SPOTIFY_ICON_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/" 
 AUTH_ENDPOINT = "https://accounts.spotify.com/api/token"
 PLAYLIST_ENDPOINT = "https://api.spotify.com/v1/browse/featured-playlists"
 
+
 async def get_auth_token(auth_id):
     return await net.post_url(
         AUTH_ENDPOINT,
@@ -23,6 +24,7 @@ async def get_auth_token(auth_id):
             "user-agent": "GAF Bot",
             "Authorization": f"Basic {auth_id.decode()}"
         })
+
 
 async def get_spotify_endpoint(endpoint, auth_token):
     return await net.get_url(
