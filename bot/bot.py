@@ -16,6 +16,7 @@ import tqdm
 from bot.utils.help_formatter import HelpFormatter
 from bot.utils.errors import NoEmbedsError, BotCogDisabledError, GuildCogDisabledError
 from bot.utils.tools import merge_dicts
+from bot.utils.net import post_url
 
 
 class Bot(commands.AutoShardedBot):
@@ -217,10 +218,14 @@ class Bot(commands.AutoShardedBot):
         msg = f"Joined \"{guild.name}\" owned by {guild.owner}"
         self.logger.info(msg)
         await self.log_to_channel("guild", msg)
+        if self.config["guild_announcement_url"]:
+            await post_url(self.config["guild_announcement_url"], {"value1": "Joined", "value2": guild.name, "value3": guild.owner})
 
     async def on_guild_remove(self, guild):
         msg = f"Left \"{guild.name}\" owned by {guild.owner}"
         await self.log_to_channel("guild", msg)
+        if self.config["guild_announcement_url"]:
+            await post_url(self.config["guild_announcement_url"], {"value1": "Left", "value2": guild.name, "value3": guild.owner})
 
     def run(self):
 

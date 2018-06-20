@@ -18,6 +18,7 @@
     "misc": true
   },
   "user_blacklist": [],
+  "guild_announcement_url": "",
   "pub_dates": {
     "gaf": ""
   },
