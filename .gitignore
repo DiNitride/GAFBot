@@ -1,12 +1,4 @@
-*.pyc
-*.suo
-GAFBot.pyproj
-*.sln
-config.json
-config/tags.json
-desktop.ini
-bot/config/modules.json
-bot/config/serverSettings.db
 .idea
-bot/logs/last-run.log
-bot/config/guild_configs.db
+*.pyc
+config
+logs

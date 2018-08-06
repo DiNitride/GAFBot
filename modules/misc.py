@@ -1,18 +1,18 @@
 import asyncio
 
-from discord.ext import commands
 import discord
+from discord.ext import commands
+from dinnerplate import BaseCog, SQLiteDataType, SQLiteGuildTable, SQLiteColumn
 
-from bot.utils import checks
 
-
-class Misc:
+class Misc(BaseCog):
 
     def __init__(self, bot):
-        self.bot = bot
+        super().__init__(bot)
+        self.guild_storage = SQLiteGuildTable("misc", [SQLiteColumn("ts_ban", SQLiteDataType.INTEGER, False)])
 
     @commands.command()
-    @checks.is_owner()
+    @commands.is_owner()
     async def massnick(self, ctx, prefix, overwrite, suffix):
         """
         Mass nicknames everyone on the server, please do $help massnick
@@ -52,40 +52,36 @@ class Misc:
         await ctx.send("*Pays respects*")
 
     @commands.command()
-    @checks.is_admin()
+    @commands.has_permissions(administrator=True)
     async def teamspeakbansound(self, ctx):
         """
         Toggles playing the teamspeak "User was banned from your channel" sound when a user is banned.
         """
-        guild_config = await self.bot.get_guild_config(ctx.guild.id)
-        if guild_config["teamspeakBanSound"]:
-            guild_config["teamspeakBanSound"] = False
+        toggle = self.bot.database.get(ctx.guild.id, self.guild_storage.columns.ts_ban)
+        if toggle:
+            toggle = False
             await ctx.send("`Disabled Teamspeak ban sound`")
         else:
-            guild_config["teamspeakBanSound"] = True
+            toggle = True
             await ctx.send("`Enabled Teamspeak ban sound`")
-        await self.bot.set_guild_config(ctx.guild.id, guild_config)
+        self.bot.database.set(ctx.guild.id, self.guild_storage.columns.ts_ban, toggle)
 
     @commands.command()
     async def gg(self, ctx):
         """
         GG EZ
         """
-        await ctx.send(
-            file=discord.File("bot/resources/ggez.jpg"))
-        await ctx.message.delete()
+        await ctx.send(file=discord.File("resources/ggez.jpg"))
 
     async def on_member_ban(self, guild, member):
-        if member.voice.channel is None:
+        if member.voice is None:
             return
-        guild_config = await self.bot.get_guild_config(guild.id)
-        if guild_config["teamspeakBanSound"]:
+        if self.bot.database.get(guild.id, self.guild_storage.columns.ts_ban):
             vc = await member.voice.channel.connect()
-            src = discord.FFmpegPCMAudio("bot/resources/user_banned.mp3")
+            src = discord.FFmpegPCMAudio("resources/user_banned.mp3")
             vc.play(src)
             await asyncio.sleep(5)
             await vc.disconnect()
 
 
-def setup(bot):
-    bot.add_cog(Misc(bot))
+setup = Misc.setup

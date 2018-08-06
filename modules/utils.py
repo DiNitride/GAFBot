@@ -3,17 +3,16 @@ import datetime
 import discord
 from discord import Colour
 from discord.ext import commands
+from dinnerplate import BaseCog, has_embeds
 
-from bot.utils import checks
 
-
-class Utils:
+class Utils(BaseCog):
 
     def __init__(self, bot):
-        self.bot = bot
+        super().__init__(bot)
 
     @commands.group(invoke_without_command=True)
-    @checks.has_embeds()
+    @has_embeds()
     async def whois(self, ctx, user_id: int):
         """
         Searches for a user via ID
@@ -37,7 +36,7 @@ class Utils:
             return
 
     @whois.command()
-    @checks.has_embeds()
+    @has_embeds()
     async def guild(self, ctx, guild_id: int):
         """
         Searchs for a guild via ID
@@ -70,7 +69,7 @@ class Utils:
             return
 
     @commands.group(invoke_without_command=True)
-    @checks.has_embeds()
+    @has_embeds()
     async def about(self, ctx, user: discord.Member = None):
         """
         Shows information about a user
@@ -95,7 +94,7 @@ class Utils:
             await ctx.send(embed=embed)
 
     @about.command()
-    @checks.has_embeds()
+    @has_embeds()
     async def server(self, ctx):
         """
         Provides information on the server
@@ -116,12 +115,11 @@ class Utils:
             embed.add_field(name="Creation Date", value=ctx.guild.created_at)
             embed.add_field(name="Region", value=ctx.guild.region)
             embed.add_field(name="Verification Level", value=ctx.guild.verification_level)
-
             embed.set_footer(text="About Server")
             await ctx.send(embed=embed)
 
     @commands.command()
-    @checks.has_embeds()
+    @has_embeds()
     async def avatar(self, ctx, user: discord.Member = None):
         """
         Returns the avatar of a user
@@ -140,8 +138,8 @@ class Utils:
 
             await ctx.send(embed=embed)
 
-    @commands.command()
-    @checks.perms_manage_roles()
+    @commands.command(hidden=True)
+    @commands.has_permissions(manage_roles=True)
     async def create_blank_role(self, ctx, role):
         await ctx.guild.create_role(name=role,
                                     colour=Colour.orange(),
@@ -150,5 +148,4 @@ class Utils:
         await ctx.send("Created blank role :pencil:")
 
 
-def setup(bot):
-    bot.add_cog(Utils(bot))
+setup = Utils.setup
