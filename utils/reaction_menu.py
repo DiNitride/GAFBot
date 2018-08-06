@@ -107,6 +107,8 @@ async def start_reaction_menu(bot, options, user, destination, count=1, *, timeo
                 choices.append(choice)
                 if len(choices) == count:
                     break
+            else:
+                choice.remove(choice)
         elif res.emoji == ARROWS[0]:
             page -= 1
         elif res.emoji == ARROWS[1]:
