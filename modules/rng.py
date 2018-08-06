@@ -1,14 +1,15 @@
-import re
 import random
+import re
 
 import discord
 from discord.ext import commands
+from dinnerplate import BaseCog
 
 
-class RNG:
+class RNG(BaseCog):
 
     def __init__(self, bot):
-        self.bot = bot
+        super().__init__(bot)
 
     @commands.command()
     async def dice(self, ctx, dice: str):
@@ -38,5 +39,4 @@ class RNG:
             await ctx.send(f"I choose: {re.sub('@here', '', re.sub('@everyone', '', random.choice(choices)))}")
 
 
-def setup(bot):
-    bot.add_cog(RNG(bot))
+setup = RNG.setup

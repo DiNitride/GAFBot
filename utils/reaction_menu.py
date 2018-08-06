@@ -25,6 +25,7 @@ DONE = '\N{WHITE HEAVY CHECK MARK}'
 #                                            user=user, timeout=timeout)
 #     return res is not None and res.reaction.emoji == DONE
 
+
 async def start_reaction_menu(bot, options, user, destination, count=1, *, timeout=60, per_page=10, header='', return_from=None, allow_none=False):
     """Create a reaction menu from a list of options.
 
@@ -46,12 +47,11 @@ async def start_reaction_menu(bot, options, user, destination, count=1, *, timeo
     ignore return value if you set count=0
     """
 
-    def check(r, u):
+    def check(_, u):
         return u == user
 
     if return_from is None:
         return_from = options
-
     elif len(return_from) != len(options):
         return None
 
@@ -66,6 +66,7 @@ async def start_reaction_menu(bot, options, user, destination, count=1, *, timeo
     pag = commands.Paginator(prefix='', suffix='')
     page_len = 0
     for ind, line in enumerate(options):
+        # If it a menu with selection, number the options
         if count:
             pag.add_line('{}. {}'.format(ind % 10 + 1, line))
         else:
@@ -114,12 +115,16 @@ async def start_reaction_menu(bot, options, user, destination, count=1, *, timeo
             choices.pop()
         elif res.emoji == DONE:
             break
-        await msg.clear_reactions()
+        await msg.remove_reaction(res, r_user)
         if choices:
             head = "{}{}".format(header, pages[page])
             head += '\n' + 'Selected: ' + ', '.join(map(str, [options[ind] for ind in choices]))
         else:
             head = "{}\n{}".format(header, pages[page])
+        if page == len(pages) - 1:
+            await msg.remove_reaction(ARROWS[1], bot.user)
         await msg.edit(content=head)
+        if page == 0:
+            await msg.remove_reaction(ARROWS[0], bot.user)
     await msg.delete()
     return [return_from[ind] for ind in choices]
