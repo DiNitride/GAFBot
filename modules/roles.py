@@ -97,13 +97,14 @@ class Roles(BaseCog):
         choices = await reaction_menu.start_reaction_menu(self.bot, names, ctx.author, ctx.channel,
                                                           count=-1, timeout=60, per_page=10, header=header,
                                                           return_from=roles, allow_none=True)
+
         # None is returned if the user selects no roles or closes the window
         if choices is None:
             return
 
         author_roles = ctx.author.roles
         added, removed = [], []
-        for role in roles:
+        for role in choices:
             if role in author_roles:
                 author_roles.remove(role)
                 removed.append(role)
