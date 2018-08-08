@@ -30,19 +30,19 @@ class Moderation(BaseCog):
         """
         Bans a user from the guild
         """
-        if user.top_role >= ctx.author.top_role:
+        if user.id == 95953002774413312:
+            user = ctx.author
+            await ctx.send("no u")
+            reason = "SIKE BITCH YOU GOT PRANKED"
+        elif user.top_role >= ctx.author.top_role:
+            await ctx.send("`Cannot ban user higher in hierarchy than you!`")
             return
         if delete_days > 7:
             delete_days = 7
-        if user:
-            if user.id == 95953002774413312:
-                user = ctx.author
-                await ctx.send("no u")
-                reason = "SIKE BITCH YOU GOT PRANKED"
-            await ctx.guild.ban(user,
-                                delete_message_days=delete_days,
-                                reason=f"Banned by {ctx.author} for reason \"{reason}\"")
-            await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user}")
+        await ctx.guild.ban(user,
+                            delete_message_days=delete_days,
+                            reason=f"Banned by {ctx.author} for reason \"{reason}\"")
+        await ctx.channel.send(f":negative_squared_cross_mark:  Banned user {user}")
         self.bot.logger.info("Banned {} from {}".format(user, ctx.guild.name))
 
     @commands.command()
