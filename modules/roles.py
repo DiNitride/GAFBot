@@ -311,41 +311,47 @@ class Roles(BaseCog):
             role = discord.utils.get(member.guild.roles, id=join_role)
             if role is None:
                 self.bot.database.reset_column(member.guild.id, self.guild_storage.columns.join_role)
-                return
-            author_roles = member.roles
-            author_roles.append(role)
-            try:
-                await member.edit(roles=author_roles)
-            except discord.HTTPException:
-                pass
+            else:
+                author_roles = member.roles
+                author_roles.append(role)
+                try:
+                    await member.edit(roles=author_roles)
+                except discord.HTTPException:
+                    pass
 
         rolestate = self.bot.database.get(member.guild.id, self.guild_storage.columns.rolestate)
         storage = self.bot.database.get(member.guild.id, self.guild_storage.columns.rolestate_storage)
+        id = str(member.id)
 
         if rolestate:
+            self.logger.info(f"Rolestate enabled, collecting roles to add for {member}")
             new_roles = []
             nick = None
             try:
-                # Tests to check the member has a entry in the storage
-                t = storage[member.id]
-                for role_id in storage[member.id]["roles"]:
-                    role = discord.utils.get(member.guild.roles, id=role)
+                self.logger.debug(f"Loaded stored rolestate data: {storage[id]}")
+                for role_id in storage[id]["roles"]:
+                    role = discord.utils.get(member.guild.roles, id=role_id)
+                    self.logger.debug(f"Searching for role with ID: {role_id}")
                     if role is None:
+                        self.logger.debug(f"Error finding role with ID: {role_id}")
                         continue
                     else:
-                        new_roles.append(role)
-                if storage[member.id]["nick"]:
-                    nick = storage[member.id]["nick"]
+                        if role < discord.utils.get(member.guild.members, id=self.bot.user.id).top_role:
+                            self.logger.debug(f"Found role with ID: {role_id}, adding to new role list")
+                            new_roles.append(role)
+                if storage[id]["nick"]:
+                    nick = storage[id]["nick"]
                 await member.edit(roles=new_roles, nick=nick)
             except KeyError:
-                pass
+                self.logger.debug(f"Key Error when loading storage for user {member} with ID: {member.id}")
             except discord.HTTPException:
-                pass
+                self.logger.debug(f"Caught HTTP Exception when trying to add roles for rolestate")
 
     async def on_member_remove(self, member):
         storage = self.bot.database.get(member.guild.id, self.guild_storage.columns.rolestate_storage)
         roles = [role.id for role in member.roles]
         storage[member.id] = {"roles": roles, "nick": member.nick}
+        self.logger.debug(f"Saved rolestate for user {member}. Roles: {roles}")
         self.bot.database.set(member.guild.id, self.guild_storage.columns.rolestate_storage, storage)
 
 
