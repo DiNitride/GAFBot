@@ -1,20 +1,36 @@
 # GAF Bot
 
 ##### About
-A Discord bot written in Python using Discord.py. Originally created for some fun custom commands for the gaming community The Never Ending GAF, but since has been developed with multi-server support for all of it's functional (and useless) abilities.
+A Discord bot written in Python using Discord.py. Originally created for some fun custom commands for the gaming community The Never Ending GAF, but since has been developed with multi-server support for all of it's tools.
 
-### Noteable Features:
+### Features:
+- Customisable prefix
+- Per-guild enable/disable modules
+- Logging system for when a user joins, leaves, gets bans or unbanned from a server
+###### Rolestate System! Save users roles when they leave the server
+Rolestate saves the users roles when they leave the guild so people do not have to have all their roles re-added upon joining again. it also prevents leaving and joining again to circumvent a mute.
 ###### Custom automated role management interface
-Got a channel locked behind a role? Fed up of being pestered 24/7 to give people the role so they can access the ultra secret Minecraft tips and tricks channel? Well me too (not really), so I made this. It features a custom menu interface for users, plus an easy way for admins to manage the roles.
-###### Moderation Commands
-Whilst GAF Bot is not a moderation focused bot, it has some basic features including
-- Mass message deletion
-- Muting
-- Banning and kicking
-###### Spotify Searching and Daily playlists
-What it says on the tin, search Spotify straight from Discord. Also get the top playlist for the day, or a random playlist from the list
-###### Some nice utility commands
-Get someones avatar, basic information about them (Date they joined the server etc)
+Set a list of roles that users can select to give themselves via either straight commands or a custom role reaction menu. Allows users to select the roles they want from an interative page.
+###### Invite Cop!
+Prevent people from sending invites in channels unless you select a bypass
+###### Moderation
+- Kicking/Banning
+- xBanning (Banning a user who is not in the server by ID)
+- Message purging (With ability to limit to only purging one users messages)
+- Set a mute role and mute and unmute via the bot
+###### Spotify
+- Search Spotify from Discord!
+- Get a random playlist
+- Get the days playlists
+###### Utility
+- Get information about a user
+- Get information about a guild
+- Find out who a user is from their ID
+- Get an enlarged picture of someones avatar
+###### Misc!
+- Press F to pay respects
+- Get a random famous quote
+- Select something randomly from a given list
 
 I run the bot with very little downtime, and you're free to invite it. If you really do want to host it yourself, it's an open source project, but I wrote it for myself and my friends, so it's poorly documented for anyone trying to set it up, because it's always me doing it.
 
