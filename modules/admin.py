@@ -103,7 +103,11 @@ class Admin(BaseCog):
         """
         Get's the top 35 guilds with most members
         """
-        ordered = sorted(self.bot.guilds, key=lambda g: len(g.members), reverse=True).remove("Discord Bot List").remove("Discord Bots")[:25]
+        ordered = sorted(self.bot.guilds, key=lambda g: len(g.members), reverse=True)
+        for item in ordered:
+            if item.name in ["Discord Bots", "Discord Bot List"]:
+                ordered.remove(item)
+        ordered = ordered[:25]
         embed = discord.Embed(title="Top 35 Guilds Ordered by Member Count", colour=discord.Colour.gold())
 
         for guild in ordered:
