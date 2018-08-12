@@ -59,7 +59,7 @@ class Admin(BaseCog):
 
     @guilds.command()
     @commands.is_owner()
-    async def leave(self, ctx, guild):
+    async def leave(self, ctx, *, guild):
         """
         Leaves a specified guild
         """
@@ -75,7 +75,7 @@ class Admin(BaseCog):
 
     @guilds.command()
     @commands.is_owner()
-    async def invite(self, ctx, guild):
+    async def invite(self, ctx, *, guild):
         """
         Creates an invite to a specified server
         """
@@ -96,6 +96,20 @@ class Admin(BaseCog):
                     break
                 except discord.HTTPException:
                     await ctx.send("`Failed to create invite for guild!`")
+
+    @commands.is_owner()
+    @guilds.command()
+    async def top(self, ctx):
+        """
+        Get's the top 10 guilds with most members
+        """
+        ordered = sorted(self.bot.guilds, key=lambda g: len(g.members), reverse=True)[:10]
+        embed = discord.Embed(title="Top 10 Guilds Ordered by Member Count", colour=discord.Colour.gold())
+
+        for guild in ordered:
+            embed.add_field(name=guild.name, value=f"{len(guild.members)}", inline=True)
+
+        await ctx.send(embed=embed)
 
     @commands.command()
     @commands.is_owner()
