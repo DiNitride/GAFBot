@@ -103,11 +103,7 @@ class Admin(BaseCog):
         """
         Get's the top 25 guilds with most members
         """
-        ordered = sorted(self.bot.guilds, key=lambda g: len(g.members), reverse=True)
-        for item in ordered:
-            if item.id in [264445053596991498, 110373943822540800]:
-                ordered.remove(item)
-        ordered = ordered[:25]
+        ordered = sorted(self.bot.guilds, key=lambda g: len(g.members), reverse=True)[:25]
         embed = discord.Embed(title="Top 25 Guilds Ordered by Member Count", colour=discord.Colour.gold())
 
         for guild in ordered:
