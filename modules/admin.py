@@ -101,14 +101,14 @@ class Admin(BaseCog):
     @guilds.command()
     async def top(self, ctx):
         """
-        Get's the top 35 guilds with most members
+        Get's the top 25 guilds with most members
         """
         ordered = sorted(self.bot.guilds, key=lambda g: len(g.members), reverse=True)
         for item in ordered:
-            if item.name in ["Discord Bots", "Discord Bot List"]:
+            if item.id in [264445053596991498, 110373943822540800]:
                 ordered.remove(item)
         ordered = ordered[:25]
-        embed = discord.Embed(title="Top 35 Guilds Ordered by Member Count", colour=discord.Colour.gold())
+        embed = discord.Embed(title="Top 25 Guilds Ordered by Member Count", colour=discord.Colour.gold())
 
         for guild in ordered:
             embed.add_field(name=guild.name, value=f"{len(guild.members)}", inline=True)
