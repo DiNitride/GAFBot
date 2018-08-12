@@ -107,7 +107,7 @@ class Admin(BaseCog):
         embed = discord.Embed(title="Top 25 Guilds Ordered by Member Count", colour=discord.Colour.gold())
 
         for guild in ordered:
-            embed.add_field(name=guild.name, value=f"{len(guild.members)}", inline=True)
+            embed.add_field(name=guild.name, value=f"Count: {len(guild.members)}\nID: {guild.id}", inline=True)
 
         await ctx.send(embed=embed)
 
