@@ -38,12 +38,13 @@ class BotLogging(BaseCog):
         channel = msg_guild.get_channel(self.config["guild"])
         await channel.send(BotLogging.construct__guild_message("LEFT", guild))
 
-    async def on_command(self, ctx):
+    async def on_command_completion(self, ctx):
         msg_guild = self.get_guild()
         channel = msg_guild.get_channel(self.config["commands"])
         await channel.send(f"```\n"
                            f"{dt.now()} --- COMMAND CALLED\n"
                            f"Command: '{ctx.command}'\n"
+                           f"Args: {ctx.args}"
                            f"Invoker: {ctx.author} -- {ctx.author.id}\n"
                            f"Channel: {ctx.channel} -- {ctx.channel.id}\n"
                            f"Guild: {ctx.guild.name} -- {ctx.guild.id}\n"
