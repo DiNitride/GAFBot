@@ -55,7 +55,7 @@ class GAF(BaseCog):
         Channel 1 and chill?
         """
         await ctx.send(
-            content=f"<@&172426880543227904> <@&262334316611239937> <@&172427010310799361>, chill? - {ctx.author}",
+            content=f"<@&172426880543227904> <@&262334316611239937>, chill? - {ctx.author}",
             file=discord.File("resources/chill.jpg"))
         await ctx.message.delete()
 
