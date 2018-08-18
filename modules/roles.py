@@ -129,13 +129,13 @@ class Roles(BaseCog):
             return
 
         author_roles = ctx.author.roles
-        if role.id in roles:
+        if role.id in role_me_roles:
             try:
                 author_roles.append(role)
                 await ctx.author.edit(roles=author_roles)
                 await ctx.send("Added role {}".format(role))
             except discord.HTTPException:
-                await ctx.send("Cannot add role!")
+                await ctx.send("Cannot add role! Do you already have it?")
 
     @roles.command()
     async def take(self, ctx, *, role: discord.Role):
@@ -148,13 +148,13 @@ class Roles(BaseCog):
             return
 
         author_roles = ctx.author.roles
-        if role.id in author_roles and role.id in roles:
+        if role.id in [r.id for r in author_roles] and role.id in role_me_roles:
             try:
                 author_roles.remove(role)
                 await ctx.author.edit(roles=author_roles)
-                await ctx.send("Added role {}".format(role))
+                await ctx.send("Removed role {}".format(role))
             except discord.HTTPException:
-                await ctx.send("Cannot remove role!")
+                await ctx.send("Cannot remove role! Do you have it?")
 
     @roles.command()
     @commands.has_permissions(manage_roles=True)
