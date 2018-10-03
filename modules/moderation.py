@@ -15,7 +15,7 @@ class Moderation(BaseCog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *, reason: str = None):
         """
-        Kicks a user from the guild
+        Kicks a user fromnhbe4the guild
         """
         if user.top_role >= ctx.author.top_role:
             return
@@ -192,6 +192,18 @@ class Moderation(BaseCog):
         mute_role_id = self.bot.database.get(role.guild.id, self.guild_storage.columns.mute_role)
         if mute_role_id == role.id:
             self.bot.database.reset_column(role.guild.id, self.guild_storage.columns.mute_role)
+
+    async def on_message(self, message):
+        channel = message.channel
+        guild = message.guild
+        if self.bot.database.get(guild.id, self.guild_storage.columns.inv_cop):
+            bypasses = self.bot.database.get(guild.id, self.guild_storage.columns.invcop_bypasses)
+            if channel.id not in bypasses and message.author.permissions_in(channel).manage_messages:   
+                if "discord.gg" in message.content or "discordapp.com/invite/" in message.content:
+                    await message.delete()
+                    await message.channel.send(f"Invites are not allowed in this channel, "
+                                               f"please view the bypasses command to view the chnanels "
+                                               f"where they are allowed ")
 
 
 setup = Moderation.setup
