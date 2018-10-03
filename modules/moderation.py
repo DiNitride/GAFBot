@@ -198,10 +198,10 @@ class Moderation(BaseCog):
         guild = message.guild
         if self.bot.database.get(guild.id, self.guild_storage.columns.inv_cop):
             bypasses = self.bot.database.get(guild.id, self.guild_storage.columns.invcop_bypasses)
-            if channel.id not in bypasses and message.author.permissions_in(channel).manage_messages:   
+            if channel.id not in bypasses and not message.author.permissions_in(channel).manage_messages:
                 if "discord.gg" in message.content or "discordapp.com/invite/" in message.content:
                     await message.delete()
-                    await message.channel.send(f"Invites are not allowed in this channel, "
+                    await message.channel.send(f"Invites are  not allowed in this channel, "
                                                f"please view the bypasses command to view the chnanels "
                                                f"where they are allowed ")
 
