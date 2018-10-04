@@ -161,10 +161,7 @@ class Moderation(BaseCog):
         """
         bypasses = self.bot.database.get(ctx.guild.id, self.guild_storage.columns.invcop_bypasses)
         channels = [f"#{self.bot.get_channel(c).name}" for c in bypasses]
-        n = "\n"
-        if len(channels) == 0:
-            channels = ["None!"]
-        await ctx.send(f"```\nInvite Cop bypasses these channels:\n{n.join(channels)}\n```")
+        await ctx.send(Moderation.get_bypass_string(channels))
 
     @commands.has_permissions(manage_guild=True)
     @bypasses.command()
@@ -188,6 +185,13 @@ class Moderation(BaseCog):
         self.bot.database.set(ctx.guild.id, self.guild_storage.columns.invcop_bypasses, bypasses)
         await ctx.send("`Invite Cop will now monitor this channel!`")
 
+    @staticmethod
+    def get_bypass_string(channels):
+        n = "\n"
+        if len(channels) == 0:
+            channels = ["None!"]
+        return f"```\nInvite Cop bypasses these channels:\n{n.join(channels)}\n```"
+
     async def on_guild_role_delete(self, role):
         mute_role_id = self.bot.database.get(role.guild.id, self.guild_storage.columns.mute_role)
         if mute_role_id == role.id:
@@ -201,9 +205,9 @@ class Moderation(BaseCog):
             if channel.id not in bypasses and not message.author.permissions_in(channel).manage_messages:
                 if "discord.gg" in message.content or "discordapp.com/invite/" in message.content:
                     await message.delete()
-                    await message.channel.send(f"Invites are  not allowed in this channel, "
-                                               f"please view the bypasses command to view the chnanels "
-                                               f"where they are allowed ")
+                    channels = [f"#{self.bot.get_channel(c).name}" for c in bypasses]
+                    await message.channel.send(f"Invites are  not allowed in this channel\n"
+                                               f"{Moderation.get_bypass_string(channels)}")
 
 
 setup = Moderation.setup
