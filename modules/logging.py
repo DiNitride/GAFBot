@@ -15,6 +15,11 @@ class Logging(BaseCog):
         super().__init__(bot)
         self.guild_storage = SQLiteGuildTable("logging", [SQLiteColumn("log_channel", SQLiteDataType.INTEGER, None)])
 
+    def sanitize(self, member: discord.User) -> str:
+        str(member).replace("@everyone", "@\u200beveryone")
+            .replace("@here", "@\u200bhere")
+            .replace("discord.gg", "invite.hidden")
+
     @commands.group(invoke_without_command=True)
     async def logging(self, ctx):
         """
@@ -50,25 +55,25 @@ class Logging(BaseCog):
         channel_id = self.bot.database.get(member.guild.id, self.guild_storage.columns.log_channel)
         if channel_id:
             channel = member.guild.get_channel(channel_id)
-            await channel.send(f"`{time()}` **{member}** joined {member.guild}")
+            await channel.send(f"`{time()}` **{self.sanitize(member)}** joined {member.guild}")
 
     async def on_member_remove(self, member):
         channel_id = self.bot.database.get(member.guild.id, self.guild_storage.columns.log_channel)
         if channel_id:
             channel = member.guild.get_channel(channel_id)
-            await channel.send(f"`{time()}` **{member}** left {member.guild}")
+            await channel.send(f"`{time()}` **{self.sanitize(member)}** left {member.guild}")
 
     async def on_member_ban(self, guild, member):
         channel_id = self.bot.database.get(guild.id, self.guild_storage.columns.log_channel)
         if channel_id:
             channel = guild.get_channel(channel_id)
-            await channel.send(f"`{time()}` **{member}** was banned from {guild}")
+            await channel.send(f"`{time()}` **{self.sanitize(member)}** was banned from {guild}")
 
     async def on_member_unban(self, guild, user):
         channel_id = self.bot.database.get(guild.id, self.guild_storage.columns.log_channel)
         if channel_id:
             channel = guild.get_channel(channel_id)
-            await channel.send(f"`{time()}` **{user}** was unbanned from {guild}")
+            await channel.send(f"`{time()}` **{self.sanitize(user)}** was unbanned from {guild}")
 
 
 setup = Logging.setup
