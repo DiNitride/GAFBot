@@ -16,9 +16,9 @@ class Logging(BaseCog):
         self.guild_storage = SQLiteGuildTable("logging", [SQLiteColumn("log_channel", SQLiteDataType.INTEGER, None)])
 
     def sanitize(self, member: discord.User) -> str:
-        str(member).replace("@everyone", "@\u200beveryone")
-            .replace("@here", "@\u200bhere")
-            .replace("discord.gg", "invite.hidden")
+        return str(member).replace("@everyone", "@\u200beveryone") \
+                .replace("@here", "@\u200bhere") \
+                .replace("discord.gg", "invite.hidden")
 
     @commands.group(invoke_without_command=True)
     async def logging(self, ctx):
