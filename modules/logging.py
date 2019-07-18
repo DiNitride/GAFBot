@@ -51,24 +51,28 @@ class Logging(BaseCog):
         self.bot.database.reset_column(ctx.guild.id, self.guild_storage.columns.log_channel)
         await ctx.send("`Logging has been disabled`")
 
+    @commands.Cog.listener()
     async def on_member_join(self, member):
         channel_id = self.bot.database.get(member.guild.id, self.guild_storage.columns.log_channel)
         if channel_id:
             channel = member.guild.get_channel(channel_id)
             await channel.send(f"`{time()}` **{self.sanitize(member)}** joined {member.guild}")
 
+    @commands.Cog.listener()
     async def on_member_remove(self, member):
         channel_id = self.bot.database.get(member.guild.id, self.guild_storage.columns.log_channel)
         if channel_id:
             channel = member.guild.get_channel(channel_id)
             await channel.send(f"`{time()}` **{self.sanitize(member)}** left {member.guild}")
 
+    @commands.Cog.listener()
     async def on_member_ban(self, guild, member):
         channel_id = self.bot.database.get(guild.id, self.guild_storage.columns.log_channel)
         if channel_id:
             channel = guild.get_channel(channel_id)
             await channel.send(f"`{time()}` **{self.sanitize(member)}** was banned from {guild}")
 
+    @commands.Cog.listener()
     async def on_member_unban(self, guild, user):
         channel_id = self.bot.database.get(guild.id, self.guild_storage.columns.log_channel)
         if channel_id:

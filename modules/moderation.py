@@ -192,11 +192,13 @@ class Moderation(BaseCog):
             channels = ["None!"]
         return f"```\nInvite Cop bypasses these channels:\n{n.join(channels)}\n```"
 
+    @commands.Cog.listener()
     async def on_guild_role_delete(self, role):
         mute_role_id = self.bot.database.get(role.guild.id, self.guild_storage.columns.mute_role)
         if mute_role_id == role.id:
             self.bot.database.reset_column(role.guild.id, self.guild_storage.columns.mute_role)
 
+    @commands.Cog.listener()
     async def on_message(self, message):
         channel = message.channel
         guild = message.guild

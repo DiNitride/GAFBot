@@ -285,6 +285,7 @@ class Roles(BaseCog):
         self.bot.database.set(ctx.guild.id, self.guild_storage.columns.rolestate, False)
         await ctx.send("`Disabled rolestate!`")
 
+    @commands.Cog.listener()
     async def on_guild_role_delete(self, role):
         role_me_roles = self.bot.database.get(role.guild.id, self.guild_storage.columns.role_me_roles)
         role_me_lvl = self.bot.database.get(role.guild.id, self.guild_storage.columns.role_me_lvl)
@@ -305,6 +306,7 @@ class Roles(BaseCog):
                 if r.position == role.position - 1:
                     self.bot.database.set(role.guild.id, self.guild_storage.columns.role_me_lvl, r.id)
 
+    @commands.Cog.listener()
     async def on_member_join(self, member):
         join_role = self.bot.database.get(member.guild.id, self.guild_storage.columns.join_role)
         if join_role is not None:
@@ -347,6 +349,7 @@ class Roles(BaseCog):
             except discord.HTTPException:
                 self.logger.debug(f"Caught HTTP Exception when trying to add roles for rolestate")
 
+    @commands.Cog.listener()
     async def on_member_remove(self, member):
         storage = self.bot.database.get(member.guild.id, self.guild_storage.columns.rolestate_storage)
         roles = [role.id for role in member.roles]

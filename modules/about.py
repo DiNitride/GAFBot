@@ -39,7 +39,7 @@ class About(BaseCog):
         """
         Source Code
         """
-        await ctx.send("`My source code is open source and available at` <https://github.com/DiNitride/GAFBot>")
+        await ctx.send("`Source code available at` <https://github.com/DiNitride/GAFBot>")
 
     @commands.command()
     async def invite(self, ctx):
@@ -55,7 +55,7 @@ class About(BaseCog):
         """
         Invite like to the bot's support server
         """
-        await ctx.send("<http://discord.bot.neverendinggaf.com> - https://discord.gg/ddbFt7S")
+        await ctx.send("If you need help with the bot, feel free to join my server and ask! https://discord.gg/ddbFt7S")
 
     @commands.command()
     async def twitter(self, ctx):

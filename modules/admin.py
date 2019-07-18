@@ -122,7 +122,7 @@ class Admin(BaseCog):
         except FileNotFoundError:
             await ctx.send(f"Couldn't find `resources/{file}`")
 
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def purge_bot_guilds(self, ctx):
         """
@@ -191,6 +191,7 @@ class Admin(BaseCog):
         else:
             return True
 
+    @commands.Cog.listener()
     async def on_guild_join(self, guild):
         await self.compare_bots_users(guild)
 

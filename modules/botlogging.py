@@ -28,16 +28,19 @@ class BotLogging(BaseCog):
                f"Owner: {guild.owner} -- {guild.owner.id}\n" \
                f"```"
 
+    @commands.Cog.listener()
     async def on_guild_join(self, guild):
         msg_guild = self.get_guild()
         channel = msg_guild.get_channel(self.config["guild"])
         await channel.send(BotLogging.construct__guild_message("JOINED", guild))
 
+    @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         msg_guild = self.get_guild()
         channel = msg_guild.get_channel(self.config["guild"])
         await channel.send(BotLogging.construct__guild_message("LEFT", guild))
 
+    @commands.Cog.listener()
     async def on_command(self, ctx):
         msg_guild = self.get_guild()
         channel = msg_guild.get_channel(self.config["commands"])

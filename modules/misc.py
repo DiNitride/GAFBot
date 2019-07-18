@@ -4,18 +4,11 @@ import discord
 from discord.ext import commands
 from dinnerplate import BaseCog, SQLiteDataType, SQLiteGuildTable, SQLiteColumn, JsonConfigManager
 
-from utils import net
-
-DEFAULT = {
-    "mashape-key": ""
-}
-
 
 class Misc(BaseCog):
 
     def __init__(self, bot):
         super().__init__(bot)
-        self.config = JsonConfigManager("misc.json", DEFAULT)
         self.guild_storage = SQLiteGuildTable("misc", [SQLiteColumn("ts_ban", SQLiteDataType.INTEGER, False)])
 
     @commands.command()
@@ -56,6 +49,9 @@ class Misc(BaseCog):
         """
         Pays respects
         """
+        for command in self.bot.commands:
+            if isinstance(command, commands.Group):
+                print(command.commands)
         await ctx.send("*Pays respects*")
 
     @commands.command()
@@ -80,19 +76,7 @@ class Misc(BaseCog):
         """
         await ctx.send(file=discord.File("resources/ggez.jpg"))
 
-    @commands.command()
-    async def quote(self, ctx):
-        """
-        Get's a random famous quote
-        """
-        _, quote, status = await net.get_url("https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famous&count=1",
-                              headers={"X-Mashape-Key": self.config["mashape-key"],
-                                       "user-agent": "GAF Bot"})
-        if status != 200:
-            await ctx.send("Error requesting quote!")
-            return
-        await ctx.send(f"\"{quote[0]['quote']}\" - *{quote[0]['author']}*")
-
+    @commands.Cog.listener()
     async def on_member_ban(self, guild, member):
         if member.voice is None:
             return
