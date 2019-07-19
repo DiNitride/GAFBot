@@ -9,7 +9,8 @@ from utils import reaction_menu
 from utils.errors import UserBlacklisted
 
 CONFIG = {
-    "blacklist": []
+    "blacklist": [],
+    "additional_statuses": []
 }
 
 
@@ -25,6 +26,7 @@ class Admin(BaseCog):
                          ]
         self.bot.add_check(self.user_in_blacklist_check)
         self.config = JsonConfigManager("admin.json", default=CONFIG)
+        self.statuses.extend(self.config["additional_statuses"])
         self.bg_task = self.bot.loop.create_task(self.status_rotator())
 
     def sum_users_and_guilds(self):
@@ -33,19 +35,25 @@ class Admin(BaseCog):
 
     def uptime(self):
         time = self.bot.uptime
-        return "{}d, {}h, {}m, {}s".format(time[0][3], time[0][2], time[0][1], time[0][0])
+        return "{}d, {}h, {}m, {}s".format(time[1][3], time[1][2], time[1][1], time[1][0])
 
     def commands_run(self):
         return "{} commands ran".format(self.bot._command_count)
 
+
     async def status_rotator(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
+            print("Starting status loop")
             for val in self.statuses:
+                print("Iterate next status")
                 if callable(val):
                     val = val()
+                    print("Called callable status")
                 await self.bot.change_presence(activity=discord.Game(name=val))
-                await asyncio.sleep(180)
+                print(f"Changed status to {val}")
+                await asyncio.sleep(10)
+                print("Finished sleeping")
 
     @commands.group(invoke_without_command=True)
     @commands.is_owner()
@@ -181,12 +189,46 @@ class Admin(BaseCog):
         except subprocess.TimeoutExpired:
             await ctx.send("Error updating - Process timed out! :exclamation: ")
 
+    @commands.is_owner()
+    @commands.group(invoke_without_command=True)
+    async def statuses(self, ctx):
+        """
+        Displays all custom statuses
+        """
+        await ctx.send(", ".join([s for s in self.statuses if not callable(s)]))
+
+    @commands.is_owner()
+    @statuses.command()
+    async def add(self, ctx, *, status: str):
+        """
+        Adds a new status
+        """
+        if status not in self.statuses:
+            self.statuses.append(status)
+            self.config["additional_statuses"].append(status)
+            await ctx.send("`Added new status!`")
+        else:
+            await ctx.send("`Status already exists dumb dumb...`")
+
+    @commands.is_owner()
+    @statuses.command()
+    async def remove(self, ctx, *, status: str):
+        """
+        Removes a status
+        """
+        try:
+            self.config["additional_statuses"].remove(status)
+            self.statuses.remove(status)
+            await ctx.send("`Removed status!`")
+        except ValueError:
+            await ctx.send("`Status did not exist`")
+
     def user_in_blacklist_check(self, ctx):
         """
         Checks whether a user is in the bot blacklist
         """
         user_id = ctx.author.id
-        if user_id in self.config["blacklist"]:
+        if user_id in self. config["blacklist"]:
             raise UserBlacklisted
         else:
             return True
