@@ -52,7 +52,7 @@ class Admin(BaseCog):
                     print("Called callable status")
                 await self.bot.change_presence(activity=discord.Game(name=val))
                 print(f"Changed status to {val}")
-                await asyncio.sleep(10)
+                await asyncio.sleep(1)
                 print("Finished sleeping")
 
     @commands.group(invoke_without_command=True)
