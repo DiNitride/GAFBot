@@ -222,6 +222,12 @@ class Admin(BaseCog):
             await ctx.send("`Removed status!`")
         except ValueError:
             await ctx.send("`Status did not exist`")
+            
+    @commands.command()
+    @commands.is_owner()
+    async def remove_bans(self, ctx):
+        for ban in ctx.guild.bans():
+            await ctx.guild.unban(ban.user)
 
     def user_in_blacklist_check(self, ctx):
         """
