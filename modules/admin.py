@@ -226,7 +226,8 @@ class Admin(BaseCog):
     @commands.command()
     @commands.is_owner()
     async def remove_bans(self, ctx):
-        for ban in ctx.guild.bans():
+        bans = await ctx.guild.bans()
+        for ban in bans:
             await ctx.guild.unban(ban.user)
 
     def user_in_blacklist_check(self, ctx):
