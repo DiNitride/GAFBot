@@ -44,16 +44,11 @@ class Admin(BaseCog):
     async def status_rotator(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
-            print("Starting status loop")
             for val in self.statuses:
-                print("Iterate next status")
                 if callable(val):
                     val = val()
-                    print("Called callable status")
                 await self.bot.change_presence(activity=discord.Game(name=val))
-                print(f"Changed status to {val}")
-                await asyncio.sleep(1)
-                print("Finished sleeping")
+                await asyncio.sleep(60)
 
     @commands.group(invoke_without_command=True)
     @commands.is_owner()

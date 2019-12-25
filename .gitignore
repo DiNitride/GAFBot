@@ -2,3 +2,5 @@
 *.pyc
 config
 logs
+venv
+.vscode
